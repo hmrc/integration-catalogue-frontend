@@ -1,0 +1,77 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+
+
+@this(
+    govukLayout: GovukLayout,
+    footer: GovukFooter,
+    siteHeader: SiteHeader,
+    pocBanner: PocBanner,
+    head: Head,
+    feedbackBanner2: FeedbackBanner2,
+    homeBreadCrumb: HomeBreadCrumb
+)
+
+@(pageTitle: Option[String] = None,
+    headBlock: Option[Html] = None,
+    scriptsBlock: Option[Html] = None,
+    activePage: Option[String] = None,
+    bodyEndBlock: Option[Html] = None
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@footerBlock = {
+    @footer()
+}
+
+@mainContentDefault = {
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLWQQZB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    @contentBlock
+}
+
+@beforeContentBlock = {
+    @feedbackBanner2()
+    <!-- Notification Banner -->
+    <div class="govuk-notification-banner-container">
+        @pocBanner()
+    </div>
+}
+
+@scripts = {
+    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+    <script>window.GOVUKFrontend.initAll();</script>
+    <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>
+}
+
+@bodyEndDefault = {
+    @bodyEndBlock
+    @scripts
+}
+
+@govukLayout(
+    pageTitle = pageTitle,
+    headBlock = Some(head(headBlock)),
+    headerBlock = Some(siteHeader(activePage, true)),
+    scriptsBlock = scriptsBlock,
+    footerBlock = Some(footerBlock),
+    beforeContentBlock = Some(beforeContentBlock),
+    bodyEndBlock = Some(bodyEndDefault)
+)(mainContentDefault)

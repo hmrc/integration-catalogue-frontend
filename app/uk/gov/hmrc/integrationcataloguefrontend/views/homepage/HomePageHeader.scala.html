@@ -1,0 +1,81 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.SiteHeader
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.SearchBox
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FeedbackBanner2
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PocBanner
+
+@this(siteHeader: SiteHeader, searchBox: SearchBox, pocBanner: PocBanner, feedbackBanner2: FeedbackBanner2)
+
+@()(implicit appConfig: AppConfig)
+
+@siteHeader()
+<!-- Notification Banner -->
+<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @feedbackBanner2()
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-notification-banner-container">
+                @pocBanner()
+            </div>
+        </div>
+    </div>
+</div>
+<div class="govuk-notification-banner-spacing">
+    <br />
+    <br />
+</div>
+<div class="govuk-find-api">
+    <div class="govuk-width-container govuk-find-api-padding">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-xl govuk-find-api-title" id="page-title">Find existing ways to access data and transfer data across HMRC</h1>
+                <p class="govuk-body-l govuk-find-api-description" id="page-title-desc">Search available HMRC APIs and file transfers</p>
+                <div>
+                    @searchBox("govuk-int-search-black", "Search")
+                </div>
+                <br />
+                <p class="govuk-body govuk-find-api-filter-text" id="page-title-searchlink-text">
+                    <a class="govuk-find-api-filter" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, None, None)" id="page-title-searchlink">
+                        See all APIs and file transfers
+                    </a>
+                </p>
+            </div>
+            <div class="govuk-grid-column-one-third govuk-find-api-black-box-padding">
+                <div class="govuk-find-api-black-box">
+                    <p class="govuk-body-l govuk-find-api-links-title" id="heading-box-title">
+                        First time using this service?
+                    </p>
+                    <ul class="govuk-find-api-links">
+                        <li>
+                            <p class="govuk-body">
+                                <a class="govuk-find-api-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.aboutPage" id="heading-box-link">
+                                    Learn about this service, including how it works and the benefits.
+                                </a>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

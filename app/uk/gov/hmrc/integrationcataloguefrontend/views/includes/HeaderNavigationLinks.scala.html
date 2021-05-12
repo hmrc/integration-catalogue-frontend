@@ -1,0 +1,54 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.SearchBox
+
+
+@this(searchBox: SearchBox)
+
+
+@(activePage: Option[String], includeSearch: Boolean)
+
+@handleLinkClasses(expectedPage: String = "")= @{
+    val activeClass = "govuk-sub-nav-link govuk-sub-nav-link--active"
+    val inactiveClass = "govuk-sub-nav-link"
+    if(activePage.getOrElse("").equals(expectedPage)) activeClass else inactiveClass
+}
+
+@*The active page class changing code is is not added here*@
+
+<div role="navigation" class="govuk-sub-nav-bar">
+    <div class="govuk-width-container govuk-sub-nav-container">
+        @if(includeSearch){
+            <div class="one">
+                @searchBox(placeholder = "Search APIs and file transfers")
+            </div>
+        }
+        <div class="two">
+            <ul id="navigation" class="govuk-sub-nav-links" aria-label="Navigation links">
+                <li class='@handleLinkClasses("list-apis")'>
+                    <a id="nav-get-started-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.getStartedPage" class="govuk-header__link">Get started</a>
+                </li>
+                <li class='@handleLinkClasses("list-apis")'>
+                    <a id="nav-about-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.aboutPage" class="govuk-header__link">About</a>
+                </li>
+                <li class='@handleLinkClasses("list-apis")'>
+                    <a id="nav-case-studies-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.caseStudiesPage" class="govuk-header__link">Case studies</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

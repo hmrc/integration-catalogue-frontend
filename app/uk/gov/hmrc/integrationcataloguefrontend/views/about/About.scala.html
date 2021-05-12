@@ -1,0 +1,95 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+
+@this(layout: DefaultLayout)
+
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = Some(s"About - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
+    <h1 class="govuk-heading-xl" id="page-heading">About the API catalogue</h1>
+    <p class="govuk-body" id="page-content">
+        If you want to access or transfer data, you can check if there’s an existing way to access and transfer data across HMRC.
+    </p>
+    <p class="govuk-body" id="page-content">
+        By reusing what’s already available, you don’t need to build a single use solution which saves you time and money.
+    </p>
+    <p class="govuk-body" id="page-content">
+        There are two ways you can securely access and transfer data across HMRC.
+    </p>
+    <ol class="govuk-list govuk-list--number">
+        <li>APIs</li>
+        <li>File transfer flows</li>
+    </ol>
+    <p class="govuk-body" id="page-content">
+        APIs let IT systems and applications talk to each other and share data in real time.
+    </p>
+    <p class="govuk-body" id="page-content">
+        File transfer flows transfer batch files or sets of data from A to B. Unlike an API, a file transfer flow only moves data from one place to another.
+    </p>
+    <p class="govuk-body" id="page-content">
+        Each file transfer flow uses a specific file transfer pattern. You can reuse existing file transfer patterns to build your own file transfer flow to get data for your service.
+    </p>
+    <p class="govuk-body" id="page-content">
+        <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, None, None).url" class="govuk-link">Search for APIs or file transfer patterns</a>
+    </p>
+    <h2 class="govuk-heading-l">Using the service</h2>
+    <p class="govuk-body" id="page-content">
+        Use this service to:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>search for the data you need</li>
+        <li>find existing HMRC APIs and file transfers that meet your service’s needs</li>
+        <li>get contact information for specific APIs or file transfer flow</li>
+        <li>view details about APIs and file transfers</li>
+    </ul>
+    <p class="govuk-body" id="page-content">
+        <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.getStartedPage" class="govuk-link">Read our get started guide before you start searching.</a>
+    </p>
+    <h2 class="govuk-heading-l">Reusing APIs and file transfer patterns</h2>
+    <p class="govuk-body" id="page-content">
+        Instead of building a new API or file transfer flow every time your service needs to access or transfer data, you can reuse existing APIs and file transfer patterns.
+    </p>
+    <p class="govuk-body" id="page-content">
+        Benefits of reuse
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>Greater flexibility, governance, speed and usability</li>
+        <li>Saves time, effort and money</li>
+        <li>Encourages change and innovation</li>
+        <li>APIs and file transfers are fit for the future</li>
+        <li>Removes the need for single use APIs or file transfers</li>
+    </ul>
+    <h2 class="govuk-heading-l">Service roadmap</h2>
+    <p class="govuk-body" id="page-content">
+        The roadmap is a guide to what we have planned for the service (not APIs in development), but some things might
+        change.
+    </p>
+    <p class="govuk-body" id="page-content">
+        Our roadmap shows the things we’re working on and when we hope to have them ready by.
+    </p>
+    <span class="govuk-heading-m">April 2021 onwards</span>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>Add more APIs and file transfers from legacy integration platforms</li>
+        <li>Help integration platform teams automate publishing to keep the API catalogue current</li>
+        <li>Enhance the search and filter functionality</li>
+        <li>Improve the information stored on the API catalogue</li>
+    </ul>
+}

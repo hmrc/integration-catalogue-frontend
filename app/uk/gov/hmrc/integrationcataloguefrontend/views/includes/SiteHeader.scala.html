@@ -1,0 +1,37 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.HeaderNavigationLinks
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PocBanner
+
+@this(navLinks: HeaderNavigationLinks, pocBanner: PocBanner, appConfig : AppConfig)
+
+@(activePage: Option[String] = None, includeSearch: Boolean = false)
+<header role="banner" class="hmrc-internal-header govuk-header-box">
+    <div class="govuk-width-container govuk-header-logo-box">
+        <div class="hmrc-internal-header__logo">
+            <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage" class="hmrc-internal-header__logo-link" id="logo-link">
+                HM Revenue &amp; Customs
+            </a>
+        </div>
+        <div class="hmrc-internal-header__service-name govuk-header-service-box">
+            <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage" class="hmrc-internal-header__link" id="site-name-link">
+                @{appConfig.serviceName}
+            </a>
+        </div>
+    </div>
+</header>
+@navLinks(activePage, includeSearch)

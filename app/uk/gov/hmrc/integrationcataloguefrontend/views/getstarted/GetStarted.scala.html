@@ -1,0 +1,51 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+
+@this(layout: DefaultLayout)
+
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = Some(s"Get Started - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
+    <h1 class="govuk-heading-xl" id="page-heading">
+        Get started
+    </h1>
+    <div id="page-content">
+        <ol class="govuk-list govuk-list--number govuk-get-started-list">
+            <li>
+                <h2 class="govuk-heading-m" id="heading-1">Find an API or file transfer you can use </h2>
+                <p class="govuk-body">This service is available for HMRC teams that want to find existing ways to access data and transfer data across HMRC.</p>
+                <p class="govuk-body">
+                    <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, None, None)" class="govuk-link">
+                        Review available HMRC APIs and file transfers</a> 
+                    and decide if any meet your service’s needs.
+                </p> 
+            </li>
+            <li>
+                <h2 class="govuk-heading-m" id="heading-2">Get contact information for an API or file transfer</h2>
+                <p class="govuk-body">All HMRC APIs and file transfers have a dedicated email address.</p>
+            </li>
+            <li>
+                <h2 class="govuk-heading-m" id="heading-3">Share with your team</h2> 
+                <p class="govuk-body">Share a link to an API or file transfer, including who to contact with your team.</p> 
+            </li>
+        </ol>
+    </div>
+}
