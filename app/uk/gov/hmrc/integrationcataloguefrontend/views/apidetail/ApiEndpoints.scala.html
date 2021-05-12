@@ -1,0 +1,29 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcatalogue.models.Endpoint
+
+@this(apiEndpointMethod: ApiEndpointMethod)
+
+
+@(endpoints: List[Endpoint])
+
+
+<section aria-labelledby="endpoints-heading">
+  <h2 class="govuk-heading-l" id="endpoints-heading">
+    Endpoints
+  </h2>
+  <ul class="govuk-endpoints-list" id="endpoint-list">
+    @for(endpoint <- endpoints.zipWithIndex) {
+      <li class="govuk-endpoints-list-item">
+        <h3 class="govuk-heading-m" id="endpoint-path-@endpoint._2">@endpoint._1.path</h3>
+        <!-- Accordions -->
+        @for(endpointMethod <- endpoint._1.methods.zipWithIndex) {
+          @apiEndpointMethod(endpointMethod._1, endpointMethod._2)
+        }
+      </li>
+    }
+  </ul>
+</section>

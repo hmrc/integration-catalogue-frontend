@@ -1,8 +1,20 @@
+### Important - This service is in development and uses limited data and functionality.
 
-# integration-catalogue-frontend
+# Integration Catalogue Frontend
+## Goals
+### Find existing ways to access data and transfer data across HMRC
 
-This is a placeholder README.md for a new repository
+If you want to move data from one point to another, you can check if there’s an existing way to access and transfer data across HMRC.
 
-### License
+By reusing what’s already available, you don’t need to build a single use solution which saves you time and money.
 
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
+There are two ways you can securely access and transfer data across HMRC.
+
+1.  APIs
+2.  File transfer flows
+
+APIs let IT systems and applications talk to each other and share data in real time.
+
+File transfer flows transfer batch files or sets of data from A to B. Unlike an API, a file transfer flow only moves data from one place to another.
+
+Each file transfer flow uses a specific file transfer pattern. You can reuse existing file transfer patterns to build your own file transfer flow to get data for your service.

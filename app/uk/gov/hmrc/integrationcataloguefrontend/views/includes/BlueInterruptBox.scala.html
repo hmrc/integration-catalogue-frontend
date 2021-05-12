@@ -1,0 +1,19 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this()
+
+@(title: String, details: String)(implicit request: Request[_])
+
+<div class="govuk-interrupt">
+   <div class="govuk-interrupt-text-container">
+       <h1 class="govuk-heading-xl govuk-interrupt-title" id="interrupt-box-heading">
+           @title
+       </h1>
+       <p class="govuk-body govuk-interrupt-description" id="interrupt-box-description">
+           @details
+       </p>   
+   </div>
+</div>

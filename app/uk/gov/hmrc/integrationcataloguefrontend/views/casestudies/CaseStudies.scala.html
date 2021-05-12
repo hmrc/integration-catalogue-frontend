@@ -1,0 +1,25 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+
+@this(layout: DefaultLayout)
+
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = Some(s"Case studies - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
+    <h1 class="govuk-heading-xl" id="page-heading">Case studies</h1>
+    <p class="govuk-body" id="page-content">We’ll be adding case studies to help you understand how other HMRC teams have reused APIs and file transfer patterns to get data or transfer data across HMRC.</p>
+    <p class="govuk-body" id="page-content-2">By reusing what’s already available, HMRC teams don’t need to build a single use solution which:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li id="page-content-bullet-1">saves time and money</li>
+        <li id="page-content-bullet-2">improves flexibility, governance, speed and usability</li>
+        <li id="page-content-bullet-3">encourages change and innovation</li>
+        <li id="page-content-bullet-4">removes the need for single use APIs or file transfers</li>
+    </ul>
+}

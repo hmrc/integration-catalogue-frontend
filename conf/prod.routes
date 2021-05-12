@@ -1,0 +1,16 @@
+# Add all the application routes to the app.routes file
+
+->         /api-catalogue             app.Routes
+->         /                          health.Routes
+->         /api-catalogue/govuk-frontend          govuk.Routes
+->         /api-catalogue/hmrc-frontend           hmrcfrontend.Routes
+
+
+GET        /integration-catalogue                  controllers.Default.redirect(to = "/api-catalogue")
+GET        /integration-catalogue/integrations     controllers.Default.redirect(to = "/api-catalogue/integrations")
+
+GET        /admin/metrics                           com.kenshoo.play.metrics.MetricsController.metrics
+
+
+
+GET        /api-catalogue/assets/*file              controllers.Assets.versioned(path = "/public", file: Asset)
