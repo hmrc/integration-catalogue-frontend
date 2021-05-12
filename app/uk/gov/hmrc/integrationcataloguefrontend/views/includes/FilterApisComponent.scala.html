@@ -1,0 +1,76 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+@import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
+
+@this()
+
+@(apiNameSearch: String,  platformFilter: List[PlatformType])
+
+<form class="govuk-int-search" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, None, None).url" method="get">
+    <div>
+        <div class="govuk-filter-search-container">
+            <label style="display: none;" for="intCatSearch" id="filter-label">Filter by Api name.</label>
+            <input class="govuk-input govuk-int-search-input" id="intCatSearch" name="integrationCatalogueSearch" type="text" placeholder="Search" spellcheck="false" aria-autocomplete="both" autocomplete="off" aria-describedby="IntCatSearchHint" value="@apiNameSearch">
+            <div class="govuk-int-search-button-container search-button-height" aria-hidden="true">
+                <button id="intCatSearchButton" class="govuk-int-search-button" type="submit">Search</button>
+            </div>
+            <span style="display: none;" id="IntCatSearchHint">Filter by API name. There is no auto complete.</span>
+        </div>
+        <br />
+        <!-- Filter 2 -->
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    <h2 class="govuk-fieldset__heading" id="platform-filter-label">
+                        Integration platform
+                    </h2>
+                </legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="api-platform" name="platformFilter" type="checkbox" value="API_PLATFORM" @if(platformFilter.contains(API_PLATFORM)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="api-platform" id="api-platform-filter-label" >
+                            API Platform
+                        </label>
+                    </div>
+
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="cma" name="platformFilter" type="checkbox" value="CMA" @if(platformFilter.contains(CMA)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cma" id="cma-filter-label">
+                            Containerised Managed Architecture (CMA)
+                        </label>
+                    </div>
+
+
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="cds-classic" name="platformFilter" type="checkbox" value="CDS_CLASSIC" @if(platformFilter.contains(CDS_CLASSIC)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cds-classic" id="cds-classic-filter-label" >
+                            Customs Declaration System (CDS Classic)
+                        </label>
+                    </div>
+
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="des-if" name="platformFilter" type="checkbox" value="DES" @if(platformFilter.contains(DES)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="des-if" id="des-if-filter-label">
+                           Data Exchange Service (DES)
+                        </label>
+                    </div>
+
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="core-if" name="platformFilter" type="checkbox" value="CORE_IF" @if(platformFilter.contains(CORE_IF)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="core-if" id="core-if-filter-label">
+                            Integration Framework (IF)
+                        </label>
+                    </div>
+
+                </div>
+            </fieldset>
+        </div>
+        <button class="govuk-button" data-module="govuk-button">
+            Filter
+        </button>
+    </div>
+</form>

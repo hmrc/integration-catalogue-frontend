@@ -1,0 +1,26 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.HeaderNavigationLinks
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PocBanner
+
+@this(navLinks: HeaderNavigationLinks, pocBanner: PocBanner, appConfig : AppConfig)
+
+@(activePage: Option[String] = None, includeSearch: Boolean = false)
+<header role="banner" class="hmrc-internal-header govuk-header-box">
+    <div class="govuk-width-container govuk-header-logo-box">
+        <div class="hmrc-internal-header__logo">
+            <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage" class="hmrc-internal-header__logo-link" id="logo-link">
+                HM Revenue &amp; Customs
+            </a>
+        </div>
+        <div class="hmrc-internal-header__service-name govuk-header-service-box">
+            <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage" class="hmrc-internal-header__link" id="site-name-link">
+                @{appConfig.serviceName}
+            </a>
+        </div>
+    </div>
+</header>
+@navLinks(activePage, includeSearch)

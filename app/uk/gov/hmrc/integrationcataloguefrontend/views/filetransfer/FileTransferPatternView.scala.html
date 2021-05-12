@@ -1,0 +1,130 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+
+@this(layout: DefaultLayout)
+
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = Some(s"File Transfer Patterns - ${appConfig.serviceName}"), activePage=Some("file-transfer-pattern")) {
+    <h1 class="govuk-heading-xl" id="page-heading">File Transfer Patterns</h1>
+
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Pattern</th>
+            <th scope="col" class="govuk-table__header">Source</th>
+            <th scope="col" class="govuk-table__header">Target</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header" id="pattern-1">External to corporate</th>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">External:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS S3 (incl. MDTP)</li>
+                    <li>Azure Blob</li>
+                    <li>FTPS/SFTP</li>
+                    <li>GUI</li>
+                    <li>SaaS storage (including SharePoint)</li>
+                </ul> 
+            </td>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">Corporate:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS</li>
+                    <li>Azure</li>
+                    <li>Crown Hosting</li>
+                    <li>Fujitsu</li>
+                </ul> 
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header" id="pattern-2">External to SaaS storage</th>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">External:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS S3 (incl. MDTP)</li>
+                    <li>Azure Blob</li>
+                    <li>FTPS/SFTP</li>
+                    <li>GUI</li>
+                </ul> 
+            </td>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">Corporate:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>SaaS storage (including SharePoint)</li>
+                </ul> 
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header" id="pattern-3">SaaS storage to external</th>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">External:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>SaaS storage (including SharePoint)</li>
+                </ul> 
+            </td>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">External:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS S3 (incl. MDTP)</li>
+                    <li>Azure Blob</li>
+                    <li>FTPS/SFTP</li>
+                    <li>GUI</li>
+                </ul> 
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header" id="pattern-4">Corporate to external</th>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">Corporate:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS</li>
+                    <li>Azure</li>
+                    <li>Crown Hosting</li>
+                    <li>Fujitsu</li>
+                </ul>    
+            </td>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">External:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS S3 (incl. MDTP)</li>
+                    <li>Azure Blob</li>
+                    <li>FTPS/SFTP</li>
+                    <li>GUI</li>
+                    <li>SaaS storage (including SharepPoint)</li>
+                </ul> 
+            </td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header" id="pattern-5">Corporate to corporate</th>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">Corporate:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS</li>
+                    <li>Azure</li>
+                    <li>Crown Hosting</li>
+                    <li>Fujitsu</li>
+                </ul> 
+            </td>
+            <td class="govuk-table__cell">
+                <p class="govuk-body">Corporate:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>AWS</li>
+                    <li>Azure</li>
+                    <li>Crown Hosting</li>
+                    <li>Fujitsu</li>
+                </ul> 
+            </td>
+          </tr>
+        </tbody>
+    </table>
+}

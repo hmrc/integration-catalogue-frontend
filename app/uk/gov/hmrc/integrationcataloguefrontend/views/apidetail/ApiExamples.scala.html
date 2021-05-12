@@ -1,0 +1,29 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcatalogue.models.Example
+
+@this()
+
+@(title: String, examples: List[Example])
+
+<section aria-labelledby="accordion-examples-heading">
+    <h2 class="govuk-heading-m" id="accordion-examples-heading">
+        @title
+    </h2>
+
+    @if(examples.nonEmpty) {
+        @for(example <- examples.zipWithIndex) {
+          @if(example._1.name.nonEmpty && example._1.jsonBody.nonEmpty) {
+              <div id="example-@example._2">
+                  <h3 class="govuk-heading-s" id="example-name-@example._2">@example._1.name</h3>
+                  <pre class="code--block" id="example-body-@example._2">@example._1.jsonBody</pre>
+                  <br/>
+              </div>
+          }
+        }
+
+    }
+</section>

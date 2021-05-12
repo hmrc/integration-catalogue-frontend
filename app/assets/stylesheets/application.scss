@@ -1,0 +1,10 @@
+$govuk-assets-path: "/api-catalogue/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/api-catalogue/assets/lib/hmrc-frontend/hmrc/";
+
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";
+@import "custom";
+@import "code";
+@import "feedback";
+@import "pagination";
+

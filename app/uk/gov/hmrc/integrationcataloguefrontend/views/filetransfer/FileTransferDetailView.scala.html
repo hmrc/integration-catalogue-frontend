@@ -1,0 +1,65 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import _root_.uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+@import _root_.uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+@import _root_.uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailLayout
+@import org.joda.time.format.DateTimeFormat
+
+@this(layout: FileTransferDetailLayout)
+
+
+@(fileTransferDetail: FileTransferDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@gridItem(heading:String, dataValue: String, indentifier: String, gridSize: String) = {
+  <div class="govuk-grid-column-one-@gridSize">
+    <h4 class="govuk-heading-s  govuk-!-display-inline-block" id="@indentifier-heading">@heading </h4> 
+</div>    
+<div class="govuk-grid-column-one-@gridSize">
+  <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
+</div>
+}
+
+@layout(pageTitle = Some(s"File transfer details - ${appConfig.serviceName}"), fileTransferDetail = Some(fileTransferDetail)) {
+
+  <br />
+  <br />
+
+  <h2 class="govuk-heading-l" id="file-transfer-details-heading">File transfer details</h2>
+
+  <div class="govuk-grid-row">
+    @gridItem("Platform", fileTransferDetail.platform.displayName, "platform", "quarter")
+    @gridItem("Updated", DateTimeFormat.forPattern("dd MMMM yyyy").print(fileTransferDetail.lastUpdated), "updated", "quarter")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem("Source system", fileTransferDetail.sourceSystem.mkString(" "), "source-system", "quarter")
+    @gridItem("Target system", fileTransferDetail.targetSystem.mkString(" "), "target-system", "quarter")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem("File transfer pattern", fileTransferDetail.fileTransferPattern, "pattern", "quarter")
+  </div>
+   
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
+
+  <h2 class="govuk-heading-l" id="contact-information-heading">Contact information</h2>
+
+  <div class="govuk-grid-row">
+    @gridItem("Development team", fileTransferDetail.maintainer.name, "development-team", "half")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem("Contact name", fileTransferDetail.maintainer.contactInfo.headOption.map(_.name).getOrElse("Unknown"), "contact-name", "half")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem("Contact email", fileTransferDetail.maintainer.contactInfo.headOption.map(_.emailAddress).getOrElse("Unknown"), "contact-email", "half")
+  </div>
+
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
+}

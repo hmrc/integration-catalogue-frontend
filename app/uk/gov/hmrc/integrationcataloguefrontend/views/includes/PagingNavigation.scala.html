@@ -1,0 +1,55 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+
+@this()
+
+@(itemsPerPage: Int,
+        currentPage: Int,
+        numberOfPages: Int,
+        fromResults: Int,
+        toResults: Int,
+        totalCount: Int,
+        firstPageLink: Int,
+        lastPageLink: Int,
+        apiNameSearch: String,
+        platformFilter: List[PlatformType])
+
+<nav class="moj-pagination" id="pagination-label">
+
+    <p class="govuk-visually-hidden" aria-labelledby="pagination-label">Pagination navigation</p>
+
+    <ul class="moj-pagination__list">
+        @if(numberOfPages > 1) {
+            @if(currentPage != 1) {
+                <li id="page-prev" class="moj-pagination__item  moj-pagination__item--prev">
+                    <a class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, Some(itemsPerPage), Some(currentPage - 1)).url">
+                        Previous<span class="govuk-visually-hidden"> set of pages</span></a>
+                </li>
+            }
+
+            @for(pageLink <- firstPageLink to lastPageLink) {
+                @if(currentPage == pageLink) {
+                    <li id="pagenumber-@pageLink" class="moj-pagination__item moj-pagination__item--active">@pageLink</li>
+                } else {
+                    <li id="pagenumber-@pageLink" class="moj-pagination__item"><a id="pageLink-@pageLink" class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, Some(itemsPerPage), Some(pageLink)).url">@pageLink</a></li>
+                }
+            }
+
+            @if(currentPage < numberOfPages) {
+                <li id="page-next" class="moj-pagination__item  moj-pagination__item--next">
+                    <a class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, Some(itemsPerPage), Some(currentPage + 1)).url">
+                        Next<span class="govuk-visually-hidden"> set of pages</span></a>
+                </li>
+            }
+        }
+    </ul>
+
+    <p id="page-results" class="moj-pagination__results">Showing <b>@fromResults</b>
+        to <b>@if(toResults > totalCount) {@totalCount} else {
+            @toResults
+        }</b> of <b>@totalCount</b> results</p>
+</nav>

@@ -1,0 +1,67 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailLayout
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiEndpoints
+@import org.joda.time.format.DateTimeFormat
+
+@this(layout: ApiDetailLayout, apiEndpoints: ApiEndpoints)
+
+@(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@gridItem(heading:String, dataValue: String, indentifier: String, gridSize: String) = {
+  <div class="govuk-grid-column-one-@gridSize">
+    <h3 class="govuk-heading-s  govuk-!-display-inline-block" id="@indentifier-heading">@heading</h3> 
+  </div>    
+  <div class="govuk-grid-column-one-@gridSize">
+    <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
+  </div>
+}
+
+@headOfDutyWording(numberOfHods: Int) = @{
+  if(numberOfHods == 1) "Head of Duty system"
+  else "Head of Duty systems"
+}
+
+@layout(pageTitle = Some(s"API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
+
+  <br />
+  <br />
+
+  <h2 class="govuk-heading-l" id="api-details-heading">
+    API details
+  </h2>
+
+  <div class="govuk-grid-row">
+    @gridItem("Version", apiDetail.version, "version", "quarter")
+    @gridItem("Updated", DateTimeFormat.forPattern("dd MMMM yyyy").print(apiDetail.lastUpdated), "updated", "quarter")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem(headOfDutyWording(apiDetail.hods.size), apiDetail.hods.mkString(", "), "hods", "quarter")
+    @gridItem("Platform", apiDetail.platform.displayName, "platform", "quarter")
+  </div>
+
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
+
+  <h2 class="govuk-heading-l" id="contact-information-heading">Contact information</h2>
+
+  <div class="govuk-grid-row">
+    @gridItem("Development team", apiDetail.maintainer.name, "development-team", "half")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(_.name).getOrElse("Unknown"), "contact-name", "half")
+  </div>
+
+  <div class="govuk-grid-row">
+    @gridItem("Contact email", apiDetail.maintainer.contactInfo.headOption.map(_.emailAddress).getOrElse("Unknown"), "contact-email", "half")
+  </div>
+  
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
+  @apiEndpoints(apiDetail.endpoints)
+}

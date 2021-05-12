@@ -1,0 +1,83 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@import _root_.uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+
+@this(
+    govukTemplate: GovukTemplate,
+    siteHeader: SiteHeader,
+    footer: GovukFooter,
+    blueInterruptBox: BlueInterruptBox,
+    govukBackLink : GovukBackLink,
+    head: Head,
+    feedbackBanner2: FeedbackBanner2
+)
+@(pageTitle: Option[String] = None,
+    headBlock: Option[Html] = None,
+    scriptsBlock: Option[Html] = None,
+    activePage: Option[String] = None,
+    fileTransferDetail: Option[FileTransferDetail] = None,
+    bodyEndBlock: Option[Html] = None,
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+
+@scripts = {
+    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+    <script>window.GOVUKFrontend.initAll();</script>
+    <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>
+}
+
+@beforeContentBlock = {
+    @feedbackBanner2()
+}
+
+@mainContentDefault = {
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLWQQZB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+        @govukBackLink(BackLink(
+            href = "javascript:history.back()",
+            content = Text("Back")
+        ))
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @blueInterruptBox(fileTransferDetail.map(_.title).getOrElse("Unknown Name"), fileTransferDetail.map(_.description).getOrElse("Unknown Desc"))
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @contentBlock
+        </div>
+    </div>
+}
+
+@bodyEndDefault = {
+    @bodyEndBlock
+    @scripts
+}
+
+@footerBlock = {
+    @footer()
+}
+
+@govukTemplate(
+    pageTitle = pageTitle,
+    headBlock = Some(head(headBlock)),
+    headerBlock = siteHeader(includeSearch = true),
+    footerBlock = footerBlock,
+    mainClasses = Some("govuk-main-wrapper-no-padding-top"),
+    beforeContentBlock = Some(beforeContentBlock),
+    bodyEndBlock = Some(bodyEndDefault)
+)(mainContentDefault)

@@ -1,0 +1,21 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+
+@this()
+
+@()(implicit appConfig: AppConfig)
+
+<!-- Home page link -->
+<div class="govuk-breadcrumbs margin-bottom-0">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item margin-bottom-0">
+      <a class="govuk-breadcrumbs__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage">
+        Home
+      </a>
+    </li>
+  </ol>
+</div>
