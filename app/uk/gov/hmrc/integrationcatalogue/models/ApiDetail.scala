@@ -25,7 +25,6 @@ sealed trait IntegrationDetail {
   def title: String
   def description: String
   def platform: PlatformType
-  def searchText: String
   def lastUpdated: DateTime
   def maintainer: Maintainer
   def integrationType: IntegrationType
@@ -160,7 +159,6 @@ case class ApiDetail(
     title: String,
     description: String,
     platform: PlatformType,
-    searchText: String,
     hods: List[String] = List.empty,
     lastUpdated: DateTime,
     maintainer: Maintainer,
@@ -179,7 +177,6 @@ case class FileTransferDetail(
     title: String,
     description: String,
     platform: PlatformType, // Split this to Platform and type
-    searchText: String, // Ignore
     lastUpdated: DateTime,
     maintainer: Maintainer,
     sourceSystem: List[String],
