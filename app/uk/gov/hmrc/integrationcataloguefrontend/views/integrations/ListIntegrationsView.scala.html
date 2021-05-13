@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PagingNavigation
 @import scala.math._
+@import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
 
 @this(layout: Layout3, pagingNavigation: PagingNavigation)
 
@@ -38,10 +39,9 @@
     lastPageLink: Int)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.Layout3
-@determineDetailLink(integrationDetail: IntegrationDetail) = @{
-        uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetail(integrationDetail.id)
-    }
-
+@getEncodedTitle(title: String) = @{
+    encodeTitle(title)
+}
 
 @layout(pageTitle = Some(s"Search results - ${appConfig.serviceName}"),
     apiNameSearch=apiNameSearch,
@@ -55,7 +55,8 @@
             @for(api <- apiList.zipWithIndex) {
                 <li class="govuk-apis-list-item">
                     <h2 class="govuk-apis-list-name" id="api-name-@api._2">
-                        <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetail(api._1.id)" class="govuk-link link-nounderline">
+
+                        <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetail(api._1.id, encodeTitle(api._1.title))" class="govuk-link link-nounderline">
                             @api._1.title 
                         </a>
                     </h2>
