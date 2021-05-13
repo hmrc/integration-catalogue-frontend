@@ -90,14 +90,14 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
     }
@@ -105,7 +105,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     "return 404 when api details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
@@ -117,7 +117,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
       status(result) shouldBe Status.OK
       verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
     }
@@ -126,7 +126,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
 
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
     }
@@ -134,7 +134,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     "return 404 when api details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
     }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-trait UrlEncodingHelper {
+object UrlEncodingHelper {
   
   def encodeTitle(title: String) : String = {
 

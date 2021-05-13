@@ -47,7 +47,17 @@ class IntegrationController @Inject() (
 
   implicit val config: AppConfig = appConfig
 
-  def getIntegrationDetail(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
+  def getIntegrationDetailById(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
+    integrationService.findByIntegrationId(id).map {
+      case Right(detail: ApiDetail)          => Ok(apiDetailView(detail))
+      case Right(detail: FileTransferDetail) => Ok(fileTransferDetailView(detail))
+      case Left(_: NotFoundException)        => NotFound(errorTemplate("Integration Not Found", "Integration not Found", "Integration Id Not Found"))
+      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+    }
+  }
+
+  def getIntegrationDetail(id: IntegrationId, title: String): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)          => Ok(apiDetailView(detail))
       case Right(detail: FileTransferDetail) => Ok(fileTransferDetailView(detail))

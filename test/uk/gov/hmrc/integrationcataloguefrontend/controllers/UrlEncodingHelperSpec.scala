@@ -24,7 +24,6 @@ class UrlEncodingHelperSpec extends WordSpec with Matchers with UrlEncodingHelpe
   "encodeTitle" should {
     "removing leading and trailing spaces" in {
       encodeTitle("    API1001 Get Data   ") shouldBe "api1001-get-data"
-
     }
 
     "lowercase all letters" in {
