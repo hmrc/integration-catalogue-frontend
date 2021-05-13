@@ -59,7 +59,12 @@ class IntegrationController @Inject() (
 
   def getIntegrationDetail(id: IntegrationId, title: String): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)          => Ok(apiDetailView(detail))
+      case Right(detail: ApiDetail)          => {
+        val encodedTitle = UrlEncodingHelper.encodeTitle(detail.title)
+        if(title==encodedTitle){
+        Ok(apiDetailView(detail))
+        } else Redirect(routes.IntegrationController.getIntegrationDetail(id, encodedTitle).url);
+      }
       case Right(detail: FileTransferDetail) => Ok(fileTransferDetailView(detail))
       case Left(_: NotFoundException)        => NotFound(errorTemplate("Integration Not Found", "Integration not Found", "Integration Id Not Found"))
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
