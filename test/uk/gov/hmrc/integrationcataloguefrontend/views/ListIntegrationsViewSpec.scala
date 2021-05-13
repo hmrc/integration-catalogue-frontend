@@ -21,14 +21,15 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 
-class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData {
+class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with FileTransferTestData {
 
   trait Setup {
     val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
+    val integrationsList = apiList ++ List(fileTransfer1)
   }
 
   "ListApisView" should {
@@ -54,7 +55,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData {
 
     "render list apis page correctly and list the apis" in new Setup {
       val page : Html =    listApisView.render(
-        apiList,
+        integrationsList,
         "",
         List.empty,
         5,
@@ -74,10 +75,20 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData {
       document.getElementById("api-name-0").text() shouldBe apiDetail0.title
       document.getElementById("api-name-1").text() shouldBe apiDetail1.title
       document.getElementById("api-name-2").text() shouldBe apiDetail2.title
+      document.getElementById("api-name-3").text() shouldBe apiDetail3.title
+      document.getElementById("api-name-4").text() shouldBe fileTransfer1.title
 
       document.getElementById("api-description-0").text() shouldBe apiDetail0.description
       document.getElementById("api-description-1").text() shouldBe apiDetail1.description
       document.getElementById("api-description-2").text() shouldBe apiDetail2.description
+      document.getElementById("api-description-3").text() shouldBe apiDetail3.description
+      document.getElementById("api-description-4").text() shouldBe fileTransfer1.description
+
+      document.getElementById("details-href-0").attr("href") shouldBe "/api-catalogue/integrations/b7c649e6-e10b-4815-8a2c-706317ec484d/self-assessment-mtd-"
+      document.getElementById("details-href-1").attr("href") shouldBe "/api-catalogue/integrations/2f0c9fc4-7773-433b-b4cf-15d4cb932e36/marriage-allowance"
+      document.getElementById("details-href-2").attr("href") shouldBe "/api-catalogue/integrations/bd05e606-b400-49f2-a436-89d1ed1513bc/title-1"
+      document.getElementById("details-href-3").attr("href") shouldBe "/api-catalogue/integrations/136791a6-2b1c-11eb-adc1-0242ac120002/title-2"
+      document.getElementById("details-href-4").attr("href") shouldBe "/api-catalogue/integrations/da64b1de-330b-11eb-adc1-0242ac120002/xx-sas-yyyyydaily-pull"
 
     }
   }

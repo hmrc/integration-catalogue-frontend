@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
+import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
 import org.scalatest.WordSpec
 import org.scalatest.Matchers
 
-class UrlEncodingHelperSpec extends WordSpec with Matchers with UrlEncodingHelper {
+class UrlEncodingHelperSpec extends WordSpec with Matchers {
 
   "encodeTitle" should {
     "removing leading and trailing spaces" in {

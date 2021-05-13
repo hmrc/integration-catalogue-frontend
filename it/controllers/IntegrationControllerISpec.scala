@@ -165,6 +165,76 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
     }
 
+    "GET /integrations/{apiId}/{encodedTitle}" should {
+      "respond with 200 and render correctly when title in url matches integration title when encoded" in {
+        
+       primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+
+        // setting this value whilst we are pulling in the oas files from assets
+        // we need to have a deterministic value for the port as we need to tell
+        // the service where to get the file from
+        System.setProperty("http.port", port.toString)
+     
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", validHeaders)
+        result.status mustBe OK
+
+      }
+
+        "respond with 303 and render correctly when title in url does not match encoded title from integration" in {
+        
+       primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+
+        // setting this value whilst we are pulling in the oas files from assets
+        // we need to have a deterministic value for the port as we need to tell
+        // the service where to get the file from
+        System.setProperty("http.port", port.toString)
+     
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/incorrect-title", validHeaders)
+        result.status mustBe 303
+
+      }
+
+
+      "respond with 400 and when backend returns returns Bad Request" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", List.empty)
+        result.status mustBe BAD_REQUEST
+
+      }
+
+      "respond with 400 and non UUID provided in path" in {
+
+        val result = callGetEndpoint(s"$url/integrations/NOTAUUID/title-3", List.empty)
+        result.status mustBe BAD_REQUEST
+
+      }
+
+      "respond with 404 and when backend returns returns Not Found" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", List.empty)
+        result.status mustBe NOT_FOUND
+
+      }
+
+      "respond with 500 and when backend returns returns any other downstream error" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_ACCEPTABLE)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", List.empty)
+        result.status mustBe INTERNAL_SERVER_ERROR
+
+      }
+
+      "respond with 404 and render errorTemplate Correctly when path invalid" in {
+
+        val result = callGetEndpoint(s"$url/unknown-path", List.empty)
+        result.status mustBe NOT_FOUND
+
+      }
+
+    }
+
     "GET /integrations/{filetransferId}" should {
       "respond with 200 and render correctly" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(fileTransfer1.asInstanceOf[IntegrationDetail]).toString, fileTransfer1.id)
