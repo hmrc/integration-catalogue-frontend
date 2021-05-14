@@ -65,7 +65,7 @@ class IntegrationController @Inject() (
   }
 
   def listIntegrations(
-      integrationCatalogueSearch: Option[String] = None,
+      keywords: Option[String] = None,
       platformFilter: List[PlatformType] = List.empty,
       itemsPerPage: Option[Int] = None,
       currentPage: Option[Int] = None
@@ -73,11 +73,11 @@ class IntegrationController @Inject() (
     Action.async { implicit request =>
       val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
       val currentPageCalc = currentPage.getOrElse(1)
-      integrationService.findWithFilters(List(integrationCatalogueSearch.getOrElse("")), platformFilter, Some(itemsPerPageCalc), currentPage).map {
+      integrationService.findWithFilters(List(keywords.getOrElse("")), platformFilter, Some(itemsPerPageCalc), currentPage).map {
         case Right(response)              =>
           Ok(listIntegrationsView(
             response.results,
-            integrationCatalogueSearch.getOrElse(""),
+            keywords.getOrElse(""),
             platformFilter,
             itemsPerPageCalc,
             response.count,

@@ -47,21 +47,21 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     "GET /integrations" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30")
-        val result = callGetEndpoint(s"$url/integrations", List.empty)
+        val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe OK
 
       }
 
       "respond with 500 and render correctly when Not Found returned from backend" in {
       primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", NOT_FOUND)
-        val result = callGetEndpoint(s"$url/integrations", List.empty)
+        val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
       }
 
       "respond with 400  when unexpected error from backend" in {
         primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", NOT_ACCEPTABLE)
-        val result = callGetEndpoint(s"$url/integrations", List.empty)
+        val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
       }
@@ -69,7 +69,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and render correctly when search query param provided" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30")
       
-        val result = callGetEndpoint(s"$url/integrations?integrationCatalogueSearch=marriage", List.empty)
+        val result = callGetEndpoint(s"$url/search?keywords=marriage", List.empty)
         result.status mustBe OK
         
 
@@ -77,26 +77,26 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
      "respond with 200 and render correctly when platform & search query params provided" in {
       primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&itemsPerPage=30")
-        val result = callGetEndpoint(s"$url/integrations?integrationCatalogueSearch=marriage&platformFilter=CORE_IF", List.empty)
+        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF", List.empty)
         result.status mustBe OK
 
       }
 
       "respond with 200 and render correctly when search query params provided but another invalid query paramkey" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30")
-        val result = callGetEndpoint(s"$url/integrations?integrationCatalogueSearch=marriage&someUnKnownKey=CORE_IF", List.empty)
+        val result = callGetEndpoint(s"$url/search?keywords=marriage&someUnKnownKey=CORE_IF", List.empty)
         result.status mustBe OK
 
       }
 
       "respond with 400 when invalid platform type provided as filter" in {
-        val result = callGetEndpoint(s"$url/integrations?integrationCatalogueSearch=marriage&platformFilter=UNKNOWN", List.empty)
+        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=UNKNOWN", List.empty)
         result.status mustBe BAD_REQUEST
 
       }
 
       "respond with 400 when empty platform type provided as filter" in {
-        val result = callGetEndpoint(s"$url/integrations?integrationCatalogueSearch=marriage&platformFilter=", List.empty)
+        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=", List.empty)
         result.status mustBe BAD_REQUEST
 
       }
