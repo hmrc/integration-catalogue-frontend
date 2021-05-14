@@ -39,7 +39,9 @@ import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with ApiTestData with FileTransferTestData with BeforeAndAfterEach {
+class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with ApiTestData
+  with FileTransferTestData with BeforeAndAfterEach {
+
   private val fakeRequest = FakeRequest("GET", "/")
 
   private val env           = Environment.simple()
@@ -49,9 +51,9 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
   private val appConfig     = new AppConfig(configuration, serviceConfig)
 
   val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
-  val apiDetailView = app.injector.instanceOf[ApiDetailView]
-  val fileTransferDetailView = app.injector.instanceOf[FileTransferDetailView]
-  val errorTemplate = app.injector.instanceOf[ErrorTemplate]
+  private val apiDetailView = app.injector.instanceOf[ApiDetailView]
+  private val fileTransferDetailView = app.injector.instanceOf[FileTransferDetailView]
+  private val errorTemplate = app.injector.instanceOf[ErrorTemplate]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
 
     override protected def beforeEach(): Unit = {
@@ -60,18 +62,26 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
   }
 
 
-  private val controller = new IntegrationController(appConfig, stubMessagesControllerComponents(), mockIntegrationService, listApisView, apiDetailView, fileTransferDetailView, errorTemplate)
+  private val controller = new IntegrationController(appConfig,
+    stubMessagesControllerComponents(),
+    mockIntegrationService,
+    listApisView,
+    apiDetailView,
+    fileTransferDetailView,
+    errorTemplate)
 
   "GET /" should {
     "return 200 when Some(ApiId) is Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *, *)(*)).thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
+      when(mockIntegrationService.findWithFilters(*, *, *, *)(*))
+        .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"))(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
  
     "return HTML" in {
-      when(mockIntegrationService.findWithFilters(*, *, *, *)(*)).thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
+      when(mockIntegrationService.findWithFilters(*, *, *, *)(*))
+        .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(None)(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
@@ -79,62 +89,75 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
 
 
     "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *, *)(*)).thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
+      when(mockIntegrationService.findWithFilters(*, *, *, *)(*))
+        .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"), List(PlatformType.CORE_IF, PlatformType.API_PLATFORM))(fakeRequest)
       status(result) shouldBe Status.OK
     }
   }
 
-  "getApiDetail" should {
+  "findByIntegrationId" should {
  
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd-")(fakeRequest)
       status(result) shouldBe Status.OK
+    }
+
+    "return 303 when api details are found but the encoded title does not match the actual url encoded title" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment")(fakeRequest)
+      status(result) shouldBe Status.SEE_OTHER
     }
 
     "return HTML" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd-")(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
     }
 
     "return 404 when api details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
+        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
-      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd-")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
-  }
-
-  "getFileTransferDetail" should {
- 
-
-    "return 200 when api details are found" in {
+    "return 200 when file transfers are found" in {
       when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
 
-      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
       status(result) shouldBe Status.OK
       verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
     }
 
-    "return HTML" in {
+    "return 303 when file transfers are found but encoded title url value does not match" in {
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
+
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyy")(fakeRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+    }
+
+    "return HTML for file transfer" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
 
 
-      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
     }
 
-    "return 404 when api details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+    "return 404 when file transfer details are notfound" in {
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*))
+        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
-      val result = controller.getIntegrationDetailById(IntegrationId(UUID.randomUUID()))(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
     }

@@ -19,11 +19,10 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 object UrlEncodingHelper {
   
   def encodeTitle(title: String) : String = {
-
     title.trim()
     .toLowerCase()
     .replaceAll("[^a-z0-9\\s-]", "-")
     .replaceAll(" ", "-")
-    .replaceAll("[-]+", "-")    
+    .replaceAll("[-]+", "-")
   }
 }
