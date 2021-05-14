@@ -69,12 +69,12 @@ class PagingNavigationSpec extends CommonViewSpec {
         Option(document.getElementById("page-prev")) shouldBe None
 
         testPageLink(document, pageNumber = "1", isActive = true, hasPageLink = false, expectedHref="")
-        testPageLink(document, pageNumber = "2", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=2")
-        testPageLink(document, pageNumber = "3", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=3")
+        testPageLink(document, pageNumber = "2", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=2")
+        testPageLink(document, pageNumber = "3", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=3")
         
         val nextLink = Option(document.getElementById("page-next").children().first())
         nextLink shouldNot be(None)
-        nextLink.get.attr("href") shouldBe "/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=2"
+        nextLink.get.attr("href") shouldBe "/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=2"
         document.getElementById("page-results").html() shouldBe "Showing <b>1</b> to <b> 5 </b> of <b>25</b> results"
     }
 
@@ -93,11 +93,11 @@ class PagingNavigationSpec extends CommonViewSpec {
        val document: Document = Jsoup.parse(page.body)
 
         val prevLink = document.getElementById("page-prev").children().first()
-        prevLink.attr("href") shouldBe "/api-catalogue/integrations?integrationCatalogueSearch=someSearch&platformFilter=API_PLATFORM&platformFilter=CMA&itemsPerPage=5&currentPage=4"
+        prevLink.attr("href") shouldBe "/api-catalogue/search?keywords=someSearch&platformFilter=API_PLATFORM&platformFilter=CMA&itemsPerPage=5&currentPage=4"
 
 
-        testPageLink(document, pageNumber = "3", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/integrations?integrationCatalogueSearch=someSearch&platformFilter=API_PLATFORM&platformFilter=CMA&itemsPerPage=5&currentPage=3")
-        testPageLink(document, pageNumber = "4", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/integrations?integrationCatalogueSearch=someSearch&platformFilter=API_PLATFORM&platformFilter=CMA&itemsPerPage=5&currentPage=4")
+        testPageLink(document, pageNumber = "3", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/search?keywords=someSearch&platformFilter=API_PLATFORM&platformFilter=CMA&itemsPerPage=5&currentPage=3")
+        testPageLink(document, pageNumber = "4", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/search?keywords=someSearch&platformFilter=API_PLATFORM&platformFilter=CMA&itemsPerPage=5&currentPage=4")
         testPageLink(document, pageNumber = "5", isActive = true, hasPageLink = false, expectedHref="")
         
         Option(document.getElementById("page-next")) shouldBe None
@@ -119,15 +119,15 @@ class PagingNavigationSpec extends CommonViewSpec {
               "", List.empty)
        val document: Document = Jsoup.parse(page.body)
             val prevLink = document.getElementById("page-prev").children().first()
-        prevLink.attr("href") shouldBe "/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=3"
+        prevLink.attr("href") shouldBe "/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=3"
 
-        testPageLink(document, pageNumber = "3", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=3")
+        testPageLink(document, pageNumber = "3", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=3")
         testPageLink(document, pageNumber = "4", isActive = true, hasPageLink = false, expectedHref="")
-        testPageLink(document, pageNumber = "5", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=5")
+        testPageLink(document, pageNumber = "5", isActive = false, hasPageLink = true, expectedHref="/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=5")
         
         val nextLink = Option(document.getElementById("page-next").children().first())
         nextLink shouldNot be(None)
-        nextLink.get.attr("href") shouldBe "/api-catalogue/integrations?integrationCatalogueSearch=&itemsPerPage=5&currentPage=5"
+        nextLink.get.attr("href") shouldBe "/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=5"
         document.getElementById("page-results").html() shouldBe "Showing <b>15</b> to <b> 20 </b> of <b>25</b> results"
     }
 

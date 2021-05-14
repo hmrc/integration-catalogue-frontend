@@ -35,7 +35,7 @@ class HomePageHeaderSpec extends CommonViewSpec {
        document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
        document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs and file transfers"
        document.getElementById("page-title-searchlink-text").text() shouldBe "See all APIs and file transfers"
-       document.getElementById("page-title-searchlink").attr("href") shouldBe "/api-catalogue/integrations"
+       document.getElementById("page-title-searchlink").attr("href") shouldBe "/api-catalogue/search"
 
        document.getElementById("heading-box-title").text() shouldBe "First time using this service?"
        document.getElementById("heading-box-link").text() shouldBe "Learn about this service, including how it works and the benefits."
