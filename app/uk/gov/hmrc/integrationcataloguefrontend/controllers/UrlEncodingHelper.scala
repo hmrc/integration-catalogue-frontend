@@ -19,10 +19,15 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 object UrlEncodingHelper {
   
   def encodeTitle(title: String) : String = {
-    title.trim()
+    val encodedTitle = title.trim()
     .toLowerCase()
     .replaceAll("[^a-z0-9\\s-]", "-")
     .replaceAll(" ", "-")
     .replaceAll("[-]+", "-")
+
+    if("^(.*[^-])\\-$".r.findFirstMatchIn(encodedTitle).isDefined) {
+       encodedTitle.substring(0, encodedTitle.size - 1)
+    } else encodedTitle
+    
   }
 }

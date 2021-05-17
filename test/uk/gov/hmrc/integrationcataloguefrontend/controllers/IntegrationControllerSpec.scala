@@ -101,7 +101,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd-")(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
@@ -115,7 +115,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     "return HTML" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd-")(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
     }
@@ -124,7 +124,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
         .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd-")(fakeRequest)
+      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
