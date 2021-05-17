@@ -40,8 +40,13 @@ class UrlEncodingHelperSpec extends WordSpec with Matchers {
     }
 
     "multiple hyphens replace with single" in {
-      encodeTitle("API----1001----Get---Data---") shouldBe "api-1001-get-data-"
+      encodeTitle("API----1001----Get---Data---") shouldBe "api-1001-get-data"
     }
+
+    "remove trailing hyphen" in {
+      encodeTitle("API-1001-Get-Data-") shouldBe "api-1001-get-data"
+    }
+
 
 
   }
