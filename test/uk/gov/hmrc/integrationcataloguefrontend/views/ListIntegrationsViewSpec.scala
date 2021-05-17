@@ -84,7 +84,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
       document.getElementById("api-description-3").text() shouldBe apiDetail3.description
       document.getElementById("api-description-4").text() shouldBe fileTransfer1.description
 
-      document.getElementById("details-href-0").attr("href") shouldBe "/api-catalogue/integrations/b7c649e6-e10b-4815-8a2c-706317ec484d/self-assessment-mtd-"
+      document.getElementById("details-href-0").attr("href") shouldBe "/api-catalogue/integrations/b7c649e6-e10b-4815-8a2c-706317ec484d/self-assessment-mtd"
       document.getElementById("details-href-1").attr("href") shouldBe "/api-catalogue/integrations/2f0c9fc4-7773-433b-b4cf-15d4cb932e36/marriage-allowance"
       document.getElementById("details-href-2").attr("href") shouldBe "/api-catalogue/integrations/bd05e606-b400-49f2-a436-89d1ed1513bc/title-1"
       document.getElementById("details-href-3").attr("href") shouldBe "/api-catalogue/integrations/136791a6-2b1c-11eb-adc1-0242ac120002/title-2"
