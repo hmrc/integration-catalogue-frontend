@@ -287,18 +287,8 @@ pre {
   list-style: none;
   padding: 0;
   margin: 0;
-  & li:first-child {
-    padding-top: 0;
-  }
-  & li:last-child {
-    border-bottom: none;
-  }
   &-item {
-    padding: 20px 0;
-    border-bottom: 1px solid #b1b4b6;
-  }
-  &-code-box {
-    padding: 20px 0;
+    padding: 10px 0 10px 0;
   }
 }
 
@@ -464,4 +454,29 @@ pre {
 
 .margin-bottom-0 {
   margin-bottom: 0;
+}
+
+.float-right  {
+  float: right;
+}
+
+.detail-summary-box {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.custom-detail-box {
+  padding-left: 0 !important;
+  border: none !important;
+}
+
+.code--header {
+  border: 1px solid #DFE0E7;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 16px;
+  font-weight: normal;
+  display: inline-block;
+  background-color: #F7F7F7;
+  line-height: 1.1em;
 }
