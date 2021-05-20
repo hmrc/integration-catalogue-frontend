@@ -36,8 +36,8 @@ class ApiEndpointMethodSpec extends CommonViewSpec with ApiTestData {
       val page: Html = apiEndpointMethod.render(endpointGetMethod, 1)
       val document: Document = Jsoup.parse(page.body)
 
-      document.getElementById("accordion-with-summary-sections-heading-1").text() shouldBe "GET"
-      document.getElementById("endpoint-summary-1").text() shouldBe "GET summary"
+      document.getElementById("GET").text() shouldBe "GET"
+      document.getElementById("method-summary-name").text() shouldBe "GET summary"
       document.getElementById("request-heading-1").text() shouldBe "Request"
       document.getElementById("responses-heading-1").text() shouldBe "Responses"
     }
@@ -48,8 +48,8 @@ class ApiEndpointMethodSpec extends CommonViewSpec with ApiTestData {
       val page: Html = apiEndpointMethod.render(endpointPutMethod, 1)
       val document: Document = Jsoup.parse(page.body)
 
-      document.getElementById("accordion-with-summary-sections-heading-1").text() shouldBe "PUT"
-      document.getElementById("endpoint-summary-1").text() shouldBe "PUT summary"
+      document.getElementById("PUT").text() shouldBe "PUT"
+      document.getElementById("method-summary-name").text() shouldBe "PUT summary"
       document.getElementById("request-heading-1").text() shouldBe "Request"
       document.getElementById("responses-heading-1").text() shouldBe "Responses"
     }
