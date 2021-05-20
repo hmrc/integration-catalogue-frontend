@@ -113,7 +113,8 @@ trait ApiTestData {
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List(schema2), List.empty)
+    components = Components(List(schema2), List.empty),
+    shortDescription = None
   )
 
   val apiDetail1: ApiDetail = ApiDetail(
@@ -127,7 +128,8 @@ trait ApiTestData {
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty)
+    components = Components(List.empty, List.empty),
+    shortDescription = Some("I am a short description")
   )
 
   val apiDetail2: ApiDetail = ApiDetail(
@@ -142,7 +144,8 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
     hods = List.empty,
-    components = Components(List.empty, List.empty)
+    components = Components(List.empty, List.empty),
+    shortDescription = None
   )
 
   val apiDetail3: ApiDetail = ApiDetail(
@@ -157,7 +160,8 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
-    hods = List("ETMP")
+    hods = List("ETMP"),
+    shortDescription = None
   )
 
   val exampleApiDetail: ApiDetail = ApiDetail(
@@ -172,7 +176,8 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List.empty, List.empty)
+    components = Components(List.empty, List.empty),
+    shortDescription = None
   )
 
   val exampleApiDetail2: ApiDetail = ApiDetail(
@@ -187,7 +192,8 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List.empty, List.empty)
+    components = Components(List.empty, List.empty),
+    shortDescription = Some("short desc")
   )
 
   val apiList = List(apiDetail0, apiDetail1, apiDetail2, apiDetail3)

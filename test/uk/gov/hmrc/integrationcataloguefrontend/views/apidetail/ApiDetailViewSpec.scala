@@ -34,7 +34,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
   "ApiDetailView" should {
 
     "render page with api details" in new Setup {
-      val apiParsed = apiDetail0
+      val apiParsed: ApiDetail = apiDetail0
       // apiDetail0
        val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
