@@ -30,7 +30,11 @@
     @for(endpoint <- endpoints.zipWithIndex) {
       <li class="govuk-endpoints-list-item">
         <div class="method-container govuk-!-margin-bottom-4">
-          <code class="code--header">@endpoint._1.path.split("/").reverse.tail.mkString("/")<strong class="bold-xsmall">@endpoint._1.path.split("/").last</strong></code>
+            @defining(endpoint._1.path.split("/")) { endpoint =>
+            <code class="code--header" id="@{endpoint.mkString("/")}">
+                endpoint.dropRight(1).mkString("/")/<strong class="bold-xsmall">endpoint.last</strong>
+            </code>
+            }
         </div>
         <!-- Accordions -->
         @for(endpointMethod <- endpoint._1.methods.zipWithIndex) {
