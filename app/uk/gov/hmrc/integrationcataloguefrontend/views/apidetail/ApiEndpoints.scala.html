@@ -30,9 +30,9 @@
     @for(endpoint <- endpoints.zipWithIndex) {
       <li class="govuk-endpoints-list-item">
         <div class="method-container govuk-!-margin-bottom-4">
-            @defining(endpoint._1.path.split("/")) { endpoint =>
+            @defining(endpoint._1.path.split("/")) { endpointUrl =>
             <code class="code--header" id="endpoint-path-@endpoint._2">
-              @endpoint.dropRight(1).mkString("/")/<strong class="bold-xsmall">@endpoint.last</strong>
+              @endpointUrl.dropRight(1).mkString("/")/<strong class="bold-xsmall">@endpointUrl.last</strong>
             </code>
             }
         </div>
