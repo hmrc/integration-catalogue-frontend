@@ -51,7 +51,7 @@ class IntegrationCatalogueConnectorSpec extends WordSpec with Matchers with Opti
     val connector = new IntegrationCatalogueConnector(
       mockHttpClient,
       mockAppConfig)
-    val integrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
+    val integrationId: IntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
     val searchTerm  = "API1001"
     val findWithFilterlUrl = s"/integration-catalogue/integrations"
 
