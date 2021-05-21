@@ -78,6 +78,8 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
 
     val objInTest: IntegrationCatalogueConnector =  app.injector.instanceOf[IntegrationCatalogueConnector]
 
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation("ApiPlatform", "api.platform@email")))
+
   }
 
 
@@ -145,6 +147,26 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         }
     }
 
+    "getPlatformContacts" should {
+      "return Right with List of PlatformContactResponse" in new Setup {
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(apiPlatformContact)).toString())
+        val result = await(objInTest.getPlatformContacts())
+        result match {
+          case Right(response) => response mustBe List(apiPlatformContact)
+          case _ => fail
+        }
+      }
+
+      "return Left with Bad Request" in new Setup {
+        primeIntegrationCatalogueServiceGetPlatformContactsReturnsError(BAD_REQUEST)
+        val result = await(objInTest.getPlatformContacts())
+        result match {
+          case Left(_) => succeed
+          case _ => fail
+        }
+      }
+    }
+ 
 
 }
 

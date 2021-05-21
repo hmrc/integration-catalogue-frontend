@@ -28,6 +28,8 @@ import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTran
 
 import java.util.UUID
 import scala.concurrent.Future
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 
 class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar
   with ApiTestData with FileTransferTestData with AwaitTestSupport with BeforeAndAfterEach {
@@ -42,6 +44,7 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
   trait SetUp {
     val objInTest = new IntegrationService(mockIntegrationCatalogueConnector)
     val exampleIntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation("ApiPlatform", "api.platform@email")))
 
   }
 
@@ -103,8 +106,33 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
 
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
     }
+  }
 
+"getPlatformContacts" should {
+  "return Right with List of PlatformContactResponse" in new SetUp {
+    when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContact))))
+
+    val result = await(objInTest.getPlatformContacts)
+    result match {
+        case Right(platformContacts) => platformContacts shouldBe List(apiPlatformContact)
+        case Left(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(eqTo(hc))
 
   }
+  "return Left when error in backend" in new SetUp {
+    when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
+
+    val result = await(objInTest.getPlatformContacts)
+    result match {
+        case Left(_) => succeed
+        case Right(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(eqTo(hc))
+
+  }
+}
 
 }

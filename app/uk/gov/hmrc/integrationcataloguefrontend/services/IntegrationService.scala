@@ -25,6 +25,7 @@ import scala.concurrent.Future
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 import uk.gov.hmrc.integrationcatalogue.models.IntegrationDetail
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 
 
 @Singleton
@@ -39,5 +40,10 @@ class IntegrationService @Inject()(integrationCatalogueConnector: IntegrationCat
     (implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
          integrationCatalogueConnector.findByIntegrationId(integrationId)
          
+  }  
+  
+  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
+         integrationCatalogueConnector.getPlatformContacts()    
   }
+
 }

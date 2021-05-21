@@ -35,3 +35,5 @@ case class FileTransferPublishRequest(
                               sourceSystem: List[String], // One or many
                               targetSystem: List[String], 
                               fileTransferPattern: String)
+
+case class PlatformContactResponse(platformType: PlatformType, contactInfo: Option[ContactInformation])
