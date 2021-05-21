@@ -46,14 +46,16 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
     handleResult(http.GET[IntegrationDetail](s"$externalServiceUri/integrations/${id.value.toString}"))
   }
 
-  private def buildQueryParams(searchTerm: List[String], platformFilter: List[PlatformType], itemsPerPage: Option[Int], currentPage: Option[Int]): Seq[(String, String)] = {
+  private def buildQueryParams(searchTerm: List[String],
+                               platformFilter: List[PlatformType],
+                               itemsPerPage: Option[Int],
+                               currentPage: Option[Int]): Seq[(String, String)] = {
     val searchTerms = searchTerm.filter(_.nonEmpty).map(x => ("searchTerm", x))
     val platformsFilters = platformFilter.map((x: PlatformType) => ("platformFilter", x.toString))
     val itemsPerPageParam = itemsPerPage.map((x: Int) => List(("itemsPerPage", x.toString))).getOrElse(List.empty)
     val currentPageParam = currentPage.map((x: Int) => List(("currentPage", x.toString))).getOrElse(List.empty)
-    // val pagingParams = List(("itemsPerPage", itemsPerPage.toString), ("currentPage", currentPage.toString))
-    searchTerms ++ platformsFilters ++ itemsPerPageParam ++ currentPageParam
 
+    searchTerms ++ platformsFilters ++ itemsPerPageParam ++ currentPageParam
   }
 
   private def handleResult[A](result: Future[A]): Future[Either[Throwable, A]] ={
