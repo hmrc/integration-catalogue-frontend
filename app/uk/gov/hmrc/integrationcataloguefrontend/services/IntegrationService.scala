@@ -30,10 +30,11 @@ import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
 
 @Singleton
-class IntegrationService @Inject()(integrationCatalogueConnector: IntegrationCatalogueConnector)(implicit ec: ExecutionContext){
+class IntegrationService @Inject()(integrationCatalogueConnector: IntegrationCatalogueConnector, appConfig: AppConfig)(implicit ec: ExecutionContext){
 
   def findWithFilters(searchTerm: List[String], platformFilter: List[PlatformType], itemsPerPage: Option[Int], currentPage: Option[Int])
   (implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationResponse]] = {
@@ -71,7 +72,7 @@ class IntegrationService @Inject()(integrationCatalogueConnector: IntegrationCat
       }
          integrationCatalogueConnector.findByIntegrationId(integrationId)
          .flatMap(result => result match {
-           case Right(integration: IntegrationDetail) => if(true){
+           case Right(integration: IntegrationDetail) => if(appConfig.defaultPlatformContacts){
              handleDefaultContact(integration).map(Right(_))
            } else {
             Future.successful(Right(integration))
