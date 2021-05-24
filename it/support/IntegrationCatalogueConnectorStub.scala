@@ -7,6 +7,7 @@ import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 
 trait IntegrationCatalogueConnectorStub {
   val getApisUrl = "/integration-catalogue/integrations"
+  val getPlatformContactsUrl = "/integration-catalogue/platform/contacts"
   def getIntegrationByIdUrl(id: String) = s"/integration-catalogue/integrations/$id"
   def findWithFiltersUrl(searchTerm: String) = s"/integration-catalogue/integrations$searchTerm"
 
@@ -91,6 +92,29 @@ trait IntegrationCatalogueConnectorStub {
           .withStatus(status)
           .withHeader("Content-Type","application/json")
           .withBody(responseBody)
+      )
+    )
+  }
+
+  def primeIntegrationCatalogueServiceGetPlatformContactsWithBody(status : Int, responseBody : String): StubMapping = {
+
+    stubFor(get(urlEqualTo(getPlatformContactsUrl))
+      .willReturn(
+        aResponse()
+          .withStatus(status)
+          .withHeader("Content-Type","application/json")
+          .withBody(responseBody)
+      )
+    )
+  }
+
+  def primeIntegrationCatalogueServiceGetPlatformContactsReturnsError(exceptionCode: Int): StubMapping = {
+
+    stubFor(get(urlEqualTo(getPlatformContactsUrl))
+      .willReturn(
+        aResponse()
+          .withStatus(exceptionCode)
+          .withHeader("Content-Type","application/json")
       )
     )
   }

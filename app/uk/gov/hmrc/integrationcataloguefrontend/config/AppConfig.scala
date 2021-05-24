@@ -29,4 +29,5 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val integrationCatalogueUrl = servicesConfig.baseUrl("integration-catalogue")
 
   val serviceName : String = config.getOptional[String]("service-name").getOrElse("API catalogue")
+  val defaultPlatformContacts : Boolean = config.getOptional[Boolean]("features.default.platform.contacts").getOrElse(false)
 }

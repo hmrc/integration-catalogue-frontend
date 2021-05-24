@@ -33,9 +33,8 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
   "ApiDetailView" should {
 
-    "render page with api details" in new Setup {
+    "render page with api details that has no contact details" in new Setup {
       val apiParsed: ApiDetail = apiDetail0
-      // apiDetail0
        val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
 
@@ -61,6 +60,36 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        
        document.getElementById("contact-email-heading").text() shouldBe "Contact email"
        document.getElementById("contact-email-value").text() shouldBe "Unknown"
+
+    }
+
+    "render page with api details that has contact details" in new Setup {
+      val apiParsed: ApiDetail = apiDetail1
+       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val document: Document = Jsoup.parse(page.body)
+
+       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
+       
+       document.getElementById("api-details-heading").text() shouldBe "API details"
+
+       document.getElementById("hods-heading").text() shouldBe "Head of Duty systems"
+       document.getElementById("hods-value").text() shouldBe ""
+
+       document.getElementById("platform-heading").text() shouldBe "Platform"
+       document.getElementById("platform-value").text() shouldBe "API Platform"
+
+       document.getElementById("updated-heading").text() shouldBe "Updated"
+       document.getElementById("updated-value").text() shouldBe "04 November 2020"
+
+       document.getElementById("development-team-heading").text() shouldBe "Development team"
+       document.getElementById("development-team-value").text() shouldBe "Api Platform Team"
+       
+       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
+       document.getElementById("contact-name-value").text() shouldBe "name"
+       
+       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
+       document.getElementById("contact-email-value").text() shouldBe "email"
 
     }
   }
