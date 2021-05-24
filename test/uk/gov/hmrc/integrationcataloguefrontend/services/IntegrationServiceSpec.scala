@@ -30,6 +30,7 @@ import java.util.UUID
 import scala.concurrent.Future
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar
   with ApiTestData with FileTransferTestData with AwaitTestSupport with BeforeAndAfterEach {
@@ -45,6 +46,7 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
     val objInTest = new IntegrationService(mockIntegrationCatalogueConnector)
     val exampleIntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
     val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation("ApiPlatform", "api.platform@email")))
+
 
   }
 
@@ -95,6 +97,7 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
      "return apidetail from connector when returned from backend" in new SetUp {
       val id = IntegrationId(UUID.randomUUID())
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(exampleApiDetail)))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContact))))
 
       val result: Either[Throwable, IntegrationDetail] =
         await(objInTest.findByIntegrationId(id))
