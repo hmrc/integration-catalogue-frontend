@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.integrationcatalogue.models
 
-import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType, SpecificationType}
-import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 import org.joda.time.DateTime
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 
 case class IntegrationResponse(count: Int, pagedCount: Option[Int] = None, results: List[IntegrationDetail])
 
