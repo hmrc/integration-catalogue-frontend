@@ -32,16 +32,19 @@ trait FileTransferTestData {
   val id1: IntegrationId = IntegrationId(UUID.fromString("da64b1de-330b-11eb-adc1-0242ac120002"))
   val id2: IntegrationId = IntegrationId(UUID.fromString("da64b634-330b-11eb-adc1-0242ac120002"))
   val id3: IntegrationId = IntegrationId(UUID.fromString("da64b742-330b-11eb-adc1-0242ac120002"))
+  val id4: IntegrationId = IntegrationId(UUID.fromString("24b733c0-bc90-11eb-8529-0242ac130003"))
 
   val flowId1 = "XX-SAS-YYYYYDaily-pull"
   val flowId2 = "XXX-SAS-YYYDaily-notify"
   val flowId3 = "XXXX-DPS-ZZZDaily-pull"
+  val flowId4 = "XXXX-PPP-ZZZDaily-pull"
 
   val fileTransferDateValue = DateTime.parse("04/11/2020 20:27:05",
                   DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"));
 
   val contactInfo = List(ContactInformation("Services", "services@example.com"))
   val coreIfFileTransferMaintainer: Maintainer = Maintainer("Maintainer", "N/A", contactInfo)
+   val apiPlatformMaintainerWithNoContacts2: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
 
   val corpToCorp: String = "Corporate to Corporate"
 
@@ -80,6 +83,19 @@ trait FileTransferTestData {
     platform = PlatformType.CORE_IF,
     lastUpdated = fileTransferDateValue,
     maintainer = coreIfFileTransferMaintainer,
+    sourceSystem = List("SOURCE"),
+    targetSystem = List("TARGET"),
+    fileTransferPattern = corpToCorp)
+
+  val fileTransfer4: FileTransferDetail = FileTransferDetail(
+    id = id4,
+    fileTransferSpecificationVersion = "1.0",
+    title = flowId4,
+    publisherReference = flowId4,
+    description = "",
+    platform = PlatformType.API_PLATFORM,
+    lastUpdated = fileTransferDateValue,
+    maintainer = apiPlatformMaintainerWithNoContacts2,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
     fileTransferPattern = corpToCorp)

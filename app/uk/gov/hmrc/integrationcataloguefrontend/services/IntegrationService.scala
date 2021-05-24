@@ -32,60 +32,61 @@ import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
-
 @Singleton
-class IntegrationService @Inject()(integrationCatalogueConnector: IntegrationCatalogueConnector, appConfig: AppConfig)(implicit ec: ExecutionContext){
+class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
-  def findWithFilters(searchTerm: List[String], platformFilter: List[PlatformType], itemsPerPage: Option[Int], currentPage: Option[Int])
-  (implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationResponse]] = {
-        integrationCatalogueConnector.findWithFilters(searchTerm, platformFilter, itemsPerPage, currentPage)
+  def findWithFilters(
+      searchTerm: List[String],
+      platformFilter: List[PlatformType],
+      itemsPerPage: Option[Int],
+      currentPage: Option[Int]
+    )(implicit hc: HeaderCarrier
+    ): Future[Either[Throwable, IntegrationResponse]] = {
+    integrationCatalogueConnector.findWithFilters(searchTerm, platformFilter, itemsPerPage, currentPage)
   }
 
-  def findByIntegrationId(integrationId: IntegrationId)
-    (implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
+  def findByIntegrationId(integrationId: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
 
-      def handleDefaultContact(integration: IntegrationDetail): Future[IntegrationDetail] ={
-        val contacts = integration.maintainer.contactInfo
-          if(contacts.nonEmpty){
-             Future.successful(integration)
-          } else {
-              // default platform contact
-              integrationCatalogueConnector.getPlatformContacts()
-              .map(contactResult =>
-              contactResult match {
-                case Right(result: List[PlatformContactResponse]) => {
-                    val matchedDefault = result.filter(p => p.platformType==integration.platform)
-                    if(matchedDefault.nonEmpty&& matchedDefault.head.contactInfo.isDefined) {
-                        val copyMaintainer: Maintainer = integration.maintainer.copy(contactInfo = List(matchedDefault.head.contactInfo.get))
-                        integration match {
-                          case apiDetail: ApiDetail =>  apiDetail.copy(maintainer = copyMaintainer)
-                          case fileTransferDetail: FileTransferDetail =>  fileTransferDetail.copy(maintainer = copyMaintainer)
-                        }
-                       
-                    } else integration
-                }
-                case _ => integration
-              })
-            
-              
-          }
+    def handleDefaultContact(integration: IntegrationDetail): Future[IntegrationDetail] = {
+      val contacts = integration.maintainer.contactInfo
+      if (contacts.nonEmpty) {
+        Future.successful(integration)
+      } else {
+        integrationCatalogueConnector.getPlatformContacts()
+          .map(contactResult =>
+            contactResult match {
+              case Right(result: List[PlatformContactResponse]) => {
+                val matchedDefault = result.filter(p => p.platformType == integration.platform)
+                if (matchedDefault.nonEmpty && matchedDefault.head.contactInfo.isDefined) {
+                  val copyMaintainer: Maintainer = integration.maintainer.copy(contactInfo = List(matchedDefault.head.contactInfo.get))
+                  integration match {
+                    case apiDetail: ApiDetail                   => apiDetail.copy(maintainer = copyMaintainer)
+                    case fileTransferDetail: FileTransferDetail => fileTransferDetail.copy(maintainer = copyMaintainer)
+                  }
+
+                } else integration
+              }
+              case _                                            => integration
+            }
+          )
       }
-         integrationCatalogueConnector.findByIntegrationId(integrationId)
-         .flatMap(result => result match {
-           case Right(integration: IntegrationDetail) => if(appConfig.defaultPlatformContacts){
-             handleDefaultContact(integration).map(Right(_))
-           } else {
-            Future.successful(Right(integration))
-           }
-           case result => Future.successful(result)
-         })
-         
-  }  
+    }
+    integrationCatalogueConnector.findByIntegrationId(integrationId)
+      .flatMap(result =>
+        result match {
+          case Right(integration: IntegrationDetail) => if (appConfig.defaultPlatformContacts) {
+              handleDefaultContact(integration).map(Right(_))
+            } else {
+              Future.successful(Right(integration))
+            }
+          case result                                => Future.successful(result)
+        }
+      )
 
+  }
 
-  
   def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
-         integrationCatalogueConnector.getPlatformContacts()    
+    integrationCatalogueConnector.getPlatformContacts()
   }
 
 }

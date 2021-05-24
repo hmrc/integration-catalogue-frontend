@@ -31,11 +31,13 @@ import scala.concurrent.Future
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
 class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar
   with ApiTestData with FileTransferTestData with AwaitTestSupport with BeforeAndAfterEach {
 
   val mockIntegrationCatalogueConnector: IntegrationCatalogueConnector = mock[IntegrationCatalogueConnector]
+  val mockAppConfig = mock[AppConfig]
   private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override protected def beforeEach(): Unit = {
@@ -43,9 +45,10 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
     reset(mockIntegrationCatalogueConnector)
   }
   trait SetUp {
-    val objInTest = new IntegrationService(mockIntegrationCatalogueConnector)
+    val objInTest = new IntegrationService(mockIntegrationCatalogueConnector, mockAppConfig)
     val exampleIntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
     val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation("ApiPlatform", "api.platform@email")))
+    val apiPlatformNoContact = PlatformContactResponse(PlatformType.API_PLATFORM, None)
 
 
   }
@@ -94,10 +97,10 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
     }
 
-     "return apidetail from connector when returned from backend" in new SetUp {
+     "return apidetail that has contacts when defaultPlatformContact feature is switched on" in new SetUp {
       val id = IntegrationId(UUID.randomUUID())
+      when(mockAppConfig.defaultPlatformContacts).thenReturn(true)
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(exampleApiDetail)))
-      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContact))))
 
       val result: Either[Throwable, IntegrationDetail] =
         await(objInTest.findByIntegrationId(id))
@@ -108,6 +111,99 @@ class IntegrationServiceSpec extends WordSpec with Matchers with GuiceOneAppPerS
       }
 
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
+    }
+  
+
+    "return apidetail that has contacts when defaultPlatformContact feature is switched off" in new SetUp {
+      val id = IntegrationId(UUID.randomUUID())
+      when(mockAppConfig.defaultPlatformContacts).thenReturn(false)
+      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(exampleApiDetail)))
+
+      val result: Either[Throwable, IntegrationDetail] =
+        await(objInTest.findByIntegrationId(id))
+
+      result match {
+        case Right(apiDetail) => apiDetail shouldBe exampleApiDetail
+        case Left(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
+    }
+
+    "return apidetail with default contacts when defaultPlatformContact feature is switched on" in new SetUp {
+      val id = IntegrationId(UUID.randomUUID())
+      when(mockAppConfig.defaultPlatformContacts).thenReturn(true)
+      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContact))))
+
+      val result: Either[Throwable, IntegrationDetail] =
+        await(objInTest.findByIntegrationId(id))
+
+      result match {
+        case Right(apiDetail) => val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+        apiDetail shouldBe apiDetail0.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
+        case Left(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
+    }
+
+    "return file transfer detail with default contacts when defaultPlatformContact feature is switched on" in new SetUp {
+      val id = IntegrationId(UUID.randomUUID())
+      when(mockAppConfig.defaultPlatformContacts).thenReturn(true)
+      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(fileTransfer4)))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContact))))
+
+      val result: Either[Throwable, IntegrationDetail] =
+        await(objInTest.findByIntegrationId(id))
+
+      result match {
+        case Right(apiDetail) => val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+        apiDetail shouldBe fileTransfer4.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
+        case Left(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
+    }
+
+    "return apidetail when defaultPlatformContact feature is switched on and defaultPlatform does not have any Contacts" in new SetUp {
+      val id = IntegrationId(UUID.randomUUID())
+      when(mockAppConfig.defaultPlatformContacts).thenReturn(true)
+      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformNoContact))))
+
+      val result: Either[Throwable, IntegrationDetail] =
+        await(objInTest.findByIntegrationId(id))
+
+      result match {
+        case Right(apiDetail) => apiDetail shouldBe apiDetail0
+        case Left(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
+    }
+
+    "return apidetail when defaultPlatformContact feature is switched on and defaultPlatform list is empty" in new SetUp {
+      val id = IntegrationId(UUID.randomUUID())
+      when(mockAppConfig.defaultPlatformContacts).thenReturn(true)
+      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List.empty)))
+
+      val result: Either[Throwable, IntegrationDetail] =
+        await(objInTest.findByIntegrationId(id))
+
+      result match {
+        case Right(apiDetail) => apiDetail shouldBe apiDetail0
+        case Left(_) => fail()
+      }
+
+      verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
     }
   }
 
