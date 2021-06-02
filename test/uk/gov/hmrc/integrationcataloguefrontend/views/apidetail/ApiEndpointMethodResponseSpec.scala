@@ -19,6 +19,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.apidetail
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
+import uk.gov.hmrc.integrationcatalogue.models.Response
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiEndpointMethodResponse
@@ -27,17 +28,70 @@ class ApiEndpointMethodResponseSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
     val apiEndpointMethodResponse: ApiEndpointMethodResponse = app.injector.instanceOf[ApiEndpointMethodResponse]
+
+    def createResponseWithStatusCode(statusCode: String) = {
+      Response(
+        statusCode = statusCode,
+        description = Some("response"),
+        schema = Some(schema2),
+        mediaType = Some("application/json"),
+        examples = List(exampleResponse1)
+      )
+
+    }
   }
 
   "ApiDetailView" should {
 
-    "render page with api details" in new Setup {
+    "render page with api details with 200 response" in new Setup {
 
-      val page: Html = apiEndpointMethodResponse.render(response)
+      val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("200"))
       val document: Document = Jsoup.parse(page.body)
-
-      // check that this renders without errors
+      document.getElementById("accordion-examples-heading").text() shouldBe "Ok (200)"
+      document.getElementById("example-name-0").text() shouldBe "example response name"
+      document.getElementById("example-body-0").text() shouldBe "example response body"
 
     }
+
+    "render page with api details with 422 response" in new Setup {
+
+      val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("422"))
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("accordion-examples-heading").text() shouldBe "Unprocessable entity (422)"
+
+    }
+
+    "render page with api details with unmatched response code 599" in new Setup {
+
+      val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("599"))
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("accordion-examples-heading").text() shouldBe "599"
+
+    }
+
+    "render page with api details with default response" in new Setup {
+
+      val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("default"))
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("accordion-examples-heading").text() shouldBe "default"
+
+    }
+
+    "render page with api details with range response 4XX" in new Setup {
+
+      val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("4XX"))
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("accordion-examples-heading").text() shouldBe "4XX"
+
+    }
+
+    "render page with api details with range response 2xx" in new Setup {
+
+      val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("2xx"))
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("accordion-examples-heading").text() shouldBe "2xx"
+
+    }
+
   }
 }

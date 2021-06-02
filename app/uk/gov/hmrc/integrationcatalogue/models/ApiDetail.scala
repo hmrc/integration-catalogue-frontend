@@ -135,7 +135,7 @@ case class Request(description: Option[String], schema: Option[Schema], mediaTyp
 
 //TODO response object needs fleshing out with headers, example errors, schema etc
 case class Response(
-    statusCode: Int,
+    statusCode: String,
     description: Option[String],
     schema: Option[Schema],
     mediaType: Option[String],
