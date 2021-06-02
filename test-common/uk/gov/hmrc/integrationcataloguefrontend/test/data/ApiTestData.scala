@@ -93,7 +93,7 @@ trait ApiTestData {
     Request(description = Some("request"), schema = Some(schema1), mediaType = Some(jsonMediaType.toString), examples = List(exampleRequest1))
 
   val response: Response =
-    Response(statusCode = 200, description = Some("response"), schema = Some(schema2), mediaType = Some("application/json"), examples = List(exampleResponse1))
+    Response(statusCode = "200", description = Some("response"), schema = Some(schema2), mediaType = Some("application/json"), examples = List(exampleResponse1))
 
   val endpointGetMethod: EndpointMethod = EndpointMethod("GET", Some("operationId"), Some("GET summary"), Some("some description"), None, List(response))
   val endpointPutMethod: EndpointMethod = EndpointMethod("PUT", Some("operationId2"), Some("PUT summary"), Some("some description"), Some(request), List.empty)
