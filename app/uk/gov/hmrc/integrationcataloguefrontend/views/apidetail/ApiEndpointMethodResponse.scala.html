@@ -16,20 +16,24 @@
 
 @import uk.gov.hmrc.integrationcatalogue.models.Response
 @import play.api.http.Status._
+@import scala.util.Try
 
 @this(apiExamples: ApiExamples)
 
 
 @(response: Response)
 
-@getHttpStatusTitle(status: Int) = @{
-        status match {
-          case ACCEPTED => s"Accepted ($status)"      
+@getHttpStatusTitle(status: String) = @{
+  Try{
+      val intStatusCode = status.toInt
+
+      intStatusCode match {
+          case ACCEPTED => s"Accepted ($status)"
           case BAD_GATEWAY => s"Bad gateway ($status)"
           case BAD_REQUEST => s"Bad request ($status)"
           case CONFLICT => s"Conflict ($status)"
           case CONTINUE => s"Continue ($status)"
-          case CREATED => s"Created ($status)" 
+          case CREATED => s"Created ($status)"
           case EXPECTATION_FAILED => s"Expectation Failed ($status)"
           case FORBIDDEN => s"Forbidden ($status)"
           case FOUND => s"Found ($status)"
@@ -39,11 +43,11 @@
           case INTERNAL_SERVER_ERROR => s"Internal server error ($status)"
           case LENGTH_REQUIRED => s"Length required ($status)"
           case METHOD_NOT_ALLOWED => s"Method not allowed ($status)"
-          case MOVED_PERMANENTLY => s"Moved permanently ($status)" 
-          case MULTIPLE_CHOICES => s"Multiple choices ($status)" 
-          case NON_AUTHORITATIVE_INFORMATION => s"Non-authoritative information ($status)" 
-          case NOT_ACCEPTABLE => s"Not acceptable ($status)" 
-          case NOT_FOUND => s"Not found ($status)" 
+          case MOVED_PERMANENTLY => s"Moved permanently ($status)"
+          case MULTIPLE_CHOICES => s"Multiple choices ($status)"
+          case NON_AUTHORITATIVE_INFORMATION => s"Non-authoritative information ($status)"
+          case NOT_ACCEPTABLE => s"Not acceptable ($status)"
+          case NOT_FOUND => s"Not found ($status)"
           case NOT_IMPLEMENTED => s"Not implemented ($status)"
           case NOT_MODIFIED  => s"Not modified ($status)"
           case NO_CONTENT  => s"No content ($status)"
@@ -66,8 +70,11 @@
           case UNSUPPORTED_MEDIA_TYPE => s"Unsupported media type ($status)"
           case USE_PROXY  => s"Use proxy ($status)"
           case 422 => s"Unprocessable entity ($status)"
-          case _ => "Unknown status ($status)"
-        }
+          case _ => s"$status"
+      }
+  }.getOrElse(status)
+
+
   }
 
 
