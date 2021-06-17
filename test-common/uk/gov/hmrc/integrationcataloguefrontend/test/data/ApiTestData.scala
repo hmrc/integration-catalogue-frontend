@@ -112,7 +112,8 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
     components = Components(List(schema2), List.empty),
-    shortDescription = None
+    shortDescription = None,
+    openApiSpecification = "OAS Content for Self Assessment (MTD)"
   )
 
   val apiDetail1: ApiDetail = ApiDetail(
@@ -127,7 +128,8 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
-    shortDescription = Some("I am a short description")
+    shortDescription = Some("I am a short description"),
+    openApiSpecification = "OAS Content for Marriage Allowance"
   )
 
   val apiDetail2: ApiDetail = ApiDetail(
@@ -143,7 +145,8 @@ trait ApiTestData {
     endpoints = endpoints,
     hods = List.empty,
     components = Components(List.empty, List.empty),
-    shortDescription = None
+    shortDescription = None,
+    openApiSpecification = "OAS Content for Title 1"
   )
 
   val apiDetail3: ApiDetail = ApiDetail(
@@ -159,7 +162,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     hods = List("ETMP"),
-    shortDescription = None
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 2"
   )
 
   val exampleApiDetail: ApiDetail = ApiDetail(
@@ -175,7 +179,8 @@ trait ApiTestData {
     hods = List("ETMP"),
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
-    shortDescription = None
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 3"
   )
 
   val exampleApiDetail2: ApiDetail = ApiDetail(
@@ -191,7 +196,8 @@ trait ApiTestData {
     hods = List("ETMP"),
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
-    shortDescription = Some("short desc")
+    shortDescription = Some("short desc"),
+    openApiSpecification = "OAS Content  for Title 4"
   )
 
   val apiDetailWithLongDescriptionNoShort: ApiDetail = ApiDetail(

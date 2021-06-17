@@ -163,4 +163,54 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     }
 
   }
+
+    "getIntegrationOas" should {
+ 
+    "return 200 when api details are found" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+
+      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return 303 when api details are found but the encoded title does not match the actual url encoded title" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+
+      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()), "self-assessment")(fakeRequest)
+      status(result) shouldBe Status.SEE_OTHER
+    }
+
+    "return OAS" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+
+      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
+      contentType(result) shouldBe Some("text/plain")
+      charset(result)     shouldBe Some("utf-8")
+      contentAsString(result) shouldBe apiDetail0.openApiSpecification
+    }
+
+    "return 404 when api details are notfound" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
+        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+
+      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+    }
+
+    "return 404 for file transfers" in {
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
+
+      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
+      status(result) shouldBe Status.NOT_FOUND
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+    }
+
+    "return HTML for file transfer" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
+
+      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result)     shouldBe Some("utf-8")
+    }
+  }
 }
