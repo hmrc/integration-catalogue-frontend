@@ -47,26 +47,25 @@ class IntegrationController @Inject() (
 
   implicit val config: AppConfig = appConfig
 
-  def handleUrlTitle(detail: IntegrationDetail, resultToReturn: Result,id: IntegrationId, urlEncodedTitle: String) ={
-    val actualEncodedTitle = UrlEncodingHelper.encodeTitle(detail.title)
-    if(urlEncodedTitle==actualEncodedTitle) resultToReturn
-    else Redirect(routes.IntegrationController.getIntegrationDetail(id, actualEncodedTitle).url);
-  }
-
   def getIntegrationDetail(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
+    def handleUrlTitle(detail: IntegrationDetail, resultToReturn: Result) ={
+      val actualEncodedTitle = UrlEncodingHelper.encodeTitle(detail.title)
+      if(urlEncodedTitle==actualEncodedTitle) resultToReturn
+      else Redirect(routes.IntegrationController.getIntegrationDetail(id, actualEncodedTitle).url);
+    }
 
     integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)          => handleUrlTitle(detail,  Ok(apiDetailView(detail)), id, urlEncodedTitle)
-      case Right(detail: FileTransferDetail) => handleUrlTitle(detail, Ok(fileTransferDetailView(detail)), id, urlEncodedTitle)
+      case Right(detail: ApiDetail)          => handleUrlTitle(detail,  Ok(apiDetailView(detail)))
+      case Right(detail: FileTransferDetail) => handleUrlTitle(detail, Ok(fileTransferDetailView(detail)))
       case Left(_: NotFoundException)        => NotFound(errorTemplate("Integration Not Found", "Integration not Found", "Integration Id Not Found"))
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
       case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
   }
 
-  def getIntegrationOas(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
+  def getIntegrationOas(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)          => handleUrlTitle(detail, Ok(detail.openApiSpecification), id, urlEncodedTitle)
+      case Right(detail: ApiDetail)          => Ok(detail.openApiSpecification)
       case Right(detail: FileTransferDetail) => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
       case Left(_: NotFoundException)        => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
