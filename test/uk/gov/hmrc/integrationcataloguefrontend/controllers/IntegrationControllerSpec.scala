@@ -30,6 +30,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiTechnicalDetailsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -52,6 +53,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
 
   val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
   private val apiDetailView = app.injector.instanceOf[ApiDetailView]
+  private val apiTechnicalDetailsView = app.injector.instanceOf[ApiTechnicalDetailsView]
   private val fileTransferDetailView = app.injector.instanceOf[FileTransferDetailView]
   private val errorTemplate = app.injector.instanceOf[ErrorTemplate]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
@@ -68,6 +70,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     listApisView,
     apiDetailView,
     fileTransferDetailView,
+    apiTechnicalDetailsView,
     errorTemplate)
 
   "GET /" should {
