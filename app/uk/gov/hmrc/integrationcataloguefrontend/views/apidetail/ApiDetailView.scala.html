@@ -78,7 +78,9 @@
   
   <h2 class="govuk-heading-l" id="contact-information-heading">Full Details</h2>
 
-  <a id="@apiDetail.id.value" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetailTechnical(apiDetail.id, encodeTitle(apiDetail.title))" class="govuk-link link-nounderline">Technical specification</a>
+  <p class="govuk-body">
+    <a id="@apiDetail.id.value" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetailTechnical(apiDetail.id, encodeTitle(apiDetail.title))" class="govuk-link link-nounderline govuk-link--no-visited-state">Technical specification</a>
+  </p>
 
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
   @apiEndpoints(apiDetail.endpoints)

@@ -42,8 +42,7 @@
 @layout(pageTitle = Some(s"API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
 
   <style>
-    html
-    {
+    html {
       box-sizing: border-box;
       overflow: -moz-scrollbars-vertical;
       overflow-y: scroll;
@@ -51,15 +50,101 @@
 
     *,
     *:before,
-    *:after
-    {
+    *:after {
       box-sizing: inherit;
     }
 
-    body
-    {
+    body {
       margin:0;
       background: #fafafa;
+    }
+
+    h2 {
+      color: #0b0c0c !important;
+      font-family: "GDS Transport",arial,sans-serif !important;
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      font-weight: 700 !important;
+      font-size: 36px !important;
+      line-height: 1.11111 !important;
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 30px !important;
+    }
+
+    p {
+      font-size: 19px !important;
+      color: #0b0c0c !important;
+      font-family: "GDS Transport",arial,sans-serif !important;
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      font-weight: 400 !important;
+      line-height: 1.31579 !important;
+      margin-top: 0 !important;
+      margin-bottom: 20px !important;
+    }
+
+    a {
+      font-size: 19px !important;
+    }
+
+    a:link {
+      color: #1d70b8 !important;
+    }
+
+    a:hover {
+      color: #003078 !important;
+    }
+
+    a:active {
+      color: #0b0c0c !important;
+    }
+
+    a:focus {
+      outline: 3px solid transparent !important;
+      color: #0b0c0c !important;
+      background-color: #fd0 !important;
+      box-shadow: 0 -2px #fd0,0 4px #0b0c0c !important;
+      text-decoration: none !important;
+    }
+
+    ul {
+      font-family: "GDS Transport",Arial,sans-serif !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      font-weight: 400 !important;
+      color: #0b0c0c !important;
+      margin-top: 0 !important;
+      margin-bottom: 20px !important;
+      font-size: 19px !important;
+      line-height: 1.31579 !important;
+      padding-left: 20px !important;
+      list-style-type: disc !important;
+    }
+    ol {
+      font-family: "GDS Transport",arial,sans-serif !important;
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important;
+      font-weight: 400 !important;
+      font-size: 19px !important;
+      line-height: 1.31579 !important;
+      color: #0b0c0c !important;
+      margin-top: 0 !important;
+      margin-bottom: 20px !important;
+      padding-left: 0 !important;
+      padding-left: 20px !important;
+      list-style-type: decimal !important;
+    }
+
+    li {
+      font-weight: 400 !important;
+      color: #0b0c0c !important;
+      font-size: 19px !important;
+    }
+    .swagger-ui .wrapper {
+      padding: 0 !important;
+    }
+    .swagger-ui .info {
+      margin: 0 0 40px 0 !important;
     }
   </style>
 
