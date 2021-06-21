@@ -79,7 +79,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
       document.getElementById("api-name-4").text() shouldBe fileTransfer1.title
 
       document.getElementById("api-description-0").text() shouldBe apiDetail0.description
-      document.getElementById("api-description-1").text() shouldBe apiDetail1.description
+      document.getElementById("api-description-1").text() shouldBe apiDetail1.shortDescription.getOrElse("")
       document.getElementById("api-description-2").text() shouldBe apiDetail2.description
       document.getElementById("api-description-3").text() shouldBe apiDetail3.description
       document.getElementById("api-description-4").text() shouldBe fileTransfer1.description
