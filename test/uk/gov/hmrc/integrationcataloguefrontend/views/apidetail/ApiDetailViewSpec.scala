@@ -69,7 +69,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
-       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
+       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
        
        document.getElementById("api-details-heading").text() shouldBe "API details"
 

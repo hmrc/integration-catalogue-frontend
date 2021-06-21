@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper._
 
 @this(
     govukTemplate: GovukTemplate,
@@ -81,7 +82,7 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @blueInterruptBox(apiDetail.map(_.title).getOrElse("Unknown Name"), apiDetail.map(_.description).getOrElse("Unknown Desc"))
+            @blueInterruptBox(apiDetail.map(_.title).getOrElse("Unknown Name"), apiDetail.map(handleDescription(_)).getOrElse("Unknown Desc"))
         </div>
     </div>
     <div class="govuk-grid-row">
