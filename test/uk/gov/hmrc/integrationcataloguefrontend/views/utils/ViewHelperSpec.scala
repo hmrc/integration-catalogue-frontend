@@ -15,28 +15,36 @@
  */
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.utils
+
 import org.scalatest.{Matchers, WordSpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
 class ViewHelperSpec extends WordSpec with Matchers with ApiTestData {
-  
 
-    "ViewHelper" should {
+  "ViewHelper" when {
 
-        "handleDescription should truncate the long description when short description is empty" in {
+    "handleDescription" should {
 
+      "Truncate the long description when short description is empty and long description is larger than 180 chars" in {
 
-         val description =  ViewHelper.handleDescription(apiDetailWithLongDescriptionNoShort)
-         description shouldBe "Lorem ipsum dolor sit amet, ludus fuisset cu nam, est malorum vituperatoribus ea, te eam facilisis cotidieque. Essent saperet neglegentur per at, summo labores pericula sed ex. ..."
-        }
+        val description = ViewHelper.handleDescription(apiDetailWithLongDescriptionNoShort)
+        description shouldBe "Lorem ipsum dolor sit amet, ludus fuisset cu nam, est malorum vituperatoribus ea, te eam facilisis cotidieque. Essent saperet neglegentur per at, summo labores pericula sed ex. ..."
+      }
 
-             "handleDescription should ignore the long description and return the short description when short description is defined" in {
+      "Not truncate the long description when short des cription is empty and long description is less than 180 chars" in {
 
+        val description = ViewHelper.handleDescription(apiDetail0)
+        description shouldBe "Making Tax Digital introduces digital record keeping for most businesses, self-employed people and landlords."
+      }
 
-         val description =  ViewHelper.handleDescription(apiDetailWithLongDescriptionAndShort)
-         description shouldBe "I am a short description"
-        }
+      "Ignore the long description and return the short description when short description is defined" in {
+
+        val description = ViewHelper.handleDescription(apiDetailWithLongDescriptionAndShort)
+        description shouldBe "I am a short description"
+      }
 
     }
+
+  }
 
 }

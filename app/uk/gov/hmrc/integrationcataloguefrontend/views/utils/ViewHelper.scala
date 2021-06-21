@@ -32,7 +32,7 @@ object ViewHelper {
     }
   }
 
-  def truncateString(value: String, max: Int) = {
+  def truncateString(value: String, max: Int): String = {
     if (value.size > max) {
       value.substring(0, max - 3) + "..."
     } else {
