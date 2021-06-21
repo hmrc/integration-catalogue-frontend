@@ -35,9 +35,9 @@ trait ApiTestData {
   val coreIfPlatform: PlatformType = PlatformType.CORE_IF
   val apiPlatform: PlatformType = PlatformType.API_PLATFORM
 
-  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation("name","email")))
+  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation("name", "email")))
   val apiPlatformMaintainerWithNoContacts: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
-  val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation("name","email")))
+  val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation("name", "email")))
 
   val selfassessmentApiId: IntegrationId = IntegrationId(UUID.fromString("b7c649e6-e10b-4815-8a2c-706317ec484d"))
 
@@ -47,9 +47,7 @@ trait ApiTestData {
   val exampleRequest1Body: String = "{\"someValue\": \"abcdefg\"}"
   val exampleRequest1: Example = Example(exampleRequest1name, exampleRequest1Body)
 
-
   val exampleResponse1: Example = Example("example response name", "example response body")
-
 
   val schema1: DefaultSchema = DefaultSchema(
     name = Some("agentReferenceNumber"),
@@ -101,7 +99,6 @@ trait ApiTestData {
   val endpoint1: Endpoint = Endpoint("/some/url/endpoint1", List(endpointGetMethod, endpointPutMethod))
 
   val endpoints: List[Endpoint] = List(endpoint1, Endpoint("/some/url/endpoint2", List.empty))
-
 
   val apiDetail0: ApiDetail = ApiDetail(
     selfassessmentApiId,
@@ -195,6 +192,38 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     shortDescription = Some("short desc")
+  )
+
+  val apiDetailWithLongDescriptionNoShort: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("28c0bd67-4176-42c7-be13-53be98a4db58")),
+    publisherReference = "API1004",
+    title = "Title 4",
+    description = "Lorem ipsum dolor sit amet, ludus fuisset cu nam, est malorum vituperatoribus ea, te eam facilisis cotidieque. Essent saperet neglegentur per at, summo labores pericula sed ex. Ius ne case appetere, ut mei pertinax dissentiunt, qui unum facilis te. In propriae tacimates adolescens usu, eos ea enim autem explicari, et duo tollit partem. Deseruisse scribentur at quo, deseruisse temporibus usu ei. Ut vix unum utamur definiebas, te postea everti fabellas eum, ne his copiosae prodesset. Eam alienum persequeris ne, in sea cibo graeco persequeris. Mentitum officiis sed et, nam harum constituto et. In fastidii explicari his, lorem facilis eum ut.",
+    lastUpdated = dateValue,
+    platform = PlatformType.CORE_IF,
+    maintainer = coreIfMaintainer,
+    version = "1.2.0",
+    specificationType = SpecificationType.OAS_V3,
+    hods = List("ETMP"),
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    shortDescription = None
+  )
+
+  val apiDetailWithLongDescriptionAndShort: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("28c0bd67-4176-42c7-be13-53be98a4db58")),
+    publisherReference = "API1004",
+    title = "Title 4",
+    description = "Lorem ipsum dolor sit amet, ludus fuisset cu nam, est malorum vituperatoribus ea, te eam facilisis cotidieque. Essent saperet neglegentur per at, summo labores pericula sed ex. Ius ne case appetere, ut mei pertinax dissentiunt, qui unum facilis te. In propriae tacimates adolescens usu, eos ea enim autem explicari, et duo tollit partem. Deseruisse scribentur at quo, deseruisse temporibus usu ei. Ut vix unum utamur definiebas, te postea everti fabellas eum, ne his copiosae prodesset. Eam alienum persequeris ne, in sea cibo graeco persequeris. Mentitum officiis sed et, nam harum constituto et. In fastidii explicari his, lorem facilis eum ut.",
+    lastUpdated = dateValue,
+    platform = PlatformType.CORE_IF,
+    maintainer = coreIfMaintainer,
+    version = "1.2.0",
+    specificationType = SpecificationType.OAS_V3,
+    hods = List("ETMP"),
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    shortDescription = Some("I am a short description")
   )
 
   val apiList = List(apiDetail0, apiDetail1, apiDetail2, apiDetail3)
