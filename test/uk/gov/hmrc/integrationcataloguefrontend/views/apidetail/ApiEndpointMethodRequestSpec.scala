@@ -36,7 +36,10 @@ class ApiEndpointMethodRequestSpec extends CommonViewSpec with ApiTestData {
       val page: Html = apiEndpointMethodRequest.render(request)
       val document: Document = Jsoup.parse(page.body)
 
-      // check that this renders without errors
+
+      document.getElementById("accordion-examples-heading").text() shouldBe "Example requests"
+      document.getElementById("request-example-name-0").text() shouldBe "example request 1"
+      document.getElementById("request-example-body-0").text() shouldBe "{\"someValue\": \"abcdefg\"}"
 
     }
   }

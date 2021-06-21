@@ -18,7 +18,7 @@
 
 @this()
 
-@(title: String, examples: List[Example])
+@(title: String, examples: List[Example], idPrefix: String)
 
 <section aria-labelledby="accordion-examples-heading">
     <h2 class="govuk-heading-m" id="accordion-examples-heading">
@@ -28,9 +28,9 @@
     @if(examples.nonEmpty) {
         @for(example <- examples.zipWithIndex) {
           @if(example._1.name.nonEmpty && example._1.jsonBody.nonEmpty) {
-              <div id="example-@example._2">
-                  <h3 class="govuk-heading-s" id="example-name-@example._2">@example._1.name</h3>
-                  <pre class="code--block" id="example-body-@example._2">@example._1.jsonBody</pre>
+              <div id="@idPrefix-example-@example._2">
+                  <h3 class="govuk-heading-s" id="@idPrefix-example-name-@example._2">@example._1.name</h3>
+                  <pre class="code--block" id="@idPrefix-example-body-@example._2">@example._1.jsonBody</pre>
                   <br/>
               </div>
           }

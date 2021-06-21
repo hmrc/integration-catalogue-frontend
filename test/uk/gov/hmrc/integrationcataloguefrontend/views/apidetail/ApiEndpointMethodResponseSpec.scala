@@ -48,8 +48,8 @@ class ApiEndpointMethodResponseSpec extends CommonViewSpec with ApiTestData {
       val page: Html = apiEndpointMethodResponse.render(createResponseWithStatusCode("200"))
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("accordion-examples-heading").text() shouldBe "Ok (200)"
-      document.getElementById("example-name-0").text() shouldBe "example response name"
-      document.getElementById("example-body-0").text() shouldBe "example response body"
+      document.getElementById("response-example-name-0").text() shouldBe "example response name"
+      document.getElementById("response-example-body-0").text() shouldBe "example response body"
 
     }
 
