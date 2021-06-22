@@ -213,7 +213,8 @@ trait ApiTestData {
     hods = List("ETMP"),
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
-    shortDescription = None
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 4"
   )
 
   val apiDetailWithLongDescriptionAndShort: ApiDetail = ApiDetail(
@@ -229,7 +230,8 @@ trait ApiTestData {
     hods = List("ETMP"),
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
-    shortDescription = Some("I am a short description")
+    shortDescription = Some("I am a short description"),
+    openApiSpecification = "OAS Content  for Title 4"
   )
 
   val apiList = List(apiDetail0, apiDetail1, apiDetail2, apiDetail3)
