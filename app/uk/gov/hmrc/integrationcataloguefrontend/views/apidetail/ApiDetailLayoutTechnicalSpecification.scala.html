@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
 
 @this(
   govukTemplate: GovukTemplate,
@@ -62,10 +63,13 @@
   </div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      @govukBackLink(BackLink(
-        href = "javascript:history.back()",
-        content = Text("Back")
-      ))
+      @{
+        val url = apiDetail.map(
+            api => uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetail(api.id, encodeTitle(api.title)).url
+        ).getOrElse("javascript:history.back()")
+        
+        govukBackLink(BackLink(href = url, content = Text("Back")))
+      }
     </div>
   </div>
   <br />
