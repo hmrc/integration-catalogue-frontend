@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailLayout
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiEndpoints
 @import org.joda.time.format.DateTimeFormat
+@import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
 
 @this(layout: ApiDetailLayout, apiEndpoints: ApiEndpoints)
 
@@ -73,6 +74,14 @@
     @gridItem("Contact email", apiDetail.maintainer.contactInfo.headOption.map(_.emailAddress).getOrElse("Unknown"), "contact-email", "half")
   </div>
   
+  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
+  
+  <h2 class="govuk-heading-l" id="contact-information-heading">Full Details</h2>
+
+  <p class="govuk-body">
+    <a id="@apiDetail.id.value" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetailTechnical(apiDetail.id, encodeTitle(apiDetail.title))" class="govuk-link link-nounderline govuk-link--no-visited-state">Technical specification</a>
+  </p>
+
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
   @apiEndpoints(apiDetail.endpoints)
 }

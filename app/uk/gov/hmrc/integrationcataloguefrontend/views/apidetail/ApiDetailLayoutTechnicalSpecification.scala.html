@@ -1,0 +1,110 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
+
+@this(
+  govukTemplate: GovukTemplate,
+  siteHeader: SiteHeader,
+  footer: GovukFooter,
+  blueInterruptBox: BlueInterruptBox,
+  pocBanner: PocBanner,
+  govukBackLink : GovukBackLink,
+  head: Head,
+  feedbackBanner2: FeedbackBanner2
+)
+@(pageTitle: Option[String] = None,
+  headBlock: Option[Html] = None,
+  scriptsBlock: Option[Html] = None,
+  activePage: Option[String] = None,
+  apiDetail: Option[ApiDetail] = None,
+  bodyEndBlock: Option[Html] = None,
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@handleLinkClasses(expectedPage: String = "") = @{
+  val activeClass = "govuk-sub-nav-link govuk-sub-nav-link--active"
+  val inactiveClass = "govuk-sub-nav-link"
+  if(activePage.getOrElse("").equals(expectedPage)) activeClass else inactiveClass
+}
+
+@scripts = {
+  <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+  <script>window.GOVUKFrontend.initAll();</script>
+  <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>
+}
+
+@mainContentDefault = {
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLWQQZB" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @feedbackBanner2()
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      @{
+        val url = apiDetail.map(
+            api => uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetail(api.id, encodeTitle(api.title)).url
+        ).getOrElse("javascript:history.back()")
+        
+        govukBackLink(BackLink(href = url, content = Text("Back")))
+      }
+    </div>
+  </div>
+  <br />
+  <!-- Notification Banner -->
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      @pocBanner()
+    </div>
+  </div>
+  <div class="govuk-notification-banner-spacing">
+    <br />
+    <br />
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      @contentBlock
+    </div>
+  </div>
+}
+
+@bodyEndDefault = {
+  @bodyEndBlock
+  @scripts
+}
+
+@footerBlock = {
+  @footer()
+}
+
+@govukTemplate(
+  pageTitle = pageTitle,
+  headBlock = Some(head(headBlock)),
+  headerBlock = siteHeader(includeSearch = true),
+  footerBlock = footerBlock,
+  mainClasses = Some("govuk-main-wrapper-no-padding-top"),
+  beforeContentBlock = None,
+  bodyEndBlock = Some(bodyEndDefault)
+)(mainContentDefault)
