@@ -33,6 +33,7 @@ object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {
 
   val values = findValues
 
+  case object XML_API extends PlatformType("XML APIs", "XML_API")
   case object DES extends PlatformType("Data Exchange Service (DES)", "DES")
   case object CDS_CLASSIC extends PlatformType("Customs Declaration System (CDS Classic)", "CDS_CLASSIC")
   case object CMA extends PlatformType("Containerised Managed Architecture (CMA)", "CMA")

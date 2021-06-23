@@ -77,6 +77,13 @@
                         </label>
                     </div>
 
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="xml-api" name="platformFilter" type="checkbox" value="XML_API" @if(platformFilter.contains(XML_API)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="xml-api" id="xml-api-filter-label">
+                            XML APIs
+                        </label>
+                    </div>
+
                 </div>
             </fieldset>
         </div>
