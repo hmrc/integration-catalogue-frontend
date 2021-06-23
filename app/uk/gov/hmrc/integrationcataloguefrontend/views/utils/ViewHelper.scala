@@ -26,15 +26,24 @@ object ViewHelper {
     integration match {
       case api: ApiDetail                   => {
         if (api.shortDescription.isDefined) api.shortDescription.get
-        else truncateString(api.description, 180)
+        else  truncateStringAddEllipses(replaceOrRemoveInvalidChars(api.description), 180)
       }
       case fileTransfer: FileTransferDetail => fileTransfer.description
     }
   }
 
-  def truncateString(value: String, max: Int): String = {
+  def replaceOrRemoveInvalidChars(value: String): String = {
+      value
+      .replaceAll("\n", " ")
+      .trim
+      .replaceAll(" +", " ") // regex to find more than one space then replace with single space
+  }
+
+  def truncateStringAddEllipses(value: String, max: Int): String = {
     if (value.size > max) {
-      value.substring(0, max - 3) + "..."
+      // we need to ignore /n or change to spaces.... 
+      value
+      .slice(0, max - 3) + "..."
     } else {
       value
     }

@@ -18,6 +18,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.utils
 
 import org.scalatest.{Matchers, WordSpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
+import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper._
 
 class ViewHelperSpec extends WordSpec with Matchers with ApiTestData {
 
@@ -25,24 +26,49 @@ class ViewHelperSpec extends WordSpec with Matchers with ApiTestData {
 
     "handleDescription" should {
 
-      "Truncate the long description when short description is empty and long description is larger than 180 chars" in {
+      "truncate the long description when short description is empty and long description is larger than 180 chars" in {
 
-        val description = ViewHelper.handleDescription(apiDetailWithLongDescriptionNoShort)
-        description shouldBe "Lorem ipsum dolor sit amet, ludus fuisset cu nam, est malorum vituperatoribus ea, te eam facilisis cotidieque. Essent saperet neglegentur per at, summo labores pericula sed ex. ..."
+        val description = handleDescription(apiDetailWithLongDescriptionNoShort)
+        description shouldBe "This is a test API to test the rendering of OAS in the API catalogue. This is testing: - Basic GET - Basic POST - Parameters (path, query, header & cookie) and parameter propert..."
       }
 
-      "Not truncate the long description when short des cription is empty and long description is less than 180 chars" in {
+      "not truncate the long description when short description is empty and long description is less than 180 chars" in {
 
-        val description = ViewHelper.handleDescription(apiDetail0)
+        val description = handleDescription(apiDetail0)
         description shouldBe "Making Tax Digital introduces digital record keeping for most businesses, self-employed people and landlords."
       }
 
-      "Ignore the long description and return the short description when short description is defined" in {
+      "ignore the long description and return the short description when short description is defined" in {
 
-        val description = ViewHelper.handleDescription(apiDetailWithLongDescriptionAndShort)
+        val description = handleDescription(apiDetailWithLongDescriptionAndShort)
         description shouldBe "I am a short description"
       }
 
+    }
+
+    "truncateStringAddEllipses" should {
+      "return value if value is less than max" in {
+        truncateStringAddEllipses("a string", 10) shouldBe "a string"
+      }
+      "return truncated value with ellipses added if value is greater than max" in {
+        val returnValue = truncateStringAddEllipses("a string", 5)
+        returnValue shouldBe "a ..."
+        returnValue.length shouldBe 5
+      }
+    }
+
+    "replaceOrRemoveInvalidChars" should {
+      "return value with \n removed" in {
+        replaceOrRemoveInvalidChars("This is a string:\n - Basic GET \n - Basic POST") shouldBe "This is a string: - Basic GET - Basic POST"
+      }
+
+      "return value with extra spaces removed" in {
+        replaceOrRemoveInvalidChars("This is a string:     - Basic GET  - Basic POST") shouldBe "This is a string: - Basic GET - Basic POST"
+      }
+
+      "return value with leading and trailing spaces removed" in {
+        replaceOrRemoveInvalidChars("   This is a string: - Basic GET - Basic POST ") shouldBe "This is a string: - Basic GET - Basic POST"
+      }
     }
 
   }
