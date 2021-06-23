@@ -32,10 +32,9 @@ object ViewHelper {
     }
   }
 
-  def replaceOrRemoveInvalidChars(value: String)={
+  def replaceOrRemoveInvalidChars(value: String): String = {
       value
       .replaceAll("\n", " ")
-      .replaceAll("/", " ")
       .trim
       .replaceAll(" +", " ") // regex to find more than one space then replace with single space
   }
