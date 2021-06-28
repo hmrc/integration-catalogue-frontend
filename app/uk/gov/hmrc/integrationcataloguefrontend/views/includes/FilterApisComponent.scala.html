@@ -77,6 +77,13 @@
                         </label>
                     </div>
 
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="transaction-engine" name="platformFilter" type="checkbox" value="TRANSACTION_ENGINE" @if(platformFilter.contains(TRANSACTION_ENGINE)){ checked }>
+                        <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="transaction-engine" id="transaction-engine-filter-label">
+                            Transaction Engine
+                        </label>
+                    </div>
+
                 </div>
             </fieldset>
         </div>
