@@ -20,7 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CDS_CLASSIC, CMA, CORE_IF, DES, XML_API}
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CDS_CLASSIC, CMA, CORE_IF, DES, TRANSACTION_ENGINE}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FilterApisComponent
 import scala.collection.JavaConverters._
@@ -34,7 +34,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
   "FilterApisComponent" should {
     val apiNameSearch: String = "someSearch"
-    val platformFilter: List[PlatformType] = List(API_PLATFORM, CMA, CDS_CLASSIC, DES, CORE_IF, XML_API)
+    val platformFilter: List[PlatformType] = List(API_PLATFORM, CMA, CDS_CLASSIC, DES, CORE_IF, TRANSACTION_ENGINE)
 
     def testFilterLabels(document : Document)={
       document.getElementById("api-platform-filter-label").text() shouldBe "API Platform"
@@ -42,7 +42,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       document.getElementById("cds-classic-filter-label").text() shouldBe "Customs Declaration System (CDS Classic)"
       document.getElementById("des-if-filter-label").text() shouldBe "Data Exchange Service (DES)"
       document.getElementById("core-if-filter-label").text() shouldBe "Integration Framework (IF)"
-      document.getElementById("xml-api-filter-label").text() shouldBe "XML APIs"
+      document.getElementById("transaction-engine-filter-label").text() shouldBe "Transaction Engine"
     }
 
     def testCheckBox(document: Document, checkboxId: String, isChecked: Boolean) ={
@@ -67,7 +67,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       testCheckBox(document, "cds-classic", isChecked = false)
       testCheckBox(document, "des-if", isChecked = false)
       testCheckBox(document, "core-if", isChecked = false)
-      testCheckBox(document, "xml-api", isChecked = false)
+      testCheckBox(document, "transaction-engine", isChecked = false)
     }
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
@@ -86,7 +86,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       testCheckBox(document, "cds-classic", isChecked = true)
       testCheckBox(document, "des-if", isChecked = true)
       testCheckBox(document, "core-if", isChecked = true)
-      testCheckBox(document, "xml-api", isChecked = true)
+      testCheckBox(document, "transaction-engine", isChecked = true)
     }
   }
 }
