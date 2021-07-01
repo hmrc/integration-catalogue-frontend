@@ -15,10 +15,11 @@
  *@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PlatformFilterComponent
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.BackendsFilterComponent
 @import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 @import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 
-@this(platformFilterComponent: PlatformFilterComponent)
+@this(platformFilterComponent: PlatformFilterComponent, backendsFilterComponent: BackendsFilterComponent)
 
 @(apiNameSearch: String,  platformFilter: List[PlatformType], backendsFilter: List[String])
 
@@ -35,6 +36,7 @@
         <br />
         <!-- Filter 2 -->
         @platformFilterComponent(platformFilter)
+        @backendsFilterComponent(backendsFilter)
         <button class="govuk-button" data-module="govuk-button">
             Filter
         </button>
