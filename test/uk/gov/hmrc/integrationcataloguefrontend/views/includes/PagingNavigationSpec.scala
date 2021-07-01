@@ -63,7 +63,9 @@ class PagingNavigationSpec extends CommonViewSpec {
               totalCount=25,
               firstPageLink=1,
               lastPageLink=3,
-              "", List.empty)
+              "", 
+              List.empty, 
+              List.empty)
        val document: Document = Jsoup.parse(page.body)
         Option(document.getElementById("page-prev")) shouldBe None
 
@@ -88,7 +90,9 @@ class PagingNavigationSpec extends CommonViewSpec {
               totalCount=25,
               firstPageLink=3,
               lastPageLink=5,
-              apiNameSearch, platformFilter)
+              apiNameSearch, 
+              platformFilter,
+              List.empty)
        val document: Document = Jsoup.parse(page.body)
 
         val prevLink = document.getElementById("page-prev").children().first()
@@ -115,7 +119,9 @@ class PagingNavigationSpec extends CommonViewSpec {
               totalCount=25,
               firstPageLink=3,
               lastPageLink=5,
-              "", List.empty)
+              "", 
+              List.empty,
+              List.empty)
        val document: Document = Jsoup.parse(page.body)
             val prevLink = document.getElementById("page-prev").children().first()
         prevLink.attr("href") shouldBe "/api-catalogue/search?keywords=&itemsPerPage=5&currentPage=3"
@@ -142,7 +148,9 @@ class PagingNavigationSpec extends CommonViewSpec {
           totalCount=10,
           firstPageLink=1,
           lastPageLink=1,
-          "", List.empty)
+          "", 
+          List.empty,
+          List.empty)
       val document: Document = Jsoup.parse(page.body)
       Option(document.getElementById("page-prev")) shouldBe None
       Option(document.getElementById(s"pagenumber-1")) shouldBe None

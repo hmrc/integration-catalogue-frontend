@@ -55,7 +55,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-       val page : Html = filterApisComponent.render("", List.empty)
+       val page : Html = filterApisComponent.render("", List.empty, List.empty)
        val document: Document = Jsoup.parse(page.body)
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
       document.getElementById("filter-label").text() shouldBe "Filter by Api name."
@@ -72,7 +72,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page : Html = filterApisComponent.render(apiNameSearch, platformFilter)
+      val page : Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"

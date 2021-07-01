@@ -39,6 +39,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         List.empty,
         "",
         List.empty,
+        List.empty,
         5,
         20,
         5,
@@ -57,6 +58,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
       val page : Html =    listApisView.render(
         integrationsList,
         "",
+        List.empty,
         List.empty,
         5,
         20,

@@ -30,6 +30,7 @@
 @(apiList: List[IntegrationDetail],
     apiNameSearch: String,
     platformFilter: List[PlatformType],
+    backendsFilter: List[String],
     itemsPerPage: Int,
     totalCount: Int,
     currentPage: Int,
@@ -48,7 +49,8 @@
 
 @layout(pageTitle = Some(s"Search results - ${appConfig.serviceName}"),
     apiNameSearch=apiNameSearch,
-    platformFilter=platformFilter) {
+    platformFilter=platformFilter,
+    backendsFilter=backendsFilter) {
 
     @if(apiList.nonEmpty){
        
@@ -71,7 +73,7 @@
         </ul>
        
         
-       @pagingNavigation(itemsPerPage, currentPage, numberOfPages, fromResults, toResults, totalCount, firstPageLink, lastPageLink, apiNameSearch, platformFilter)
+       @pagingNavigation(itemsPerPage, currentPage, numberOfPages, fromResults, toResults, totalCount, firstPageLink, lastPageLink, apiNameSearch, platformFilter, backendsFilter)
 
     }
     @if(apiList.isEmpty){
