@@ -75,7 +75,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
 
   "GET /" should {
     "return 200 when Some(ApiId) is Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *, *)(*))
+      when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"))(fakeRequest)
       status(result) shouldBe Status.OK
@@ -83,7 +83,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
 
  
     "return HTML" in {
-      when(mockIntegrationService.findWithFilters(*, *, *, *)(*))
+      when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(None)(fakeRequest)
       contentType(result) shouldBe Some("text/html")
@@ -92,7 +92,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
 
 
     "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *, *)(*))
+      when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"), List(PlatformType.CORE_IF, PlatformType.API_PLATFORM))(fakeRequest)
       status(result) shouldBe Status.OK

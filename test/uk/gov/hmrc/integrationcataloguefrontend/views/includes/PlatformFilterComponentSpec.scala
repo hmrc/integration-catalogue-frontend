@@ -22,18 +22,17 @@ import play.twirl.api.Html
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CDS_CLASSIC, CMA, CORE_IF, DES, TRANSACTION_ENGINE}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FilterApisComponent
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PlatformFilterComponent
 import scala.collection.JavaConverters._
 
-class FilterApisComponentSpec extends CommonViewSpec {
+class PlatformFilterComponentSpec extends CommonViewSpec {
 
   trait Setup {
-    val filterApisComponent = app.injector.instanceOf[FilterApisComponent]
+    val platformFilterComponent = app.injector.instanceOf[PlatformFilterComponent]
   }
 
 
-  "FilterApisComponent" should {
-    val apiNameSearch: String = "someSearch"
+  "PlatformFilterComponent" should {
     val platformFilter: List[PlatformType] = List(API_PLATFORM, CMA, CDS_CLASSIC, DES, CORE_IF, TRANSACTION_ENGINE)
 
     def testPlatformFilterLabels(document : Document)={
@@ -69,11 +68,10 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-       val page : Html = filterApisComponent.render("", List.empty, List.empty)
+       val page : Html = platformFilterComponent.render(List.empty)
        val document: Document = Jsoup.parse(page.body)
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
-      document.getElementById("filter-label").text() shouldBe "Filter by Api name."
-      document.getElementById("IntCatSearchHint").text() shouldBe "Filter by API name. There is no auto complete."
+
       //test filter labels
       testPlatformFilter(document, false)
      
@@ -81,11 +79,10 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page : Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty)
+      val page : Html = platformFilterComponent.render(platformFilter)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
-      document.getElementById("filter-label").text() shouldBe "Filter by Api name."
 
       //test filter labels
       testPlatformFilter(document, true)

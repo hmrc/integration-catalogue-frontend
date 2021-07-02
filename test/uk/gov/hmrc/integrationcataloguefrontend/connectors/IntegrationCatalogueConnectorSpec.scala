@@ -57,7 +57,7 @@ class IntegrationCatalogueConnectorSpec extends WordSpec with Matchers with Opti
 
     def httpCallToFindWithFilterWillSucceedWithResponse(response: IntegrationResponse): ScalaOngoingStubbing[Future[IntegrationResponse]] =
       when(mockHttpClient.GET[IntegrationResponse]
-        (eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm",searchTerm))), eqTo(Seq.empty))
+        (eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm",searchTerm), ("currentPage", "1"))), eqTo(Seq.empty))
         (any[HttpReads[IntegrationResponse]], any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful(response))
 
@@ -73,7 +73,7 @@ class IntegrationCatalogueConnectorSpec extends WordSpec with Matchers with Opti
       val expectedResult = List(exampleApiDetail, exampleApiDetail2)
       httpCallToFindWithFilterWillSucceedWithResponse(IntegrationResponse(count = 2, results = expectedResult))
 
-      val result: Either[Throwable, IntegrationResponse] = await(connector.findWithFilters(List(searchTerm), List.empty, None, None))
+      val result: Either[Throwable, IntegrationResponse] = await(connector.findWithFilters(IntegrationFilter(searchText = List(searchTerm), platforms = List.empty), None, Some(1)))
 
       result match {
         case Left(_) => fail()
@@ -84,7 +84,7 @@ class IntegrationCatalogueConnectorSpec extends WordSpec with Matchers with Opti
     "handle exceptions" in new SetUp {
       httpCallToFindWithFilterWillFailWithException(new BadGatewayException("some error"))
 
-      val result: Either[Throwable, IntegrationResponse] = await(connector.findWithFilters(List(searchTerm), List.empty, None, None))
+      val result: Either[Throwable, IntegrationResponse] = await(connector.findWithFilters(IntegrationFilter(searchText = List(searchTerm), platforms = List.empty), None, None))
 
       result match {
         case Right(_) => fail()

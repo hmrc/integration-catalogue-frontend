@@ -27,6 +27,7 @@ object IntegrationId {
   implicit val apiIdFormat = Json.valueFormat[IntegrationId]
 }
 
+
 sealed abstract class PlatformType(val displayName: String, val shortName: String) extends EnumEntry
 
 object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {

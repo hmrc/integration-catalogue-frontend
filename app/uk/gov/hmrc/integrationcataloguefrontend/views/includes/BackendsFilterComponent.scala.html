@@ -1,0 +1,27 @@
+@import uk.gov.hmrc.integrationcataloguefrontend.models.Backends
+
+@this()
+
+@(backendsFilter: List[String])
+
+
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            <h2 class="govuk-fieldset__heading" id="backend-filter-label">
+                HoD
+            </h2>
+        </legend>
+        <div class="govuk-checkboxes govuk-checkboxes--small">
+            @for(item <- Backends.filters) {
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="backend-filter-@item.displayName" name="backendsFilter" type="checkbox" value="@item.name" @if(backendsFilter.contains(item.name)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="backend-filter-@item.displayName" id="backend-filter-@item.displayName-label" >
+                   @item.displayName
+                </label>
+            </div>
+            }
+
+        </div>
+    </fieldset>
+</div>
