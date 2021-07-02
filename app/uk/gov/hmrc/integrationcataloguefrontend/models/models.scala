@@ -22,8 +22,7 @@ object BackendFilterItem {
   // Note that because `Ordering[A]` is not contravariant, the declaration
   // must be type-parametrized in the event that you want the implicit
   // ordering to apply to subclasses of `BackendFilterItem`.
-  implicit def orderingByName[A <: BackendFilterItem]: Ordering[A] =
-    Ordering.by(_.name.toUpperCase)
+  implicit def orderingByName: Ordering[BackendFilterItem] = Ordering.by(_.name.toUpperCase)
 
 }
 
@@ -38,7 +37,7 @@ object Backends {
     BackendFilterItem("ITMP", "ITMP"),
     BackendFilterItem("ITSD", "ITSD"),
     BackendFilterItem("NPS", "NPS"),
-    BackendFilterItem("RTI", "RTI"),
+    BackendFilterItem("RTI", "RTI")
     ).sorted
 
 }
