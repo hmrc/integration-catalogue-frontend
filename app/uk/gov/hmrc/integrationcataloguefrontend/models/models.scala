@@ -18,19 +18,27 @@ package uk.gov.hmrc.integrationcataloguefrontend.models
 
 case class BackendFilterItem(name: String, displayName: String)
 
+object BackendFilterItem {
+  // Note that because `Ordering[A]` is not contravariant, the declaration
+  // must be type-parametrized in the event that you want the implicit
+  // ordering to apply to subclasses of `BackendFilterItem`.
+  implicit def orderingByName[A <: BackendFilterItem]: Ordering[A] =
+    Ordering.by(_.name.toUpperCase)
+
+}
+
 object Backends {
     val filters = List(
-   BackendFilterItem("CESA", "CESA"),
+   BackendFilterItem("Case Mgt", "Case Mgt"),
     BackendFilterItem("CID", "CID"),
-    BackendFilterItem("COTAX", "COTAX"),
+    BackendFilterItem("EDH", "EDH"),
+    BackendFilterItem("Elec Folders", "Elec Folders"),
     BackendFilterItem("ETMP", "ETMP"),
-    BackendFilterItem("FIA", "FIA"),
-    BackendFilterItem("IDMS", "IDMS"),
+    BackendFilterItem("Income Tax Domain", "Income Tax Domain"),
     BackendFilterItem("ITMP", "ITMP"),
+    BackendFilterItem("ITSD", "ITSD"),
     BackendFilterItem("NPS", "NPS"),
-    BackendFilterItem("NTC", "NTC"),
     BackendFilterItem("RTI", "RTI"),
-    BackendFilterItem("TPSS", "TPSS")
-    )
+    ).sorted
 
 }
