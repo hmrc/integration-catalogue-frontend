@@ -32,6 +32,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import uk.gov.hmrc.integrationcatalogue.models.IntegrationFilter
 
 @Singleton
 class IntegrationController @Inject() (
@@ -91,18 +92,20 @@ class IntegrationController @Inject() (
   def listIntegrations(
       keywords: Option[String] = None,
       platformFilter: List[PlatformType] = List.empty,
+      backendsFilter: List[String] = List.empty,
       itemsPerPage: Option[Int] = None,
       currentPage: Option[Int] = None
     ): Action[AnyContent] =
     Action.async { implicit request =>
       val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
       val currentPageCalc = currentPage.getOrElse(1)
-      integrationService.findWithFilters(List(keywords.getOrElse("")), platformFilter, Some(itemsPerPageCalc), currentPage).map {
+      integrationService.findWithFilters(IntegrationFilter(List(keywords.getOrElse("")), platformFilter, backendsFilter), Some(itemsPerPageCalc), currentPage).map {
         case Right(response)              =>
           Ok(listIntegrationsView(
             response.results,
             keywords.getOrElse(""),
             platformFilter,
+            backendsFilter,
             itemsPerPageCalc,
             response.count,
             currentPageCalc,

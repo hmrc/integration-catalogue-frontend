@@ -27,7 +27,8 @@
         firstPageLink: Int,
         lastPageLink: Int,
         apiNameSearch: String,
-        platformFilter: List[PlatformType])
+        platformFilter: List[PlatformType],
+        backendsFilter: List[String])
 
 <nav class="moj-pagination" id="pagination-label">
 
@@ -37,7 +38,7 @@
         @if(numberOfPages > 1) {
             @if(currentPage != 1) {
                 <li id="page-prev" class="moj-pagination__item  moj-pagination__item--prev">
-                    <a class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, Some(itemsPerPage), Some(currentPage - 1)).url">
+                    <a class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, backendsFilter, Some(itemsPerPage), Some(currentPage - 1)).url">
                         Previous<span class="govuk-visually-hidden"> set of pages</span></a>
                 </li>
             }
@@ -46,13 +47,13 @@
                 @if(currentPage == pageLink) {
                     <li id="pagenumber-@pageLink" class="moj-pagination__item moj-pagination__item--active">@pageLink</li>
                 } else {
-                    <li id="pagenumber-@pageLink" class="moj-pagination__item"><a id="pageLink-@pageLink" class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, Some(itemsPerPage), Some(pageLink)).url">@pageLink</a></li>
+                    <li id="pagenumber-@pageLink" class="moj-pagination__item"><a id="pageLink-@pageLink" class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, backendsFilter, Some(itemsPerPage), Some(pageLink)).url">@pageLink</a></li>
                 }
             }
 
             @if(currentPage < numberOfPages) {
                 <li id="page-next" class="moj-pagination__item  moj-pagination__item--next">
-                    <a class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, Some(itemsPerPage), Some(currentPage + 1)).url">
+                    <a class="moj-pagination__link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(Some(apiNameSearch), platformFilter, backendsFilter, Some(itemsPerPage), Some(currentPage + 1)).url">
                         Next<span class="govuk-visually-hidden"> set of pages</span></a>
                 </li>
             }

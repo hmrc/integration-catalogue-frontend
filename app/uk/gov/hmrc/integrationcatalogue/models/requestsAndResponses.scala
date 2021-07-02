@@ -36,3 +36,5 @@ case class FileTransferPublishRequest(
                               fileTransferPattern: String)
 
 case class PlatformContactResponse(platformType: PlatformType, contactInfo: Option[ContactInformation])
+
+case class IntegrationFilter(searchText: List[String] = List.empty, platforms: List[PlatformType] = List.empty, backendsFilter: List[String] = List.empty, backends: List[String] = List.empty, itemsPerPage: Option[Int] = None, currentPage: Option[Int] = None)

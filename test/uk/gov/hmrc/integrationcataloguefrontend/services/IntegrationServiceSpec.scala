@@ -90,12 +90,12 @@ class IntegrationServiceSpec
   "findWithFilter" should {
     "return a Right when successful" in new SetUp {
       val expectedResult = List(exampleApiDetail, exampleApiDetail2, fileTransfer1)
-      when(mockIntegrationCatalogueConnector.findWithFilters(*, *, *, *)(*)).thenReturn(Future.successful(Right(IntegrationResponse(
+      when(mockIntegrationCatalogueConnector.findWithFilters(*, *, *)(*)).thenReturn(Future.successful(Right(IntegrationResponse(
         count = expectedResult.size,
         results = expectedResult
       ))))
 
-      val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(List("search"), List.empty, None, None))
+      val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("search"), platforms = List(PlatformType.CORE_IF), backendsFilter = List("ETMP")), None, None))
 
       result match {
         case Left(_)                                         => fail()
@@ -104,17 +104,18 @@ class IntegrationServiceSpec
     }
 
     "return Left when error from connector" in new SetUp {
-      when(mockIntegrationCatalogueConnector.findWithFilters(*, *, *, *)(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+      when(mockIntegrationCatalogueConnector.findWithFilters(*, *, *)(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+      val integrationFilter = IntegrationFilter(searchText = List("search"), platforms = List.empty)
 
       val result: Either[Throwable, IntegrationResponse] =
-        await(objInTest.findWithFilters(List("search"), List.empty, None, None))
+        await(objInTest.findWithFilters(integrationFilter, None, None))
 
       result match {
         case Left(_)  => succeed
         case Right(_) => fail()
       }
 
-      verify(mockIntegrationCatalogueConnector).findWithFilters(eqTo(List("search")), eqTo(List.empty), eqTo(None), eqTo(None))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).findWithFilters(eqTo(integrationFilter),eqTo(None), eqTo(None))(eqTo(hc))
     }
   }
 

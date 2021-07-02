@@ -59,6 +59,13 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       }
 
+      "respond with 400 and render correctly when Bad Request returned from backend" in {
+      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", BAD_REQUEST)
+        val result = callGetEndpoint(s"$url/search", List.empty)
+        result.status mustBe BAD_REQUEST
+
+      }
+
       "respond with 400  when unexpected error from backend" in {
         primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", NOT_ACCEPTABLE)
         val result = callGetEndpoint(s"$url/search", List.empty)
@@ -76,8 +83,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
      "respond with 200 and render correctly when platform & search query params provided" in {
-      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&itemsPerPage=30")
-        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF", List.empty)
+      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30")
+        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF&backendsFilter=ETMP", List.empty)
         result.status mustBe OK
 
       }
@@ -109,6 +116,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
     }
+
 
 
     "GET /integrations/{apiId}/{encodedTitle}" should {
@@ -180,6 +188,63 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
     }
+
+   "GET /integrations/:id/:title/technical" should {
+      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
+        result.status mustBe OK
+
+      }
+
+    
+      "respond with 400 and when backend returns returns Bad Request" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
+        result.status mustBe BAD_REQUEST
+
+      }
+
+      "respond with 404 and when backend returns returns Not Found" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
+        result.status mustBe NOT_FOUND
+
+      }
+
+    }
+
+      "GET /integrations/:id/files/oas" should {
+      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
+        result.status mustBe OK
+
+      }
+
+    
+      "respond with 400 and when backend returns returns Bad Request" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
+        result.status mustBe BAD_REQUEST
+
+      }
+
+      "respond with 404 and when backend returns returns Not Found" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
+        result.status mustBe NOT_FOUND
+
+      }
+
+    }
+
 
     "GET /integrations/{filetransferId}" should {
       "respond with 200 and render correctly" in {

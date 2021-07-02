@@ -33,9 +33,9 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
 
   private lazy val externalServiceUri = s"${appConfig.integrationCatalogueUrl}/integration-catalogue"
 
-  def findWithFilters(searchTerm: List[String], platformFilter: List[PlatformType], itemsPerPage: Option[Int], currentPage: Option[Int])
+  def findWithFilters(integrationFilter: IntegrationFilter, itemsPerPage: Option[Int], currentPage: Option[Int])
                      (implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationResponse]] = {
-   val queryParamsValues = buildQueryParams(searchTerm, platformFilter: List[PlatformType], itemsPerPage: Option[Int], currentPage: Option[Int])
+   val queryParamsValues = buildQueryParams(integrationFilter, itemsPerPage: Option[Int], currentPage: Option[Int])
     handleResult(
       http.GET[IntegrationResponse](s"$externalServiceUri/integrations", queryParams = queryParamsValues))
   }
@@ -48,16 +48,16 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
     handleResult(http.GET[List[PlatformContactResponse]](s"$externalServiceUri/platform/contacts"))
   }
 
-  private def buildQueryParams(searchTerm: List[String],
-                               platformFilter: List[PlatformType],
+  private def buildQueryParams(integrationFilter: IntegrationFilter,
                                itemsPerPage: Option[Int],
                                currentPage: Option[Int]): Seq[(String, String)] = {
-    val searchTerms = searchTerm.filter(_.nonEmpty).map(x => ("searchTerm", x))
-    val platformsFilters = platformFilter.map((x: PlatformType) => ("platformFilter", x.toString))
+    val searchTerms = integrationFilter.searchText.filter(_.nonEmpty).map(x => ("searchTerm", x))
+    val platformsFilters = integrationFilter.platforms.map((x: PlatformType) => ("platformFilter", x.toString))
+    val backendsFilters = integrationFilter.backendsFilter.filter(_.nonEmpty).map(x => ("backendsFilter", x))
     val itemsPerPageParam = itemsPerPage.map((x: Int) => List(("itemsPerPage", x.toString))).getOrElse(List.empty)
     val currentPageParam = currentPage.map((x: Int) => List(("currentPage", x.toString))).getOrElse(List.empty)
 
-    searchTerms ++ platformsFilters ++ itemsPerPageParam ++ currentPageParam
+    searchTerms ++ platformsFilters ++ backendsFilters ++ itemsPerPageParam ++ currentPageParam
   }
 
   private def handleResult[A](result: Future[A]): Future[Either[Throwable, A]] ={

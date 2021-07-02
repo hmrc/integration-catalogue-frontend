@@ -31,18 +31,18 @@ import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+import uk.gov.hmrc.integrationcatalogue.models.IntegrationFilter
 
 @Singleton
 class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
   def findWithFilters(
-      searchTerm: List[String],
-      platformFilter: List[PlatformType],
+      integrationFilter: IntegrationFilter,
       itemsPerPage: Option[Int],
       currentPage: Option[Int]
     )(implicit hc: HeaderCarrier
     ): Future[Either[Throwable, IntegrationResponse]] = {
-    integrationCatalogueConnector.findWithFilters(searchTerm, platformFilter, itemsPerPage, currentPage)
+    integrationCatalogueConnector.findWithFilters(integrationFilter, itemsPerPage, currentPage)
   }
 
   def findByIntegrationId(integrationId: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
