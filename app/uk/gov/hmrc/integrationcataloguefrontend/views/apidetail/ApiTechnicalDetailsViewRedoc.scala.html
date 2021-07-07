@@ -21,5 +21,17 @@
 
 @(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-<redoc spec-url="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationOas(apiDetail.id)"></redoc>
+<div id="redoc"></div>
+
 <script src='@controllers.routes.Assets.versioned("javascripts/redoc/redoc.standalone.js")' charset="UTF-8"> </script>
+
+<script>
+  var options = {
+    hideHostname: true
+  };
+
+  var oasUrl = "@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationOas(apiDetail.id)"
+
+  Redoc.init(oasUrl,options,document.getElementById("redoc"));
+
+</script>
