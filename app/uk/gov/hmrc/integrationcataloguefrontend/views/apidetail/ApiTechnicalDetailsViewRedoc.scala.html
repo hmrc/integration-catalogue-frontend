@@ -22,4 +22,4 @@
 @(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 <redoc spec-url="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationOas(apiDetail.id)"></redoc>
-<script src="https://cdn.jsdelivr.net/npm/redoc@@next/bundles/redoc.standalone.js"> </script>
+<script src='@controllers.routes.Assets.versioned("javascripts/redoc/redoc.standalone.js")' charset="UTF-8"> </script>
