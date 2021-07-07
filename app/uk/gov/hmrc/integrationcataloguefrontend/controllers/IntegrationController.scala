@@ -28,6 +28,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailVi
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiTechnicalDetailsView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiTechnicalDetailsViewRedoc
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -43,6 +44,7 @@ class IntegrationController @Inject() (
     apiDetailView: ApiDetailView,
     fileTransferDetailView: FileTransferDetailView,
     apiTechnicalDetailsView: ApiTechnicalDetailsView,
+    apiTechnicalDetailsViewRedoc: ApiTechnicalDetailsViewRedoc,
     errorTemplate: ErrorTemplate
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
@@ -78,6 +80,15 @@ class IntegrationController @Inject() (
     }
   }
 
+  def getIntegrationDetailTechnicalRedoc(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
+    integrationService.findByIntegrationId(id).map {
+      case Right(detail: ApiDetail)          => handleUrlTitle(detail,  Ok(apiTechnicalDetailsViewRedoc(detail)), id, urlEncodedTitle)
+      case Right(detail: FileTransferDetail) => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
+      case Left(_: NotFoundException)        => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
+      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+    }
+  }
 
   def getIntegrationOas(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
