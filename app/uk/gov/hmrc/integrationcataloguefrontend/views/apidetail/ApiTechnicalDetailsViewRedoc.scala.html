@@ -26,9 +26,23 @@
 
   <script src='@controllers.routes.Assets.versioned("javascripts/redoc/redoc.standalone.js")' charset="UTF-8"> </script>
 
+@*
+  To fix this issue:
+  https://github.com/Redocly/redoc/issues/1108#issuecomment-585990742 
+*@
   <script>
     var options = {
-      hideHostname: true
+      hideHostname: true,
+      theme: {
+        spacing: {
+          sectionVertical: '35px',
+        },
+        typography: {
+          headings: {
+            lineHeight: "1.2em"
+          }
+        }
+      }
     };
 
     var oasUrl = "@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationOas(apiDetail.id)"
