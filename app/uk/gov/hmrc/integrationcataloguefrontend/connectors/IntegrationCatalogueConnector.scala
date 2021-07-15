@@ -53,7 +53,7 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
                                currentPage: Option[Int]): Seq[(String, String)] = {
     val searchTerms = integrationFilter.searchText.filter(_.nonEmpty).map(x => ("searchTerm", x))
     val platformsFilters = integrationFilter.platforms.map((x: PlatformType) => ("platformFilter", x.toString))
-    val backendsFilters = integrationFilter.backendsFilter.filter(_.nonEmpty).map(x => ("backendsFilter", x))
+    val backendsFilters = integrationFilter.backendsFilter.filter(_.nonEmpty).map(x => ("backendsFilter", x.replace("_", " ")))
     val itemsPerPageParam = itemsPerPage.map((x: Int) => List(("itemsPerPage", x.toString))).getOrElse(List.empty)
     val currentPageParam = currentPage.map((x: Int) => List(("currentPage", x.toString))).getOrElse(List.empty)
 
