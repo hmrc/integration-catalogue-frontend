@@ -55,7 +55,7 @@ class IntegrationServiceSpec
   trait SetUp {
     val objInTest = new IntegrationService(mockIntegrationCatalogueConnector, mockAppConfig)
     val exampleIntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
-    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation("ApiPlatform", "api.platform@email")))
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))))
     val apiPlatformNoContact = PlatformContactResponse(PlatformType.API_PLATFORM, None)
 
     def validateDefaultContacts(

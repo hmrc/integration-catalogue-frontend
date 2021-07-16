@@ -65,11 +65,11 @@
   </div>
 
   <div class="govuk-grid-row">
-    @gridItem("Contact name", fileTransferDetail.maintainer.contactInfo.headOption.map(_.name).getOrElse("Unknown"), "contact-name", "half")
+    @gridItem("Contact name", fileTransferDetail.maintainer.contactInfo.headOption.map(x => x.name.getOrElse("")).getOrElse("Unknown"), "contact-name", "half")
   </div>
 
   <div class="govuk-grid-row">
-    @gridItem("Contact email", fileTransferDetail.maintainer.contactInfo.headOption.map(_.emailAddress).getOrElse("Unknown"), "contact-email", "half")
+    @gridItem("Contact email", fileTransferDetail.maintainer.contactInfo.headOption.map(x => x.emailAddress.getOrElse("")).getOrElse("Unknown"), "contact-email", "half")
   </div>
 
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />

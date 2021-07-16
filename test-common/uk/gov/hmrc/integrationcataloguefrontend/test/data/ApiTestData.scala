@@ -35,9 +35,9 @@ trait ApiTestData {
   val coreIfPlatform: PlatformType = PlatformType.CORE_IF
   val apiPlatform: PlatformType = PlatformType.API_PLATFORM
 
-  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation("name", "email")))
+  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), Some("email"))))
   val apiPlatformMaintainerWithNoContacts: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
-  val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation("name", "email")))
+  val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation(Some("name"), Some("email"))))
 
   val selfassessmentApiId: IntegrationId = IntegrationId(UUID.fromString("b7c649e6-e10b-4815-8a2c-706317ec484d"))
 
