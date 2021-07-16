@@ -28,12 +28,12 @@ object BackendFilterItem {
 
 object Backends {
     val filters = List(
-   BackendFilterItem("Case Mgt", "Case Mgt"),
+   BackendFilterItem("Case_Mgt", "Case Mgt"),
     BackendFilterItem("CID", "CID"),
     BackendFilterItem("EDH", "EDH"),
-    BackendFilterItem("Elec Folders", "Elec Folders"),
+    BackendFilterItem("Elec_Folders", "Elec Folders"),
     BackendFilterItem("ETMP", "ETMP"),
-    BackendFilterItem("Income Tax Domain", "Income Tax Domain"),
+    BackendFilterItem("Income_Tax_Domain", "Income Tax Domain"),
     BackendFilterItem("ITMP", "ITMP"),
     BackendFilterItem("ITSD", "ITSD"),
     BackendFilterItem("NPS", "NPS"),
