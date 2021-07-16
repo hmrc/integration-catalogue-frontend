@@ -44,13 +44,10 @@
     <script src='/api-catalogue/assets/javascripts/custom.js'></script>
   </head>
   <body>
-    @{
-      val url = apiDetail.map(
-          api => uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetail(api.id, encodeTitle(api.title)).url
-      ).getOrElse("javascript:history.back()")
-      
-      govukBackLink(BackLink(href = url, content = Text("Back")))
-    }
+    @govukBackLink(BackLink(
+      href = "javascript:history.back()",
+      content = Text("Back")
+  ))
     
     @contentBlock
   </body>
