@@ -49,7 +49,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
 
     def handleDefaultContact(integration: IntegrationDetail): Future[IntegrationDetail] = {
       val contacts = integration.maintainer.contactInfo
-      if (contacts.nonEmpty) {
+      if (contacts.nonEmpty && contacts.head.emailAddress.isDefined){
         Future.successful(integration)
       } else {
         integrationCatalogueConnector.getPlatformContacts()
