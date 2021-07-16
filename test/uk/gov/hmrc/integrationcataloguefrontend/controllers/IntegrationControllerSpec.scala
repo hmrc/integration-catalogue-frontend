@@ -29,7 +29,8 @@ import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.{ApiDetailView, ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
