@@ -74,11 +74,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
     integrationCatalogueConnector.findByIntegrationId(integrationId)
       .flatMap(result =>
         result match {
-          case Right(integration: IntegrationDetail) => if (appConfig.defaultPlatformContacts) {
-              handleDefaultContact(integration).map(Right(_))
-            } else {
-              Future.successful(Right(integration))
-            }
+          case Right(integration: IntegrationDetail) =>  handleDefaultContact(integration).map(Right(_))
           case result                                => Future.successful(result)
         }
       )

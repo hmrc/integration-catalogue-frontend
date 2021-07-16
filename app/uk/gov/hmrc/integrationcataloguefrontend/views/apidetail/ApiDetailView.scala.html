@@ -67,7 +67,9 @@
   </div>
 
   <div class="govuk-grid-row">
-    @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(x => x.name.getOrElse("")).getOrElse("Unknown"), "contact-name", "half")
+    @if(apiDetail.maintainer.contactInfo.headOption.map(x => x.name.isDefined).getOrElse(false)){
+     @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(x => x.name.getOrElse("")).getOrElse("Unknown"), "contact-name", "half")
+    }
   </div>
 
   <div class="govuk-grid-row">
