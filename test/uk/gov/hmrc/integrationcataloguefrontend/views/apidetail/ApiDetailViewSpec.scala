@@ -33,8 +33,8 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
   "ApiDetailView" should {
 
-    "render page with api details that has no contact details" in new Setup {
-      val apiParsed: ApiDetail = apiDetail0
+    "render page with api details that only has a contact email address" in new Setup {
+      val apiParsed: ApiDetail = apiDetailWithOnlyContactEmail
        val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
 
@@ -55,11 +55,11 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("development-team-heading").text() shouldBe "Development team"
        document.getElementById("development-team-value").text() shouldBe "Api Platform Team"
        
-       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
-       document.getElementById("contact-name-value").text() shouldBe "Unknown"
+       Option(document.getElementById("contact-name-heading")) shouldBe None
+       Option(document.getElementById("contact-name-value")) shouldBe None
        
        document.getElementById("contact-email-heading").text() shouldBe "Contact email"
-       document.getElementById("contact-email-value").text() shouldBe "Unknown"
+       document.getElementById("contact-email-value").text() shouldBe "email"
 
     }
 

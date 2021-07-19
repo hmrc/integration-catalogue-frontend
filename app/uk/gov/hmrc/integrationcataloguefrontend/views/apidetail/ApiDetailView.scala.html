@@ -67,7 +67,7 @@
   </div>
 
   <div class="govuk-grid-row">
-    @if(apiDetail.maintainer.contactInfo.headOption.map(x => x.name.isDefined).getOrElse(false)){
+    @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.name.isDefined)){
      @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(x => x.name.getOrElse("")).getOrElse("Unknown"), "contact-name", "half")
     }
   </div>
