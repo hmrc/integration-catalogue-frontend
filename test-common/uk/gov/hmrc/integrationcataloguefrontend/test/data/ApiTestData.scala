@@ -38,6 +38,7 @@ trait ApiTestData {
   val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), Some("email"))))
   val apiPlatformMaintainerWithNoContacts: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
   val apiPlatformMaintainerWithOnlyEmail: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(None, Some("email"))))
+  val apiPlatformMaintainerWithOnlyName: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), None)))
   val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation(Some("name"), Some("email"))))
 
   val selfassessmentApiId: IntegrationId = IntegrationId(UUID.fromString("b7c649e6-e10b-4815-8a2c-706317ec484d"))
@@ -243,6 +244,22 @@ trait ApiTestData {
     lastUpdated = dateValue,
     platform = apiPlatform,
     maintainer = apiPlatformMaintainerWithOnlyEmail,
+    version = "2.0",
+    specificationType = SpecificationType.OAS_V3,
+    endpoints = endpoints,
+    components = Components(List(schema2), List.empty),
+    shortDescription = None,
+    openApiSpecification = "OAS Content for Self Assessment (MTD)"
+  )
+
+    val apiDetailWithOnlyContactName: ApiDetail = ApiDetail(
+    selfassessmentApiId,
+    publisherReference = "",
+    title = "Self Assessment (MTD)",
+    description = "Making Tax Digital introduces digital record keeping for most businesses, self-employed people and landlords.",
+    lastUpdated = dateValue,
+    platform = apiPlatform,
+    maintainer = apiPlatformMaintainerWithOnlyName,
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,

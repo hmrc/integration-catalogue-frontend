@@ -61,15 +61,16 @@ class IntegrationServiceSpec
     def validateDefaultContacts(
         integrationReturned: IntegrationDetail,
         expectedIntegration: IntegrationDetail,
-        callGetPlatformContacts: Boolean = false,
         defaultPlatformContacts: List[PlatformContactResponse] = List.empty,
-        defaultPlatformContactFeature: Boolean = false
+        callGetPlatformContacts: Boolean,
+        callGetPlatformContactsReturnsError: Boolean = false
+
       ) = {
       val id = IntegrationId(UUID.randomUUID())
-      when(mockAppConfig.defaultPlatformContacts).thenReturn(defaultPlatformContactFeature)
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(integrationReturned)))
       if (callGetPlatformContacts) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
-
+      if(callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
+      
       val result: Either[Throwable, IntegrationDetail] =
         await(objInTest.findByIntegrationId(id))
 
@@ -79,10 +80,10 @@ class IntegrationServiceSpec
       }
 
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
-      if (callGetPlatformContacts) {
+    if (callGetPlatformContacts || callGetPlatformContactsReturnsError) {
         verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
-      } else verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
-
+      }
+        else verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
     }
 
   }
@@ -135,73 +136,103 @@ class IntegrationServiceSpec
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
     }
 
-    "return apidetail that has contacts when defaultPlatformContact feature is switched on" in new SetUp {
+    "return apidetail that has contact name and email" in new SetUp {
       validateDefaultContacts(
         integrationReturned = exampleApiDetail,
         expectedIntegration = exampleApiDetail,
-        callGetPlatformContacts = false,
         defaultPlatformContacts = List.empty,
-        defaultPlatformContactFeature = true
+        callGetPlatformContacts = false
       )
     }
 
-    "return apidetail that has contacts when defaultPlatformContact feature is switched off" in new SetUp {
+    "return apidetail that only has a contact email" in new SetUp {
       validateDefaultContacts(
-        integrationReturned = exampleApiDetail,
-        expectedIntegration = exampleApiDetail,
-        callGetPlatformContacts = false,
+        integrationReturned = apiDetailWithOnlyContactEmail,
+        expectedIntegration = apiDetailWithOnlyContactEmail,
         defaultPlatformContacts = List.empty,
-        defaultPlatformContactFeature = false
+        callGetPlatformContacts = false
+      )
+    }
+
+    "return apidetail with default platform contact info when api only has contact name" in new SetUp {
+      val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+      val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
+
+      validateDefaultContacts(
+        integrationReturned = apiDetailWithOnlyContactName,
+        expectedIntegration = expectedApiDetail,
+        defaultPlatformContacts = List(apiPlatformContact),
+        callGetPlatformContacts = true
       )
 
     }
 
-    "return apidetail with default contacts when defaultPlatformContact feature is switched on" in new SetUp {
+    "return apidetail with empty contact list when api only has contact name and defaultPlatformContacts list is empty" in new SetUp {
+      val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts)
+
+      validateDefaultContacts(
+        integrationReturned = apiDetailWithOnlyContactName,
+        expectedIntegration = expectedApiDetail,
+        defaultPlatformContacts = List.empty,
+        callGetPlatformContacts = true
+      )
+
+    }
+
+    "return apidetail with default platform contact info when api does not have any contact information" in new SetUp {
       val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedApiDetail = apiDetail0.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
 
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = expectedApiDetail,
-        callGetPlatformContacts = true,
         defaultPlatformContacts = List(apiPlatformContact),
-        defaultPlatformContactFeature = true
+        callGetPlatformContacts = true
       )
 
     }
 
-    "return file transfer detail with default contacts when defaultPlatformContact feature is switched on" in new SetUp {
+    "return file transfer detail with default platform contact info when FT does not have any contact information" in new SetUp {
 
       val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedIntegration = fileTransfer4.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
       validateDefaultContacts(
         integrationReturned = fileTransfer4,
         expectedIntegration = expectedIntegration,
-        callGetPlatformContacts = true,
         defaultPlatformContacts = List(apiPlatformContact),
-        defaultPlatformContactFeature = true
+        callGetPlatformContacts = true
       )
     }
 
-    "return apidetail when defaultPlatformContact feature is switched on and defaultPlatform does not have any Contacts" in new SetUp {
+    "return apidetail with empty contactInfo list when both the api and defaultPlatform do not have any cntacts info" in new SetUp {
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
-        callGetPlatformContacts = true,
         defaultPlatformContacts = List(apiPlatformNoContact),
-        defaultPlatformContactFeature = true
+        callGetPlatformContacts = true
       )
     }
 
-    "return apidetail when defaultPlatformContact feature is switched on and defaultPlatform list is empty" in new SetUp {
+    "return apidetail with empty contactInfo list when api has no contacts and defaultPlatform list is empty" in new SetUp {
      validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
-        callGetPlatformContacts = true,
         defaultPlatformContacts = List.empty,
-        defaultPlatformContactFeature = true
+        callGetPlatformContacts = true
       )
     }
+
+    "return apidetail with empty contactInfo list when api has no contacts and getPlatformContacts returns a Left from connector" in new SetUp {
+     when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
+     validateDefaultContacts(
+        integrationReturned = apiDetail0,
+        expectedIntegration = apiDetail0,
+        defaultPlatformContacts = List.empty,
+        callGetPlatformContacts = false,
+        callGetPlatformContactsReturnsError = true
+      )
+    }
+
   }
 
   "getPlatformContacts" should {
