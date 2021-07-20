@@ -66,7 +66,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
       description = "A file transfer from Birth Verification Data (BVD) to Data Provisioning Systems (DPS)",
       platformType = PlatformType.CORE_IF,
       lastUpdated =  dateValue,
-      contact = ContactInformation("Core IF Team", "example@gmail.com"),
+      contact = ContactInformation(Some("Core IF Team"), Some("example@gmail.com")),
       sourceSystem = List("BVD"),
       targetSystem = List("DPS"),
       fileTransferPattern = "Corporate to corporate"
@@ -78,7 +78,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
 
     val objInTest: IntegrationCatalogueConnector =  app.injector.instanceOf[IntegrationCatalogueConnector]
 
-    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation("ApiPlatform", "api.platform@email")))
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))))
 
   }
 

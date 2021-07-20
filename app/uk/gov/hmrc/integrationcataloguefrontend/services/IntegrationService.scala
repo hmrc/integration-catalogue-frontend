@@ -32,6 +32,7 @@ import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcatalogue.models.IntegrationFilter
+import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 
 @Singleton
 class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector, appConfig: AppConfig)(implicit ec: ExecutionContext) {
@@ -48,37 +49,37 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
   def findByIntegrationId(integrationId: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
 
     def handleDefaultContact(integration: IntegrationDetail): Future[IntegrationDetail] = {
+
+      def constructMaintainer(intzegration: IntegrationDetail, contacts: List[ContactInformation]) ={
+           val copyMaintainer: Maintainer = integration.maintainer.copy(contactInfo = contacts)
+              integration match {
+                case x: ApiDetail => x.copy(maintainer = copyMaintainer)
+                case y: FileTransferDetail => y.copy(maintainer = copyMaintainer)
+              }            
+      }
+
       val contacts = integration.maintainer.contactInfo
-      if (contacts.nonEmpty) {
+      if (contacts.nonEmpty && contacts.head.emailAddress.isDefined){
         Future.successful(integration)
       } else {
         integrationCatalogueConnector.getPlatformContacts()
-          .map(contactResult =>
+          .map(contactResult => {
             contactResult match {
               case Right(result: List[PlatformContactResponse]) => {
                 val matchedDefault = result.filter(p => p.platformType == integration.platform)
                 if (matchedDefault.nonEmpty && matchedDefault.head.contactInfo.isDefined) {
-                  val copyMaintainer: Maintainer = integration.maintainer.copy(contactInfo = List(matchedDefault.head.contactInfo.get))
-                  integration match {
-                    case apiDetail: ApiDetail                   => apiDetail.copy(maintainer = copyMaintainer)
-                    case fileTransferDetail: FileTransferDetail => fileTransferDetail.copy(maintainer = copyMaintainer)
-                  }
-
-                } else integration
+                  constructMaintainer(integration, List(matchedDefault.head.contactInfo.get))
+                } else constructMaintainer(integration, List.empty)
               }
-              case _                                            => integration
-            }
-          )
-      }
+              case _                                            => constructMaintainer(integration, List.empty)
+          }
+       })
     }
+  }
     integrationCatalogueConnector.findByIntegrationId(integrationId)
       .flatMap(result =>
         result match {
-          case Right(integration: IntegrationDetail) => if (appConfig.defaultPlatformContacts) {
-              handleDefaultContact(integration).map(Right(_))
-            } else {
-              Future.successful(Right(integration))
-            }
+          case Right(integration: IntegrationDetail) =>  handleDefaultContact(integration).map(Right(_))
           case result                                => Future.successful(result)
         }
       )
