@@ -58,6 +58,7 @@
     @gridItem("Platform", apiDetail.platform.displayName, "platform", "quarter")
   </div>
 
+  @if(apiDetail.maintainer.contactInfo.nonEmpty) {
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
 
   <h2 class="govuk-heading-l" id="contact-information-heading">Contact information</h2>
@@ -67,12 +68,17 @@
   </div>
 
   <div class="govuk-grid-row">
-    @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(_.name).getOrElse("Unknown"), "contact-name", "half")
+    @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.name.isDefined)){
+     @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(x => x.name.getOrElse("")).getOrElse("Unknown"), "contact-name", "half")
+    }
   </div>
 
   <div class="govuk-grid-row">
-    @gridItem("Contact email", apiDetail.maintainer.contactInfo.headOption.map(_.emailAddress).getOrElse("Unknown"), "contact-email", "half")
+      @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.emailAddress.isDefined)) {
+          @gridItem("Contact email", apiDetail.maintainer.contactInfo.headOption.map(x => x.emailAddress.getOrElse("")).getOrElse("Unknown"), "contact-email", "half")
+      }
   </div>
+}
   
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
   
