@@ -47,7 +47,9 @@
   </h2>
   <div class="govuk-grid-row">
   @gridItem("Version", apiDetail.version, "version")
-  @gridItem("HoDs", apiDetail.hods.mkString(", "), "hods")
+  @if(apiDetail.hods.nonEmpty){
+    @gridItem("HoDs", apiDetail.hods.mkString(", "), "hods")
+  }
   @gridItem("Platform", apiDetail.platform.displayName, "platform")
 </div>
 
