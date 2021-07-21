@@ -45,8 +45,8 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        
        document.getElementById("api-details-heading").text() shouldBe "API summary"
 
-       document.getElementById("hods-heading").text() shouldBe "HoDs"
-       document.getElementById("hods-value").text() shouldBe ""
+       Option(document.getElementById("hods-heading")) shouldBe None
+      Option(document.getElementById("hods-value")) shouldBe None
 
        document.getElementById("platform-heading").text() shouldBe "Platform"
        document.getElementById("platform-value").text() shouldBe "API Platform"
@@ -75,7 +75,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("api-details-heading").text() shouldBe "API summary"
 
        document.getElementById("hods-heading").text() shouldBe "HoDs"
-       document.getElementById("hods-value").text() shouldBe ""
+       document.getElementById("hods-value").text() shouldBe "ETMP"
 
        document.getElementById("platform-heading").text() shouldBe "Platform"
        document.getElementById("platform-value").text() shouldBe "API Platform"
@@ -100,8 +100,8 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        
        document.getElementById("api-details-heading").text() shouldBe "API summary"
 
-       document.getElementById("hods-heading").text() shouldBe "HoDs"
-       document.getElementById("hods-value").text() shouldBe ""
+       Option(document.getElementById("hods-heading"))shouldBe None
+       Option(document.getElementById("hods-value")) shouldBe None
 
        document.getElementById("platform-heading").text() shouldBe "Platform"
        document.getElementById("platform-value").text() shouldBe "API Platform"
