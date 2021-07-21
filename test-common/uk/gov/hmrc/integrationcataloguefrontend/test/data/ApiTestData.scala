@@ -246,6 +246,7 @@ trait ApiTestData {
     maintainer = apiPlatformMaintainerWithOnlyEmail,
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
+    hods = List("ETMP"),
     endpoints = endpoints,
     components = Components(List(schema2), List.empty),
     shortDescription = None,
