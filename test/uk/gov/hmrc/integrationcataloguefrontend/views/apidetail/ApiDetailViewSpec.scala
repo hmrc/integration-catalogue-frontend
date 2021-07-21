@@ -40,17 +40,16 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
-       
-       document.getElementById("api-details-heading").text() shouldBe "API details"
 
-       document.getElementById("hods-heading").text() shouldBe "Head of Duty systems"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       
+       document.getElementById("api-details-heading").text() shouldBe "API summary"
+
+       document.getElementById("hods-heading").text() shouldBe "HoDs"
        document.getElementById("hods-value").text() shouldBe ""
 
        document.getElementById("platform-heading").text() shouldBe "Platform"
        document.getElementById("platform-value").text() shouldBe "API Platform"
-
-       document.getElementById("updated-heading").text() shouldBe "Updated"
-       document.getElementById("updated-value").text() shouldBe "04 November 2020"
 
        Option(document.getElementById("development-team-heading")) shouldBe None
        Option(document.getElementById("development-team-value")) shouldBe None
@@ -70,20 +69,16 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
-       
-       document.getElementById("api-details-heading").text() shouldBe "API details"
 
-       document.getElementById("hods-heading").text() shouldBe "Head of Duty systems"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       
+       document.getElementById("api-details-heading").text() shouldBe "API summary"
+
+       document.getElementById("hods-heading").text() shouldBe "HoDs"
        document.getElementById("hods-value").text() shouldBe ""
 
        document.getElementById("platform-heading").text() shouldBe "Platform"
        document.getElementById("platform-value").text() shouldBe "API Platform"
-
-       document.getElementById("updated-heading").text() shouldBe "Updated"
-       document.getElementById("updated-value").text() shouldBe "04 November 2020"
-
-       document.getElementById("development-team-heading").text() shouldBe "Development team"
-       document.getElementById("development-team-value").text() shouldBe "Api Platform Team"
        
        Option(document.getElementById("contact-name-heading")) shouldBe None
        Option(document.getElementById("contact-name-value")) shouldBe None
@@ -100,20 +95,16 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
-       
-       document.getElementById("api-details-heading").text() shouldBe "API details"
 
-       document.getElementById("hods-heading").text() shouldBe "Head of Duty systems"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       
+       document.getElementById("api-details-heading").text() shouldBe "API summary"
+
+       document.getElementById("hods-heading").text() shouldBe "HoDs"
        document.getElementById("hods-value").text() shouldBe ""
 
        document.getElementById("platform-heading").text() shouldBe "Platform"
        document.getElementById("platform-value").text() shouldBe "API Platform"
-
-       document.getElementById("updated-heading").text() shouldBe "Updated"
-       document.getElementById("updated-value").text() shouldBe "04 November 2020"
-
-       document.getElementById("development-team-heading").text() shouldBe "Development team"
-       document.getElementById("development-team-value").text() shouldBe "Api Platform Team"
        
        document.getElementById("contact-name-heading").text() shouldBe "Contact name"
        document.getElementById("contact-name-value").text() shouldBe "name"
