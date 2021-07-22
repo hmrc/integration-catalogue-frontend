@@ -39,7 +39,6 @@
 
   <br />
   <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-5" id="page-reviewed-date">Page reviewed @DateTimeFormat.forPattern("d MMMM yyyy").print(apiDetail.lastUpdated)</p>
-  <br />
 
 
   <h2 class="govuk-heading-m" id="api-details-heading">
@@ -55,7 +54,7 @@
 
 
 @if(apiDetail.maintainer.contactInfo.nonEmpty) {
-<hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible govuk-!-margin-top-1" />
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
 
 <h2 class="govuk-heading-m" id="contact-information-heading">Contact</h2>
 
@@ -73,7 +72,7 @@
 </div>
 }
 
-<hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible govuk-!-margin-top-1" />
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
 
 <h2 class="govuk-heading-m" id="contact-information-heading">Endpoints, examples and schemas</h2>
 
