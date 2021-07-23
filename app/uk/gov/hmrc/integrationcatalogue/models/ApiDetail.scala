@@ -18,6 +18,7 @@ package uk.gov.hmrc.integrationcatalogue.models
 
 import org.joda.time.DateTime
 import uk.gov.hmrc.integrationcatalogue.models.common._
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 
 sealed trait IntegrationDetail {
   def id: IntegrationId
@@ -153,6 +154,16 @@ case class EndpointMethod(
     responses: List[Response],
     parameters: List[Parameter] = List.empty)
 
+sealed abstract class ApiStatus(val displayName: String, val shortName: String) extends EnumEntry
+object ApiStatus extends Enum[ApiStatus] with PlayJsonEnum[ApiStatus] {
+
+  val values = findValues
+
+  case object ALPHA extends ApiStatus("Alpha – not ready to use (documentation only and could change)", "ALPHA")
+  case object BETA extends ApiStatus("Beta – early stage of development and may be available (expect breaking changes)", "BETA")
+  case object LIVE extends ApiStatus("Live – available to use", "LIVE")
+  case object DEPRECATED extends ApiStatus("Deprecated – not recommended for use", "DEPRECATED")
+}
 case class ApiDetail(
     id: IntegrationId,
     publisherReference: String,
@@ -167,7 +178,8 @@ case class ApiDetail(
     endpoints: List[Endpoint],
     components: Components,
     shortDescription: Option[String],
-    openApiSpecification: String)
+    openApiSpecification: String,
+    apiStatus: ApiStatus)
     extends IntegrationDetail {
   override val integrationType: IntegrationType = IntegrationType.API
 }

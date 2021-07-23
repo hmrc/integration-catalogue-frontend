@@ -24,6 +24,7 @@ import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
+import uk.gov.hmrc.integrationcatalogue.models.ApiStatus
 
 class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
@@ -114,5 +115,63 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     }
   }
+
+    "render page with api details that has status LIVE" in new Setup {
+      val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE)
+       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val document: Document = Jsoup.parse(page.body)
+
+       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
+
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       
+       document.getElementById("api-details-heading").text() shouldBe "API summary"
+
+       Option(document.getElementById("hods-heading"))shouldBe None
+       Option(document.getElementById("hods-value")) shouldBe None
+
+       document.getElementById("platform-heading").text() shouldBe "Platform"
+       document.getElementById("platform-value").text() shouldBe "API Platform"
+       
+       document.getElementById("status-heading").text() shouldBe "Status"
+       document.getElementById("status-value").text() shouldBe "Live – available to use"
+
+       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
+       document.getElementById("contact-name-value").text() shouldBe "name"
+       
+       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
+       document.getElementById("contact-email-value").text() shouldBe "email"
+
+    }
+  
+    "render page with api details that has status BETA" in new Setup {
+      val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.BETA)
+       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val document: Document = Jsoup.parse(page.body)
+
+       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
+
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       
+       document.getElementById("api-details-heading").text() shouldBe "API summary"
+
+       Option(document.getElementById("hods-heading"))shouldBe None
+       Option(document.getElementById("hods-value")) shouldBe None
+
+       document.getElementById("platform-heading").text() shouldBe "Platform"
+       document.getElementById("platform-value").text() shouldBe "API Platform"
+       
+       document.getElementById("status-heading").text() shouldBe "Status"
+       document.getElementById("status-value").text() shouldBe "Beta – early stage of development and may be available (expect breaking changes)"
+
+       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
+       document.getElementById("contact-name-value").text() shouldBe "name"
+       
+       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
+       document.getElementById("contact-email-value").text() shouldBe "email"
+
+    }
 
 }
