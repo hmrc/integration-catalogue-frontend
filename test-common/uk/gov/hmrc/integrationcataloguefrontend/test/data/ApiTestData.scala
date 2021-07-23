@@ -115,7 +115,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List(schema2), List.empty),
     shortDescription = None,
-    openApiSpecification = "OAS Content for Self Assessment (MTD)"
+    openApiSpecification = "OAS Content for Self Assessment (MTD)",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiDetail1: ApiDetail = ApiDetail(
@@ -131,7 +132,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     shortDescription = Some("I am a short description"),
-    openApiSpecification = "OAS Content for Marriage Allowance"
+    openApiSpecification = "OAS Content for Marriage Allowance",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiDetail2: ApiDetail = ApiDetail(
@@ -148,7 +150,8 @@ trait ApiTestData {
     hods = List.empty,
     components = Components(List.empty, List.empty),
     shortDescription = None,
-    openApiSpecification = "OAS Content for Title 1"
+    openApiSpecification = "OAS Content for Title 1",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiDetail3: ApiDetail = ApiDetail(
@@ -165,7 +168,8 @@ trait ApiTestData {
     components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
-    openApiSpecification = "OAS Content  for Title 2"
+    openApiSpecification = "OAS Content  for Title 2",
+    apiStatus = ApiStatus.LIVE
   )
 
   val exampleApiDetail: ApiDetail = ApiDetail(
@@ -182,7 +186,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     shortDescription = None,
-    openApiSpecification = "OAS Content  for Title 3"
+    openApiSpecification = "OAS Content  for Title 3",
+    apiStatus = ApiStatus.LIVE
   )
 
   val exampleApiDetail2: ApiDetail = ApiDetail(
@@ -199,7 +204,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     shortDescription = Some("short desc"),
-    openApiSpecification = "OAS Content  for Title 4"
+    openApiSpecification = "OAS Content  for Title 4",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiDetailWithLongDescriptionNoShort: ApiDetail = ApiDetail(
@@ -216,7 +222,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     shortDescription = None,
-    openApiSpecification = "OAS Content  for Title 4"
+    openApiSpecification = "OAS Content  for Title 4",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiDetailWithLongDescriptionAndShort: ApiDetail = ApiDetail(
@@ -233,7 +240,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List.empty, List.empty),
     shortDescription = Some("I am a short description"),
-    openApiSpecification = "OAS Content  for Title 4"
+    openApiSpecification = "OAS Content  for Title 4",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiDetailWithOnlyContactEmail: ApiDetail = ApiDetail(
@@ -250,7 +258,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List(schema2), List.empty),
     shortDescription = None,
-    openApiSpecification = "OAS Content for Self Assessment (MTD)"
+    openApiSpecification = "OAS Content for Self Assessment (MTD)",
+     apiStatus = ApiStatus.LIVE
   )
 
     val apiDetailWithOnlyContactName: ApiDetail = ApiDetail(
@@ -266,7 +275,8 @@ trait ApiTestData {
     endpoints = endpoints,
     components = Components(List(schema2), List.empty),
     shortDescription = None,
-    openApiSpecification = "OAS Content for Self Assessment (MTD)"
+    openApiSpecification = "OAS Content for Self Assessment (MTD)",
+    apiStatus = ApiStatus.LIVE
   )
 
   val apiList = List(apiDetail0, apiDetail1, apiDetail2, apiDetail3)
