@@ -44,7 +44,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
        
-       document.getElementById("api-details-heading").text() shouldBe "API summary"
+       document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
        Option(document.getElementById("hods-heading")) shouldBe None
       Option(document.getElementById("hods-value")) shouldBe None
@@ -73,7 +73,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
        
-       document.getElementById("api-details-heading").text() shouldBe "API summary"
+       document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
        document.getElementById("hods-heading").text() shouldBe "HoDs"
        document.getElementById("hods-value").text() shouldBe "ETMP"
@@ -87,6 +87,9 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("contact-email-heading").text() shouldBe "Contact email"
        document.getElementById("contact-email-value").text() shouldBe "email"
 
+       document.getElementById("endpoints-examples-schemas-heading").text() shouldBe "Endpoints, examples and schemas"
+
+
     }
 
     "render page with api details that has contact name and email address" in new Setup {
@@ -99,7 +102,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
        
-       document.getElementById("api-details-heading").text() shouldBe "API summary"
+       document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
        Option(document.getElementById("hods-heading"))shouldBe None
        Option(document.getElementById("hods-value")) shouldBe None
@@ -126,7 +129,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
        
-       document.getElementById("api-details-heading").text() shouldBe "API summary"
+       document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
        Option(document.getElementById("hods-heading"))shouldBe None
        Option(document.getElementById("hods-value")) shouldBe None
@@ -155,7 +158,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
        
-       document.getElementById("api-details-heading").text() shouldBe "API summary"
+       document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
        Option(document.getElementById("hods-heading"))shouldBe None
        Option(document.getElementById("hods-value")) shouldBe None
