@@ -88,6 +88,8 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("contact-email-value").text() shouldBe "email"
 
        document.getElementById("endpoints-examples-schemas-heading").text() shouldBe "Endpoints, examples and schemas"
+       document.getElementById("api-detail-link").text() shouldBe "See API details"
+       document.getElementById("api-detail-link").attr("href") shouldBe "/api-catalogue/integrations/b7c649e6-e10b-4815-8a2c-706317ec484d/self-assessment-mtd/redoc"
 
 
     }
