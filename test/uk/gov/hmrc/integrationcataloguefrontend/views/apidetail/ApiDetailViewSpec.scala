@@ -42,7 +42,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
        
        document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
@@ -71,7 +71,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
        
        document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
@@ -102,7 +102,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
        
        document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
@@ -129,7 +129,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
        
        document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
@@ -158,7 +158,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
        document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 November 2020"
+       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
        
        document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
