@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.test.data
 
-
 import java.util.UUID
 
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
@@ -28,7 +27,6 @@ import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 
 trait FileTransferTestData {
 
-
   val id1: IntegrationId = IntegrationId(UUID.fromString("da64b1de-330b-11eb-adc1-0242ac120002"))
   val id2: IntegrationId = IntegrationId(UUID.fromString("da64b634-330b-11eb-adc1-0242ac120002"))
   val id3: IntegrationId = IntegrationId(UUID.fromString("da64b742-330b-11eb-adc1-0242ac120002"))
@@ -39,12 +37,13 @@ trait FileTransferTestData {
   val flowId3 = "XXXX-DPS-ZZZDaily-pull"
   val flowId4 = "XXXX-PPP-ZZZDaily-pull"
 
-  val fileTransferDateValue = DateTime.parse("04/11/2020 20:27:05",
-                  DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"));
+  val fileTransferDateValue = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"));
+
+  val fileTransferReviewedDate = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"));
 
   val contactInfo = List(ContactInformation(Some("Services"), Some("services@example.com")))
   val coreIfFileTransferMaintainer: Maintainer = Maintainer("Maintainer", "N/A", contactInfo)
-   val apiPlatformMaintainerWithNoContacts2: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
+  val apiPlatformMaintainerWithNoContacts2: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
 
   val corpToCorp: String = "Corporate to Corporate"
 
@@ -56,10 +55,12 @@ trait FileTransferTestData {
     description = "",
     platform = PlatformType.CORE_IF,
     lastUpdated = fileTransferDateValue,
+    reviewedDate = fileTransferReviewedDate,
     maintainer = coreIfFileTransferMaintainer,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
-    fileTransferPattern = corpToCorp)
+    fileTransferPattern = corpToCorp
+  )
 
   val fileTransfer2: FileTransferDetail = FileTransferDetail(
     id = id2,
@@ -69,10 +70,12 @@ trait FileTransferTestData {
     description = "",
     platform = PlatformType.CORE_IF,
     lastUpdated = fileTransferDateValue,
+    reviewedDate = fileTransferReviewedDate,
     maintainer = coreIfFileTransferMaintainer,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
-    fileTransferPattern = corpToCorp)
+    fileTransferPattern = corpToCorp
+  )
 
   val fileTransfer3: FileTransferDetail = FileTransferDetail(
     id = id3,
@@ -82,10 +85,12 @@ trait FileTransferTestData {
     description = "",
     platform = PlatformType.CORE_IF,
     lastUpdated = fileTransferDateValue,
+    reviewedDate = fileTransferReviewedDate,
     maintainer = coreIfFileTransferMaintainer,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
-    fileTransferPattern = corpToCorp)
+    fileTransferPattern = corpToCorp
+  )
 
   val fileTransfer4: FileTransferDetail = FileTransferDetail(
     id = id4,
@@ -95,10 +100,12 @@ trait FileTransferTestData {
     description = "",
     platform = PlatformType.API_PLATFORM,
     lastUpdated = fileTransferDateValue,
+    reviewedDate = fileTransferReviewedDate,
     maintainer = apiPlatformMaintainerWithNoContacts2,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
-    fileTransferPattern = corpToCorp)
+    fileTransferPattern = corpToCorp
+  )
 
   val fileTransferList = List(fileTransfer1, fileTransfer2, fileTransfer3)
 
