@@ -21,7 +21,7 @@
 
 @(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(s"API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
+@layout(pageTitle = Some(s"${apiDetail.title} - API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
   <div id="redoc"></div>
 
   <script src='@controllers.routes.Assets.versioned("javascripts/redoc/redoc.standalone.js")' charset="UTF-8"> </script>
