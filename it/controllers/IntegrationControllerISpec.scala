@@ -46,35 +46,35 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
     "GET /integrations" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe OK
 
       }
 
       "respond with 500 and render correctly when Not Found returned from backend" in {
-      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", NOT_FOUND)
+      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_FOUND)
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
       }
 
       "respond with 400 and render correctly when Bad Request returned from backend" in {
-      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", BAD_REQUEST)
+      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", BAD_REQUEST)
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe BAD_REQUEST
 
       }
 
       "respond with 400  when unexpected error from backend" in {
-        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30", NOT_ACCEPTABLE)
+        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_ACCEPTABLE)
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
       }
 
       "respond with 200 and render correctly when search query param provided" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
       
         val result = callGetEndpoint(s"$url/search?keywords=marriage", List.empty)
         result.status mustBe OK
@@ -83,14 +83,14 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
      "respond with 200 and render correctly when platform & search query params provided" in {
-      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30")
+      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF&backendsFilter=ETMP", List.empty)
         result.status mustBe OK
 
       }
 
       "respond with 200 and render correctly when search query params provided but another invalid query paramkey" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search?keywords=marriage&someUnKnownKey=CORE_IF", List.empty)
         result.status mustBe OK
 
