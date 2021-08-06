@@ -57,13 +57,13 @@ class IntegrationCatalogueConnectorSpec extends WordSpec with Matchers with Opti
 
     def httpCallToFindWithFilterWillSucceedWithResponse(response: IntegrationResponse): ScalaOngoingStubbing[Future[IntegrationResponse]] =
       when(mockHttpClient.GET[IntegrationResponse]
-        (eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm",searchTerm), ("currentPage", "1"))), eqTo(Seq.empty))
+        (eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm",searchTerm), ("currentPage", "1"), ("integrationType", "API"))), eqTo(Seq.empty))
         (any[HttpReads[IntegrationResponse]], any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful(response))
 
     def httpCallToFindWithFilterWillFailWithException(exception: Throwable): ScalaOngoingStubbing[Future[IntegrationResponse]] =
            when(mockHttpClient.GET[IntegrationResponse]
-        (eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm",searchTerm))), eqTo(Seq.empty))
+        (eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm",searchTerm), ("integrationType", "API"))), eqTo(Seq.empty))
         (any[HttpReads[IntegrationResponse]], any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.failed(exception))
   }
