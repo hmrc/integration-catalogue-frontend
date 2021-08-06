@@ -26,6 +26,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
+import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationType
 
 @Singleton
 class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppConfig)
@@ -56,8 +57,9 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
     val backendsFilters = integrationFilter.backendsFilter.filter(_.nonEmpty).map(x => ("backendsFilter", x))
     val itemsPerPageParam = itemsPerPage.map((x: Int) => List(("itemsPerPage", x.toString))).getOrElse(List.empty)
     val currentPageParam = currentPage.map((x: Int) => List(("currentPage", x.toString))).getOrElse(List.empty)
+     val integrationTypeFilter = List(("integrationType", IntegrationType.API.entryName))
 
-    searchTerms ++ platformsFilters ++ backendsFilters ++ itemsPerPageParam ++ currentPageParam
+    searchTerms ++ platformsFilters ++ backendsFilters ++ itemsPerPageParam ++ currentPageParam ++ integrationTypeFilter
   }
 
   private def handleResult[A](result: Future[A]): Future[Either[Throwable, A]] ={

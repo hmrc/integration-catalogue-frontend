@@ -113,7 +113,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
 
     "findWithFilter" should {
       "return Right with IntegrationResponse when searchTerm=API1689" in new Setup {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponse).toString(), "?searchTerm=API1689")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponse).toString(), "?searchTerm=API1689&integrationType=API")
         val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
             result match {
               case Right(response) => val integration = response.results.head
@@ -125,7 +125,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
       }
 
       "return Right with IntegrationResponse when filtering by backends" in new Setup {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponse).toString(), "?backendsFilter=ETMP")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponse).toString(), "?backendsFilter=ETMP&integrationType=API")
         val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(backendsFilter = List("ETMP")), None, None))
             result match {
               case Right(response) => val integration = response.results.head
@@ -137,7 +137,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
       }
 
       "return Right with IntegrationResponse when short desc is in the json " in new Setup {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponseWithShortDesc).toString(), "?searchTerm=API1689")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponseWithShortDesc).toString(), "?searchTerm=API1689&integrationType=API")
         val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
         result match {
           case Right(response) => val integration = response.results.head
@@ -149,7 +149,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
       }
       
       "return Left with Bad Request " in new Setup {
-        primeIntegrationCatalogueServiceFindWithFilterWithBadRequest("?searchTerm=API1689")
+        primeIntegrationCatalogueServiceFindWithFilterWithBadRequest("?searchTerm=API1689&integrationType=API")
         val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
             result match {
               case Left(_) => succeed
