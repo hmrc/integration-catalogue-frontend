@@ -198,6 +198,7 @@ case class FileTransferDetail(
     maintainer: Maintainer,
     sourceSystem: List[String],
     targetSystem: List[String],
+    transports: List[String],
     fileTransferPattern: String)
     extends IntegrationDetail {
   override val integrationType: IntegrationType = IntegrationType.FILE_TRANSFER
