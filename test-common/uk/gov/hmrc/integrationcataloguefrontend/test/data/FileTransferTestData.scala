@@ -59,6 +59,7 @@ trait FileTransferTestData {
     maintainer = coreIfFileTransferMaintainer,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
+    transports = List("S3"),
     fileTransferPattern = corpToCorp
   )
 
@@ -74,6 +75,7 @@ trait FileTransferTestData {
     maintainer = coreIfFileTransferMaintainer,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
+    transports = List("S3"),
     fileTransferPattern = corpToCorp
   )
 
@@ -89,6 +91,7 @@ trait FileTransferTestData {
     maintainer = coreIfFileTransferMaintainer,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
+    transports = List.empty,
     fileTransferPattern = corpToCorp
   )
 
@@ -104,6 +107,7 @@ trait FileTransferTestData {
     maintainer = apiPlatformMaintainerWithNoContacts2,
     sourceSystem = List("SOURCE"),
     targetSystem = List("TARGET"),
+    transports = List.empty,
     fileTransferPattern = corpToCorp
   )
 
