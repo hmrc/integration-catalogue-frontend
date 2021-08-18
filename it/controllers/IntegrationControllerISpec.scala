@@ -1,5 +1,6 @@
 package controllers
 
+import org.jsoup.Jsoup
 import org.scalatest.BeforeAndAfterEach
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -44,9 +45,23 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
   "ApiController" when {
 
+    "Any not found page" should{
+      "return the relevant customs not found page" in{
+        val result = callGetEndpoint(s"$url/someUnknownPage", List.empty)
+        result.status mustBe NOT_FOUND
+        val document = Jsoup.parse(result.body)
+        document.getElementById("pageHeading").text() mustBe "Page not found"
+        document.getElementById("paragraph1").text() mustBe "If you typed the web address, check it is correct."
+        document.getElementById("paragraph2").text() mustBe "If you pasted the web address, check you copied the entire address."
+        document.getElementById("paragraph3").text() mustBe "If the web address is correct or you selected a link or button," +
+          " contact the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk ."
+      }
+    }
+
     "GET /integrations" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+          Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe OK
 
@@ -74,7 +89,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
       "respond with 200 and render correctly when search query param provided" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+          Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
       
         val result = callGetEndpoint(s"$url/search?keywords=marriage", List.empty)
         result.status mustBe OK
@@ -83,7 +99,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
      "respond with 200 and render correctly when platform & search query params provided" in {
-      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
+      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+        Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF&backendsFilter=ETMP", List.empty)
         result.status mustBe OK
 
