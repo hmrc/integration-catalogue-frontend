@@ -1,6 +1,5 @@
 package controllers
 
-import org.jsoup.Jsoup
 import org.scalatest.BeforeAndAfterEach
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -8,12 +7,12 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.test.Helpers._
 import support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
-import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
+import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 
 class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
-  with IntegrationCatalogueConnectorStub  with ApiTestData with FileTransferTestData {
+  with IntegrationCatalogueConnectorStub with ApiTestData with FileTransferTestData {
 
 
   protected override def appBuilder: GuiceApplicationBuilder =
@@ -45,19 +44,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
   "ApiController" when {
 
-    "Any not found page" should{
-      "return the relevant customs not found page" in{
-        val result = callGetEndpoint(s"$url/someUnknownPage", List.empty)
-        result.status mustBe NOT_FOUND
-        val document = Jsoup.parse(result.body)
-        document.getElementById("pageHeading").text() mustBe "Page not found"
-        document.getElementById("paragraph1").text() mustBe "If you typed the web address, check it is correct."
-        document.getElementById("paragraph2").text() mustBe "If you pasted the web address, check you copied the entire address."
-        document.getElementById("paragraph3").text() mustBe "If the web address is correct or you selected a link or button," +
-          " contact the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk."
-      }
-    }
-
     "GET /integrations" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
@@ -68,14 +54,14 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
       "respond with 500 and render correctly when Not Found returned from backend" in {
-      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_FOUND)
+        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_FOUND)
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
       }
 
       "respond with 400 and render correctly when Bad Request returned from backend" in {
-      primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", BAD_REQUEST)
+        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", BAD_REQUEST)
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe BAD_REQUEST
 
@@ -91,23 +77,25 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and render correctly when search query param provided" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
           Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
-      
+
         val result = callGetEndpoint(s"$url/search?keywords=marriage", List.empty)
         result.status mustBe OK
-        
+
 
       }
 
-     "respond with 200 and render correctly when platform & search query params provided" in {
-      primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-        Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
+      "respond with 200 and render correctly when platform & search query params provided" in {
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+          Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString,
+          "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF&backendsFilter=ETMP", List.empty)
         result.status mustBe OK
 
       }
 
       "respond with 200 and render correctly when search query params provided but another invalid query paramkey" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+          Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search?keywords=marriage&someUnKnownKey=CORE_IF", List.empty)
         result.status mustBe OK
 
@@ -135,31 +123,30 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     }
 
 
-
     "GET /integrations/{apiId}/{encodedTitle}" should {
       "respond with 200 and render correctly when title in url matches integration title when encoded" in {
-        
-       primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+
+        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
 
         // setting this value whilst we are pulling in the oas files from assets
         // we need to have a deterministic value for the port as we need to tell
         // the service where to get the file from
         System.setProperty("http.port", port.toString)
-     
+
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", validHeaders)
         result.status mustBe OK
 
       }
 
-        "respond with 303 and render correctly when title in url does not match encoded title from integration" in {
-        
-       primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+      "respond with 303 and render correctly when title in url does not match encoded title from integration" in {
+
+        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
 
         // setting this value whilst we are pulling in the oas files from assets
         // we need to have a deterministic value for the port as we need to tell
         // the service where to get the file from
         System.setProperty("http.port", port.toString)
-     
+
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/incorrect-title", validHeaders)
         result.status mustBe 303
 
@@ -206,7 +193,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
     }
 
-   "GET /integrations/:id/:title/technical" should {
+    "GET /integrations/:id/:title/technical" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
 
@@ -215,7 +202,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       }
 
-    
+
       "respond with 400 and when backend returns returns Bad Request" in {
         primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
 
@@ -234,7 +221,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
     }
 
-      "GET /integrations/:id/files/oas" should {
+    "GET /integrations/:id/files/oas" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
 
@@ -243,7 +230,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       }
 
-    
+
       "respond with 400 and when backend returns returns Bad Request" in {
         primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
 
@@ -270,8 +257,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         // we need to have a deterministic value for the port as we need to tell
         // the service where to get the file from
         System.setProperty("http.port", port.toString)
-     
-     
+
+
         val result = callGetEndpoint(s"$url/integrations/${fileTransfer1.id.value.toString}/xx-sas-yyyyydaily-pull", validHeaders)
         result.status mustBe OK
 

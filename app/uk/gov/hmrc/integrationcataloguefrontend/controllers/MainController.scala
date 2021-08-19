@@ -24,6 +24,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.Future
@@ -35,6 +36,7 @@ class MainController @Inject()(appConfig: AppConfig,
                                caseStudiesView: CaseStudies,
                                getStartedView: GetStarted,
                                aboutView: About,
+                               contactView: ContactView,
                                fileTransferPattern: FileTransferPatternView)
   extends FrontendController(mcc) {
 
@@ -46,6 +48,10 @@ class MainController @Inject()(appConfig: AppConfig,
 
    def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(aboutView()))
+  }
+
+  def contactPage(): Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(contactView()))
   }
 
   def getStartedPage(): Action[AnyContent] = Action.async { implicit request =>
