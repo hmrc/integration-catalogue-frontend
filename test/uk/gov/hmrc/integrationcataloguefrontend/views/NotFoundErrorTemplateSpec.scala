@@ -38,7 +38,7 @@ class NotFoundErrorTemplateSpec extends CommonViewSpec {
       document.getElementById("paragraph1").text() shouldBe "If you typed the web address, check it is correct."
       document.getElementById("paragraph2").text() shouldBe "If you pasted the web address, check you copied the entire address."
       document.getElementById("paragraph3").text() shouldBe "If the web address is correct or you selected a link or button," +
-        " contact the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk ."
+        " contact the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk."
     }
   }
 
