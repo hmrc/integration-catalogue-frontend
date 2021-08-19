@@ -34,7 +34,8 @@ class NotFoundErrorTemplateSpec extends CommonViewSpec {
     "render case studies page correctly" in new Setup {
       val page: Html = notFoundErrorPage.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
-      document.getElementById("pageHeading").text() shouldBe "Page not found"
+      document.getElementById("poc-banner-title").text() shouldBe "Important"
+      document.getElementById("page-heading").text() shouldBe "Page not found"
       document.getElementById("paragraph1").text() shouldBe "If you typed the web address, check it is correct."
       document.getElementById("paragraph2").text() shouldBe "If you pasted the web address, check you copied the entire address."
       document.getElementById("paragraph3").text() shouldBe "If the web address is correct or you selected a link or button," +

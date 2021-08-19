@@ -25,6 +25,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
@@ -37,7 +38,7 @@ class MainControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite
   private val getStartedPageRequest = FakeRequest("GET", "/get-started")
   private val aboutPageRequest = FakeRequest("GET", "/about")
   private val fileTransferPatternPageRequest = FakeRequest("GET", "/file-transfer-patterns")
-
+  private val contactViewPageRequest = FakeRequest("GET", "/contact")
   private val env           = Environment.simple()
   private val configuration = Configuration.load(env)
 
@@ -47,10 +48,11 @@ class MainControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite
   val homePage: HomePage = app.injector.instanceOf[HomePage]
   val caseStudiesPage: CaseStudies = app.injector.instanceOf[CaseStudies]
   val getStartedPage: GetStarted = app.injector.instanceOf[GetStarted]
+  val contactPage: ContactView = app.injector.instanceOf[ContactView]
   val aboutPage: About = app.injector.instanceOf[About]
   val fileTransferPatternPage: FileTransferPatternView = app.injector.instanceOf[FileTransferPatternView]
 
-  private val controller = new MainController(appConfig, stubMessagesControllerComponents(), homePage, caseStudiesPage, getStartedPage, aboutPage, fileTransferPatternPage)
+  private val controller = new MainController(appConfig, stubMessagesControllerComponents(), homePage, caseStudiesPage, getStartedPage, aboutPage, contactPage, fileTransferPatternPage)
 
   "GET /" should {
     "return 200" in {
@@ -116,4 +118,17 @@ class MainControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite
       charset(result)     shouldBe Some("utf-8")
     }
   }
+  "GET /contacts" should {
+    "return 200" in {
+      val result = controller.contactPage()(contactViewPageRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = controller.contactPage()(contactViewPageRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result)     shouldBe Some("utf-8")
+    }
+  }
+
 }
