@@ -33,45 +33,50 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
 
   "BackendsFilterComponent" should {
 
-    def testBackendsFilterLabels(document : Document)={
-      for(item <- Backends.filters) {
+    def testBackendsFilterLabels(document: Document) = {
+      for (item <- Backends.filters) {
         document.getElementById(s"backend-filter-${item.displayName}-label").text() shouldBe item.displayName
       }
     }
 
-    def testBackendsFilter(document: Document, isChecked: Boolean) ={
-                testBackendsFilterLabels(document)
-                testBackendsFilterCheckBoxes(document, isChecked)
+    def testBackendsFilter(document: Document, isChecked: Boolean) = {
+      testBackendsFilterLabels(document)
+      testBackendsFilterCheckBoxes(document, isChecked)
+      testContactLink(document)
     }
 
-    def testBackendsFilterCheckBoxes(document: Document, isChecked: Boolean )= {
-      for(item <- Backends.filters) {
-        testCheckBox(document, s"backend-filter-${item.displayName}", isChecked )
+    def testContactLink(document: Document) = {
+      document.getElementById("contactlink").text shouldBe "The HoD I want isn’t listed"
+    }
+
+    def testBackendsFilterCheckBoxes(document: Document, isChecked: Boolean) = {
+      for (item <- Backends.filters) {
+        testCheckBox(document, s"backend-filter-${item.displayName}", isChecked)
       }
     }
 
-    def testCheckBox(document: Document, checkboxId: String, isChecked: Boolean) ={
+    def testCheckBox(document: Document, checkboxId: String, isChecked: Boolean) = {
       withClue(s"checkbox $checkboxId test failed") {
         document.getElementById(checkboxId)
           .attributes().asList().asScala.map(_.getKey)
-          .contains( "checked") shouldBe isChecked
+          .contains("checked") shouldBe isChecked
       }
     }
 
     "render backend filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-       val page : Html = backendsFilterComponent.render(List.empty)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html = backendsFilterComponent.render(List.empty)
+      val document: Document = Jsoup.parse(page.body)
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
       //test filter labels
       testBackendsFilter(document, false)
-     
+
     }
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page : Html = backendsFilterComponent.render(Backends.filters.map(_.name))
+      val page: Html = backendsFilterComponent.render(Backends.filters.map(_.name))
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
