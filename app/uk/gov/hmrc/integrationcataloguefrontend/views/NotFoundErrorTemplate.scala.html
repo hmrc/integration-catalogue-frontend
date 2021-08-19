@@ -1,0 +1,38 @@
+@*
+* Copyright 2021 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.DefaultLayout
+
+@this(layout: DefaultLayout)
+
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@layout(pageTitle = Some("Page not found - API catalogue")) {
+    <h1 id="pageHeading" class="govuk-heading-xl">@{
+        Text("Page not found").asHtml
+    }</h1>
+    <p id="paragraph1" class="govuk-body">If you typed the web address, check it is correct.
+    </p>
+    <p id="paragraph2" class="govuk-body">If you pasted the web address, check you copied the entire address.
+    </p>
+    <p id="paragraph3" class="govuk-body">
+        If the web address is correct or you selected a link or button, contact the API catalogue team at
+        <a href="mailto:@HtmlFormat.raw("api-catalogue-g@digital.hmrc.gov.uk")\" class="govuk-link">@HtmlFormat.raw("api-catalogue-g@digital.hmrc.gov.uk")</a>
+        .
+    </p>
+}
+
+
