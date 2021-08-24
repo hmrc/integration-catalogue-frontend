@@ -23,7 +23,7 @@ import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, I
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ErrorTemplate, ApiNotFoundErrorTemplate}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
@@ -45,7 +45,8 @@ class IntegrationController @Inject() (
     fileTransferDetailView: FileTransferDetailView,
     apiTechnicalDetailsView: ApiTechnicalDetailsView,
     apiTechnicalDetailsViewRedoc: ApiTechnicalDetailsViewRedoc,
-    errorTemplate: ErrorTemplate
+    errorTemplate: ErrorTemplate,
+    apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with Logging with PagingHelper {
@@ -59,14 +60,13 @@ class IntegrationController @Inject() (
   }
 
   def getIntegrationDetail(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
-  val apiNotFoundMessage = "<p id=\"paragraph1\" class=\"govuk-body\">The API does not exist or has been removed from the API catalogue.</p><p id=\"paragraph2\" class=\"govuk-body\"><a href=\"@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url\" class=\"govuk-link\">Search for a different API</a></p><p id=\"paragraph3\" class=\"govuk-body\">You can contact the API catalogue team at <a href=\"mailto:api-catalogue-g@digital.hmrc.gov.uk\" class=\"govuk-link\"><br>api-catalogue-g@digital.hmrc.gov.uk</a>.</p>"
 
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)          => handleUrlTitle(detail,  Ok(apiDetailView(detail)), id, urlEncodedTitle)
       case Right(detail: FileTransferDetail) => handleUrlTitle(detail, Ok(fileTransferDetailView(detail)), id, urlEncodedTitle)
-      case Left(_: NotFoundException)        => NotFound(errorTemplate("API not found", "API not found", apiNotFoundMessage))
-      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "<p id=\"paragraph1\" class=\"govuk-body\">Bad Request</p>"))
-      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "<p id=\"paragraph1\" class=\"govuk-body\">Internal Server Error</p>"))
+      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
   }
   
@@ -74,8 +74,8 @@ class IntegrationController @Inject() (
 
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)          => handleUrlTitle(detail,  Ok(apiTechnicalDetailsView(detail)), id, urlEncodedTitle)
-      case Right(detail: FileTransferDetail) => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
-      case Left(_: NotFoundException)        => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
+      case Right(detail: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
       case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
@@ -84,8 +84,8 @@ class IntegrationController @Inject() (
   def getIntegrationDetailTechnicalRedoc(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)          => handleUrlTitle(detail,  Ok(apiTechnicalDetailsViewRedoc(detail)), id, urlEncodedTitle)
-      case Right(detail: FileTransferDetail) => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
-      case Left(_: NotFoundException)        => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
+      case Right(detail: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
       case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
@@ -94,8 +94,8 @@ class IntegrationController @Inject() (
   def getIntegrationOas(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)          => Ok(detail.openApiSpecification)
-      case Right(detail: FileTransferDetail) => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
-      case Left(_: NotFoundException)        => NotFound(errorTemplate("API Not Found", "API not Found", "API Id Not Found"))
+      case Right(detail: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
       case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
