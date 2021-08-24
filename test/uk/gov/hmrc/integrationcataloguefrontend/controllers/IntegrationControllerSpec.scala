@@ -28,7 +28,7 @@ import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformTy
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
@@ -57,6 +57,7 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
   private val apiTechnicalDetailsViewRedoc = app.injector.instanceOf[ApiTechnicalDetailsViewRedoc]
   private val fileTransferDetailView = app.injector.instanceOf[FileTransferDetailView]
   private val errorTemplate = app.injector.instanceOf[ErrorTemplate]
+  private val apiNotFoundErrorTemplate = app.injector.instanceOf[ApiNotFoundErrorTemplate]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
 
     override protected def beforeEach(): Unit = {
@@ -73,7 +74,8 @@ class IntegrationControllerSpec extends WordSpec with Matchers with GuiceOneAppP
     fileTransferDetailView,
     apiTechnicalDetailsView,
     apiTechnicalDetailsViewRedoc,
-    errorTemplate)
+    errorTemplate,
+    apiNotFoundErrorTemplate)
 
   "GET /" should {
     "return 200 when Some(ApiId) is Sent" in {

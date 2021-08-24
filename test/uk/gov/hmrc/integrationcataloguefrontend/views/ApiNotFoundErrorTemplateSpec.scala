@@ -21,26 +21,25 @@ import org.jsoup.nodes.Document
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.NotFoundErrorTemplate
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, NotFoundErrorTemplate}
 
-class NotFoundErrorTemplateSpec extends CommonViewSpec {
+class ApiNotFoundErrorTemplateSpec extends CommonViewSpec {
 
   trait Setup {
-    val notFoundErrorPage: NotFoundErrorTemplate = app.injector.instanceOf[NotFoundErrorTemplate]
+    val apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate = app.injector.instanceOf[ApiNotFoundErrorTemplate]
   }
 
-  "NotFoundErrorTemplate" should {
+  "ApiNotFoundErrorTemplate" should {
 
-    "render not found page correctly" in new Setup {
-      val page: Html = notFoundErrorPage.render(FakeRequest(), messagesProvider.messages, appConfig)
+    "render api not found page correctly" in new Setup {
+      val page: Html = apiNotFoundErrorTemplate.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("poc-banner-title").text() shouldBe "Important"
-      document.getElementById("page-heading").text() shouldBe "Page not found"
-      document.getElementById("paragraph1").text() shouldBe "If you typed the web address, check it is correct."
-      document.getElementById("paragraph2").text() shouldBe "If you pasted the web address, check you copied the entire address."
-      document.getElementById("paragraph3").text() shouldBe "If the web address is correct or you selected a link or button," +
-        " contact the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk."
+      document.getElementById("page-heading").text() shouldBe "API not found"
+      document.getElementById("paragraph1").text() shouldBe "The API does not exist or has been removed from the API catalogue."
+      document.getElementById("paragraph2").text() shouldBe "Search for a different API"
+      document.getElementById("paragraph3").text() shouldBe "You can contact the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk."
     }
-  }
 
+  }
 }
