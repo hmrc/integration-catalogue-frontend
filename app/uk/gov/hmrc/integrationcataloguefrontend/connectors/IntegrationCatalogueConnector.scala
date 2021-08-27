@@ -49,6 +49,15 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
     handleResult(http.GET[List[PlatformContactResponse]](s"$externalServiceUri/platform/contacts"))
   }
 
+  def getFileTransferTransportsByPlatform(source: Option[String], target: Option[String])
+                     (implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
+
+    val sourceParam = source.map((x: String) => List(("source", x))).getOrElse(List.empty)
+    val targetParam = target.map((x: String) => List(("target", x))).getOrElse(List.empty)
+    handleResult(
+      http.GET[List[FileTransferTransportsForPlatform]](s"$externalServiceUri/filetransfers/platform/transports", queryParams = sourceParam ++ targetParam))
+  }
+
   private def buildQueryParams(integrationFilter: IntegrationFilter,
                                itemsPerPage: Option[Int],
                                currentPage: Option[Int]): Seq[(String, String)] = {
