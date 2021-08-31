@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.integrationcataloguefrontend.models.FileTransferBackends
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataTargetForm
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataTargetForm._
+@import includes.ErrorSummary
 
 @this(layout: DefaultLayout)
 
@@ -28,6 +29,7 @@
 @layout(pageTitle = Some(s"Where do you want to send your data? - ${appConfig.serviceName}"), activePage=Some("contact")) {
       <div>
           <div class="govuk-form-group">
+            @ErrorSummary(form)
               <fieldset class="govuk-fieldset">
                 @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), 'class -> "form", 'id -> "selectedDataTargetForm") {
                     @helper.CSRF.formField 
@@ -36,15 +38,6 @@
                           Where do you want to send your data?
                       </h1>
                   </legend>
-                  @if(form.errors.nonEmpty){
-                    <ul class="error-summary-list">
-                        @for(error <- form.errors) {
-                        <li>
-                            <a href="#@error.key">@error.messages.head</a>
-                        </li>
-                        }
-                    </ul>
-                  }
 
                   <div class="govuk-radios">
                   @for(item <- FileTransferBackends.radiobuttons) {

@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.integrationcataloguefrontend.models.FileTransferBackends
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataSourceForm
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataSourceForm._
+@import includes.ErrorSummary
 
 @this(layout: DefaultLayout)
 
@@ -29,6 +30,7 @@
     
     <div>
           <div class="govuk-form-group">
+            @ErrorSummary(form)
               <fieldset class="govuk-fieldset">
                 @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceAction(), 'class -> "form", 'id -> "selectedDataSourceForm") {
                 @helper.CSRF.formField 
@@ -37,16 +39,6 @@
                           Where is your data currently stored?
                       </h1>
                   </legend>
-                  @if(form.errors.nonEmpty){
-                    <ul class="error-summary-list">
-                        @for(error <- form.errors) {
-                        <li>
-                            <a href="#@error.key">@error.messages.head</a>
-                        </li>
-                        }
-                    </ul>
-                  }
-
                   <div class="govuk-radios">
                   @for(item <- FileTransferBackends.radiobuttons) {
                       <div class="govuk-radios__item">
