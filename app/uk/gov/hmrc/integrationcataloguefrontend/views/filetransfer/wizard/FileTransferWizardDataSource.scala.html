@@ -17,38 +17,49 @@
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 @import uk.gov.hmrc.integrationcataloguefrontend.models.FileTransferBackends
+@import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataSourceForm
+@import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataSourceForm._
 
 @this(layout: DefaultLayout)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[SelectedDataSourceForm])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Where is your data currently stored? - ${appConfig.serviceName}"), activePage=Some("contact")) {
-  <form name="Go to data source" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart" method="get">
-      <div>
+    
+    <div>
           <div class="govuk-form-group">
               <fieldset class="govuk-fieldset">
+                @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceAction(), 'class -> "form", 'id -> "selectedDataSourceForm") {
+                @helper.CSRF.formField 
                   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                       <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="ftwizard-datasource-heading-label">
                           Where is your data currently stored?
                       </h1>
                   </legend>
+                  @if(form.errors.nonEmpty){
+                    <ul class="error-summary-list">
+                        @for(error <- form.errors) {
+                        <li>
+                            <a href="#@error.key">@error.messages.head</a>
+                        </li>
+                        }
+                    </ul>
+                  }
+
                   <div class="govuk-radios">
                   @for(item <- FileTransferBackends.radiobuttons) {
                       <div class="govuk-radios__item">
-                          <input class="govuk-radios__input" id="ftwizard-datasource-radios-@item.displayName" name="ftwizard-datasource-radios" type="radio" value="@item.name">
+                          <input class="govuk-radios__input" id="ftwizard-datasource-radios-@item.displayName" name="dataSource" type="radio" value="@item.name">
                           <label class="govuk-label govuk-radios__label" for="ftwizard-datasource-radios-@item.displayName" id="ftwizard-datasource-radios-@item.displayName-label" >
                           @item.displayName
                           </label>
                       </div>
                   }
                   </div>
+                  <button id="submit" class="govuk-button" type="submit">Continue</button>
+                }
               </fieldset>
           </div>
-
-          <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardDataTarget("source")" class="govuk-button" data-module="govuk-button">
-              Continue
-          </a>
       </div>
-  </form>
 }

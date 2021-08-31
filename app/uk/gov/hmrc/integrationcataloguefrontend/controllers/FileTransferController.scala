@@ -47,17 +47,37 @@ class FileTransferController @Inject()(appConfig: AppConfig,
     Future.successful(Ok(wizardStartView()))
   }
 
-  def wizardDataSource(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(wizardDataSourceView()))
+  def dataSourceView(): Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(wizardDataSourceView(SelectedDataSourceForm.form)))
   }
 
-  def wizardDataTarget(source: String): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(wizardDataTargetView(source)))
+  def dataSourceAction(): Action[AnyContent] = Action.async { implicit request =>
+       val form = SelectedDataSourceForm.form.bindFromRequest
+// Redirect(controllers.profile.routes.EmailPreferences.flowSelectApisPage(sortedCategories(currentCategoryIndex + 1)))
+    Future.successful{
+    form.fold(formWithErrors => Ok(wizardDataSourceView(formWithErrors)),
+    okForm => Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetView(okForm.dataSource.getOrElse(""))))
+    }
   }
 
-  def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
-  integrationService.getFileTransferTransportsByPlatform(Some(source), Some(target)).map {
-    case Right(result: List[FileTransferTransportsForPlatform])          => Ok(wizardFoundConnectionsView(source, target, result))
+  def dataTargetView(source: String): Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(wizardDataTargetView(SelectedDataTargetForm.form, source)))
+  }
+
+  def dataTargetAction(): Action[AnyContent] = Action.async { implicit request =>
+       val form = SelectedDataTargetForm.form.bindFromRequest
+       form.data.foreach(x => println(s"*********${x._1} - ${x._2}"))
+       println(s"******dataSource: ${form.value.map(form => form.dataSource)}")
+// Redirect(controllers.profile.routes.EmailPreferences.flowSelectApisPage(sortedCategories(currentCategoryIndex + 1)))
+    Future.successful{
+    form.fold(formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.value.flatMap(x => x.dataSource).getOrElse(""))),
+    okForm => Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource, okForm.dataTarget)))
+    }
+  }
+
+  def getFileTransferTransportsByPlatform(source: Option[String], target: Option[String]): Action[AnyContent] = Action.async { implicit request =>
+  integrationService.getFileTransferTransportsByPlatform(source, target).map {
+    case Right(result: List[FileTransferTransportsForPlatform])          => Ok(wizardFoundConnectionsView(source.get, target.get, result))
     case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
     case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
   }
