@@ -52,7 +52,7 @@ class FileTransferController @Inject()(appConfig: AppConfig,
   }
 
   def dataSourceAction(): Action[AnyContent] = Action.async { implicit request =>
-       val form = SelectedDataSourceForm.form.bindFromRequest
+    val form = SelectedDataSourceForm.form.bindFromRequest
 // Redirect(controllers.profile.routes.EmailPreferences.flowSelectApisPage(sortedCategories(currentCategoryIndex + 1)))
     Future.successful{
     form.fold(formWithErrors => Ok(wizardDataSourceView(formWithErrors)),
@@ -70,7 +70,7 @@ class FileTransferController @Inject()(appConfig: AppConfig,
        println(s"******dataSource: ${form.value.map(form => form.dataSource)}")
 // Redirect(controllers.profile.routes.EmailPreferences.flowSelectApisPage(sortedCategories(currentCategoryIndex + 1)))
     Future.successful{
-    form.fold(formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.value.flatMap(x => x.dataSource).getOrElse(""))),
+    form.fold(formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.get("dataSource").getOrElse(""))),
     okForm => Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource, okForm.dataTarget)))
     }
   }

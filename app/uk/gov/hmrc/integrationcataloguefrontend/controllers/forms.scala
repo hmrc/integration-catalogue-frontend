@@ -24,48 +24,28 @@ final case class SelectedDataSourceForm(dataSource: Option[String])
 
 object SelectedDataSourceForm {
 
-  def nonEmpty(message: String): Constraint[String] = Constraint[String] { s: String =>
-    if (Option(s).isDefined) Invalid(message) else Valid
+  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
+   
+    if (s.isDefined)  Valid else Invalid(message) 
   }
 
-
   def form: Form[SelectedDataSourceForm] = Form(mapping(
-    "dataSource" -> optional(text)
-                      .verifying("You must select a Source", s => s.isDefined))
-  (SelectedDataSourceForm.apply)(SelectedDataSourceForm.unapply)
-    .verifying(
-      "Some other error on SelectedDataSourceForm",
-      fields =>
-        fields match {
-          case data: SelectedDataSourceForm =>
-          // do we need to validate source is a valid value? 
-            if(data.dataSource.isEmpty) false else true
-        }
-    )
-  )
+    "dataSource" -> optional(text).verifying(nonEmpty("You must select a Source")))
+  (SelectedDataSourceForm.apply)(SelectedDataSourceForm.unapply))
 }
 
-final case class SelectedDataTargetForm(dataSource: String, dataTarget: String)
+final case class SelectedDataTargetForm(dataSource: Option[String], dataTarget: Option[String])
 
 object SelectedDataTargetForm {
 
-  def nonEmpty(message: String): Constraint[String] = Constraint[String] { s: String =>
-    if (Option(s).isDefined) Invalid(message) else Valid
+  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
+    if (s.isDefined) Valid else Invalid(message)
   }
 
 
   def form: Form[SelectedDataTargetForm] = Form(mapping(
-    "dataTarget" -> nonEmptyText.verifying("You must select a Target", s => s.isDefined),
-    "dataSource" -> optional(text).verifying("You must select a Source", s => s.isDefined))
-  (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply)
-    .verifying(
-      "Some other error on SelectedDataTargetForm",
-      fields =>
-        fields match {
-          case data: SelectedDataTargetForm =>
-          // do we need to validate source is a valid value? 
-            if(data.dataTarget.isEmpty) false else true
-        }
-    )
-  )
+    "dataTarget" -> optional(text).verifying(nonEmpty("You must select a Target")),
+    "dataSource" -> optional(text).verifying(nonEmpty("You must select a Source")))
+  (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
+
 }
