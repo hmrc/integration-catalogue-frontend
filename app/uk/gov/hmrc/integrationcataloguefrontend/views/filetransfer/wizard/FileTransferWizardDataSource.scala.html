@@ -39,6 +39,8 @@
                           Where is your data currently stored?
                       </h1>
                   </legend>
+
+                  <a name="dataSource"></a>
                   <div class="govuk-radios">
                   @for(item <- FileTransferBackends.radiobuttons) {
                       <div class="govuk-radios__item">
@@ -49,6 +51,7 @@
                       </div>
                   }
                   </div>
+                  <br><br>
                   <button id="submit" class="govuk-button" type="submit">Continue</button>
                 }
               </fieldset>

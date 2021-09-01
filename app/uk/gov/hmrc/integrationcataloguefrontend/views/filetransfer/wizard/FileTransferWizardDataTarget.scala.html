@@ -38,6 +38,7 @@
                           Where do you want to send your data?
                       </h1>
                   </legend>
+                  <a name="dataTarget"></a>
 
                   <div class="govuk-radios">
                   @for(item <- FileTransferBackends.radiobuttons) {
@@ -49,6 +50,7 @@
                       </div>
                   }
                   </div>
+                  <br><br>
                   <input id="dataSource" type="hidden" name="dataSource" value="@dataSource" />
                   <button id="submit" class="govuk-button" type="submit">Continue</button>
                 }
