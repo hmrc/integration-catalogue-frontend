@@ -86,7 +86,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
     integrationCatalogueConnector.getPlatformContacts()
   }
 
-  def getFileTransferTransportsByPlatform(source: Option[String], target: Option[String])(implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
+  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
     integrationCatalogueConnector.getFileTransferTransportsByPlatform(source, target)
   }
 
