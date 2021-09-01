@@ -23,27 +23,23 @@
 
 @(source: String, target: String, connections: List[FileTransferTransportsForPlatform])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@getConnectionsText(transports: List[String]) = {
-  @if(!transports.isEmpty){
-      @transports
-      .toString
-      .replaceAll("(,)(?!.*,)", " and")
-      .substring(4, transports.length)
-  }
-  else s""
+@getConnectionsText(transports: List[String]) = @{
+  if(!transports.isEmpty){
+      transports.mkString(", ").replaceAll("(,)(?!.*,)", " and")
+  } else ""
 }
 
 @layout(pageTitle = Some(s"A file transfer connection exists - ${appConfig.serviceName}"), activePage=Some("contact")) {
   <form name="Go to data source" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart" method="get">
       <div>
-        <h1 id="page-heading"  class="govuk-heading-xl">
+        <h1 id="page-heading"  class="govuk-heading-l">
             A file transfer connection exists
         </h1>
         <p id="paragraph1" class="govuk-body">@source and @target are connected by:</p>
         <ul class="govuk-list govuk-list--bullet">
             @for(connection <- connections){
               <li>
-                @{connection.platform.displayName} using @getConnectionsText(connection.transports)
+                @{connection.platform.fileTransferName} using @getConnectionsText(connection.transports)
               </li>
             }
         </ul>
