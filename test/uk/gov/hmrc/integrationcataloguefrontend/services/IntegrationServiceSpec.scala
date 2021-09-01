@@ -265,6 +265,7 @@ class IntegrationServiceSpec
   }
 
   "getFileTransferTransportsByPlatform" should {
+    //TODO add param mock check
     "return Right with List of FileTransferTransportsForPlatform" in new SetUp {
       val expectedResult = List(
         FileTransferTransportsForPlatform(API_PLATFORM, List("S3", "WTM")),
@@ -272,7 +273,7 @@ class IntegrationServiceSpec
       )
       when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(*,*)(*))
         .thenReturn(Future.successful(Right(expectedResult)))
-      val result = await(objInTest.getFileTransferTransportsByPlatform(source = Some("CESA"), target = Some("DPS")))
+      val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
       result match {
         case Right(response) => response shouldBe expectedResult
         case _ => fail
@@ -283,16 +284,18 @@ class IntegrationServiceSpec
   }
 
   "return Left when error in backend" in new SetUp {
-    when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(*,*)(*))
+    val dataSource = "SOURCE"
+    val dataTarget = "TARGET"
+    when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(eqTo(dataSource),eqTo(dataTarget))(*))
       .thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
 
-    val result = await(objInTest.getFileTransferTransportsByPlatform(None, None))
+    val result = await(objInTest.getFileTransferTransportsByPlatform(dataSource, dataTarget))
     result match {
       case Left(_)  => succeed
       case Right(_) => fail()
     }
 
-    verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(*,*)(eqTo(hc))
+    verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(eqTo(dataSource),eqTo(dataTarget))(eqTo(hc))
   }
 
 }

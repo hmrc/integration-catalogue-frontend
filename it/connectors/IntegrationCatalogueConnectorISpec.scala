@@ -187,7 +187,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
           FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
         )
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody("?source=CESA&target=DPS", OK, Json.toJson(expectedResult).toString())
-        val result = await(objInTest.getFileTransferTransportsByPlatform(source = Some("CESA"), target = Some("DPS")))
+        val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
         result match {
           case Right(response) => response mustBe expectedResult
           case _ => fail
@@ -196,7 +196,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
 
       "return Left with Bad Request" in new Setup {
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(BAD_REQUEST)
-        val result = await(objInTest.getFileTransferTransportsByPlatform(source = None, target = None))
+        val result = await(objInTest.getFileTransferTransportsByPlatform(source = "ANYTHING", target = "ANYTHING"))
         result match {
           case Left(_) => succeed
           case _ => fail

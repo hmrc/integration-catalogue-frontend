@@ -88,6 +88,6 @@ object FileTransferBackends {
     FileTransferBackendItem("TIED", "TIED"),
     FileTransferBackendItem("VDB", "VDB"),
     FileTransferBackendItem("VIES", "VIES"),
-    FileTransferBackendItem("VMF", "VMF"),
+    FileTransferBackendItem("VMF", "VMF")
   ).sorted
 }
