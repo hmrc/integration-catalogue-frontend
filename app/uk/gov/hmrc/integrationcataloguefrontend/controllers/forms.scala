@@ -44,8 +44,8 @@ object SelectedDataTargetForm {
 
 
   def form: Form[SelectedDataTargetForm] = Form(mapping(
-    "dataTarget" -> optional(text).verifying(nonEmpty("You must select a Target")),
-    "dataSource" -> optional(text).verifying(nonEmpty("You must select a Source")))
+    "dataSource" -> optional(text).verifying(nonEmpty("You must select a Source")),
+    "dataTarget" -> optional(text).verifying(nonEmpty("You must select a Target")))
   (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
 
 }

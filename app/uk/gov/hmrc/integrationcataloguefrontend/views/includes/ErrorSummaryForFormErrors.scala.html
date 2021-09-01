@@ -2,15 +2,15 @@
 @(errors: Seq[FormError])(implicit messages: Messages)
 
 @if(errors.nonEmpty) {
-  <div class="error-summary"
+  <div class="govuk-error-summary"
     id="error-summary-display"
     role="alert"
     aria-labelledby="error-summary-heading"
     tabindex="-1">
     
-    <h2 id="error-summary-heading" class="heading-medium error-summary-heading">There is a problem</h2>
+    <h2 id="error-summary-heading" class="govuk-error-summary__title">There is a problem</h2>
     
-    <ul class="error-summary-list">
+    <ul class="govuk-list govuk-error-summary__list">
         @for(error <- errors) {
         <li>
             <a href="#@error.key">@Messages(s"${error.messages.head}")</a>
