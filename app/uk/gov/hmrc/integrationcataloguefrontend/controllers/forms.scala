@@ -18,6 +18,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import play.api.data.Form
 import play.api.data.Forms._
+import org.apache.commons.lang3.StringUtils.{isBlank, isNotBlank}
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 final case class SelectedDataSourceForm(dataSource: Option[String])
@@ -34,18 +35,14 @@ object SelectedDataSourceForm {
   (SelectedDataSourceForm.apply)(SelectedDataSourceForm.unapply))
 }
 
-final case class SelectedDataTargetForm(dataSource: Option[String], dataTarget: Option[String])
+final case class SelectedDataTargetForm(dataSource: String, dataTarget: String)
 
 object SelectedDataTargetForm {
 
-  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
-    if (s.isDefined) Valid else Invalid(message)
-  }
-
-
   def form: Form[SelectedDataTargetForm] = Form(mapping(
-    "dataSource" -> optional(text).verifying(nonEmpty("You must select a Source")),
-    "dataTarget" -> optional(text).verifying(nonEmpty("You must select a Target")))
+    "dataSource" ->
+    text.verifying("SOME BIG ERROR", isNotBlank(_)),
+    "dataTarget" ->  text.verifying("SOME BIG ERROR", isNotBlank(_)))
   (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
 
 }

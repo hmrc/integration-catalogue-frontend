@@ -19,38 +19,31 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import org.mockito.scalatest.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.data.Form
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationResponse
-import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
+import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
+import uk.gov.hmrc.http.BadRequestException
 
-import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardStart
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataSource
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataTarget
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardFoundConnections
-import org.jsoup.Jsoup
-import com.vladsch.flexmark.util.html.HtmlFormattingAppendable
-import play.twirl.api.HtmlFormat
-import play.api.data.Form
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
+import uk.gov.hmrc.http.NotFoundException
 
-class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with ApiTestData with FileTransferTestData with BeforeAndAfterEach {
+
+class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with ApiTestData
+  with FileTransferTestData with BeforeAndAfterEach {
 
   private val fakeRequest = FakeRequest("GET", "/")
 
@@ -65,7 +58,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
   private val mockWizardDataSourceView: FileTransferWizardDataSource = mock[FileTransferWizardDataSource]
   private val mockWizardDataTargetView: FileTransferWizardDataTarget = mock[FileTransferWizardDataTarget]
   private val mockWizardFoundConnectionsView: FileTransferWizardFoundConnections = mock[FileTransferWizardFoundConnections]
-  private val mockerrorTemplate = mock[ErrorTemplate]
+  private val mockErrorTemplate = mock[ErrorTemplate]
   private val mockIntegrationService: IntegrationService = mock[IntegrationService]
 
   override protected def beforeEach(): Unit = {
@@ -81,7 +74,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
     mockWizardDataTargetView,
     mockWizardFoundConnectionsView,
     mockIntegrationService,
-    mockerrorTemplate
+    mockErrorTemplate
   )
 
   "GET  /filetransfer/wizard/start" should {
@@ -133,19 +126,98 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
           FileTransferTransportsForPlatform(API_PLATFORM, List("AB", "S3", "WTM")),
           FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
         )
-    // "return 200 and have correct view when called" in {
-    //   val dataSource = "SOURCE"
-    //   val dataTarget = "TARGET"
+
+       val dataSource = "SOURCE"
+       val dataTarget = "TARGET"   
+       val htmlVal = "<head></head>"
+     "return 200 and have correct view when called" in {
       
-    //   when(mockWizardFoundConnectionsView.apply()(*, *, *)).thenReturn(HtmlFormat.raw("more HTML"))
-    //   when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget), ))
-    //   val result = controller.dataTargetView(dataSource)(fakeRequest)
-    //   status(result) shouldBe Status.OK
-    //   contentAsString(result) shouldBe "more HTML"
+       when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms))(*, *, *))
+         .thenReturn(HtmlFormat.raw(htmlVal))
+       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+         .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
+       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+       status(result) shouldBe Status.OK
+       contentAsString(result) shouldBe htmlVal
      
-    //   verify(mockWizardFoundConnectionsView).apply(*, *, *)(*, *, *)
-    //   verifyZeroInteractions(mockIntegrationService)
-    // }
+       verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms))(*, *, *)
+       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+     }
+
+       "return 400 when service returns BadRequest Exception" in {
+
+        when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+         .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
+       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+       status(result) shouldBe Status.BAD_REQUEST
+       contentAsString(result) shouldBe htmlVal
+     
+       verifyZeroInteractions(mockWizardFoundConnectionsView)
+       verify(mockErrorTemplate).apply(eqTo("Bad Request"), eqTo("Bad Request"), eqTo("Bad Request"))(*, *, *)
+       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+     }
+
+
+      "return 500 when service returns NotFound Exception" in {
+
+        when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+         .thenReturn(Future.successful(Left(new NotFoundException("error"))))
+       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+       contentAsString(result) shouldBe htmlVal
+     
+       verifyZeroInteractions(mockWizardFoundConnectionsView)
+       verify(mockErrorTemplate).apply(eqTo("Internal Server Error"), eqTo("Internal Server Error"), eqTo("Internal Server Error"))(*, *, *)
+       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+     }
+
+  }
+
+  "POST       /filetransfer/wizard/data-source" should {
+
+    "redirect to Data Target view when successful" in {
+      val dataSource = "BTM"
+      val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource))
+      val result = controller.dataSourceAction()(requestWithForm)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetView(dataSource).url)
+    }
+
+    "show error page when form is invalid" in {
+       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", ""))
+      when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
+        val result = controller.dataSourceAction()(requestWithForm)
+        status(result) shouldBe Status.OK
+         contentAsString(result) shouldBe "htmlVal"
+    }
+
+  }
+
+    "POST       /filetransfer/wizard/data-target" should {
+      val dataSource = "BTM"
+      val dataTarget = "BFG"
+
+    "redirect to getFileTransferTransportsByPlatform when successful" in {
+
+      val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", dataTarget))
+      val result = controller.dataTargetAction()(requestWithForm)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(dataSource, dataTarget).url)
+
+      verifyZeroInteractions(mockWizardDataTargetView)
+    }
+
+    "show error page when form is invalid" in {
+       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", ""))
+      when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], any[String])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
+        val result = controller.dataTargetAction()(requestWithForm)
+        status(result) shouldBe Status.OK
+         contentAsString(result) shouldBe "htmlVal"
+
+         verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)
+    }
 
   }
  

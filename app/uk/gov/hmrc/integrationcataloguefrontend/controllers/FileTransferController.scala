@@ -74,20 +74,13 @@ class FileTransferController @Inject() (
 
   def dataTargetAction(): Action[AnyContent] = Action.async { implicit request =>
     val form = SelectedDataTargetForm.form.bindFromRequest
-    form.data.foreach(x => println(s"*********${x._1} - ${x._2}"))
-    println(s"******dataSource: ${form.value.map(form => form.dataSource)}")
-// Redirect(controllers.profile.routes.EmailPreferences.flowSelectApisPage(sortedCategories(currentCategoryIndex + 1)))
+  
     Future.successful {
       form.fold(
         formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.get("dataSource").getOrElse(""))),
-        okForm => {
-          (okForm.dataSource, okForm.dataTarget) match {
-            case (Some(source: String), Some(target: String)) =>
-              Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(source, target))
-            case _                                            => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-          }
+        okForm => 
+        Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource, okForm.dataTarget))
 
-        }
       )
     }
   }
