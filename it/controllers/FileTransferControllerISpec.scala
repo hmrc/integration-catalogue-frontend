@@ -1,24 +1,17 @@
 package controllers
 
 import org.jsoup.Jsoup
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{Assertion, BeforeAndAfterEach}
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.ws.WSClient
-import play.api.libs.ws.WSResponse
-import play.api.test.Helpers._
-import support.IntegrationCatalogueConnectorStub
-import support.ServerBaseISpec
-import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import play.api.libs.json.Json
-import play.filters.csrf.CSRF
-import play.filters.csrf._
-import play.filters.csrf.CSRF.Token
-import play.api.test.CSRFTokenHelper._
-import play.api.mvc.RequestHeader
+import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.test.Helpers._
+import support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
+import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
+import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
 
 class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEach with IntegrationCatalogueConnectorStub with FileTransferTestData {
 
@@ -39,8 +32,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
   val wsClient: WSClient = app.injector.instanceOf[WSClient]
 
   val validHeaders = List(CONTENT_TYPE -> "application/json")
-  val validPostHeaders = List(CONTENT_TYPE -> "application/x-www-form-urlencoded")
-  val csrfToken = List("Csrf-Token" -> app.injector.instanceOf[CSRF.TokenProvider].generateToken)
+  val validPostHeaders = List(CONTENT_TYPE -> "application/x-www-form-urlencoded", "Csrf-Token" -> "nocheck")
 
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
@@ -50,27 +42,27 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
       .get()
       .futureValue
 
- def callPostEndpointWithBody(url: String, headers: List[(String, String)], body: String)   ={
+ def callPostEndpointWithBody(url: String, headers: List[(String, String)], body: String): WSResponse ={
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
-      .withFollowRedirects(false)
+      .withFollowRedirects(true)
+   .withHttpHeaders(headers : _*)
       .post(body)
       .futureValue
- }  
+ }
 
 
-  def shouldDisplayBadRequestTemplate = shouldDisplayErrorTemplate(_, BAD_REQUEST, "Bad request")
-  def shouldDisplayInternalServerErrorTemplate = shouldDisplayErrorTemplate(_, INTERNAL_SERVER_ERROR, "Internal server error")
+  def shouldDisplayBadRequestTemplate: WSResponse => Assertion = shouldDisplayErrorTemplate(_, BAD_REQUEST, "Bad request")
+  def shouldDisplayInternalServerErrorTemplate: WSResponse => Assertion = shouldDisplayErrorTemplate(_, INTERNAL_SERVER_ERROR, "Internal server error")
 
-  def shouldDisplayErrorTemplate(result: WSResponse, expectedStatus: Int, expectedMessage: String) = {
+  def shouldDisplayErrorTemplate(result: WSResponse, expectedStatus: Int, expectedMessage: String): Assertion = {
     result.status mustBe expectedStatus
     val document = Jsoup.parse(result.body)
 
     document.getElementById("page-heading").text mustBe expectedMessage
   }
 
-   def validateRedirect(response: WSResponse, expectedLocation: String){
+   def validateRedirect(response: WSResponse, expectedLocation: String): Unit = {
         response.status mustBe SEE_OTHER
         val mayBeLocationHeader: Option[Seq[String]] = response.headers.get(LOCATION)
         mayBeLocationHeader.fold(fail("redirect Location header missing")){ locationHeader =>
@@ -163,19 +155,6 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
       }
     }
 
-    "POST       /filetransfer/wizard/data-source" should {
-      "redirect to data target page when posted data is valid" in {
 
-        val result = callPostEndpointWithBody(s"$url/filetransfer/wizard/data-source", validPostHeaders,  "dataSource=BMC")
-        validateRedirect(result, "/api-catalogue/filetransfer/wizard/data-target?source=BMC")
-
-      }
-       "retrun OK and display the data source page when there are form errors" in {
-
-        val result = callPostEndpointWithBody(s"$url/filetransfer/wizard/data-source", validPostHeaders,  "someinvalid=value")
-        result.status mustBe OK
-
-      }
-    }
   }
 }

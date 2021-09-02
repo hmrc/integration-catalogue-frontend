@@ -154,7 +154,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
        contentAsString(result) shouldBe htmlVal
      
        verifyZeroInteractions(mockWizardFoundConnectionsView)
-       verify(mockErrorTemplate).apply(eqTo("Bad Request"), eqTo("Bad Request"), eqTo("Bad Request"))(*, *, *)
+       verify(mockErrorTemplate).apply(eqTo("Bad request"), eqTo("Bad request"), eqTo("Bad request"))(*, *, *)
        verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
      }
 
@@ -169,7 +169,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
        contentAsString(result) shouldBe htmlVal
      
        verifyZeroInteractions(mockWizardFoundConnectionsView)
-       verify(mockErrorTemplate).apply(eqTo("Internal Server Error"), eqTo("Internal Server Error"), eqTo("Internal Server Error"))(*, *, *)
+       verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
        verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
      }
 
