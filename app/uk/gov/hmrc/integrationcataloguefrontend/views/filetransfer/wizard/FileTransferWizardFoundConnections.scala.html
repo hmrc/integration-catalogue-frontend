@@ -37,9 +37,9 @@
         </h1>
         <p id="paragraph1" class="govuk-body">@source and @target are connected by:</p>
         <ul class="govuk-list govuk-list--bullet">
-            @for(connection <- connections){
-              <li>
-                @{connection.platform.fileTransferName} using @getConnectionsText(connection.transports)
+            @for(connection <- connections.zipWithIndex){
+              <li id="connection-@connection._2">
+                @{connection._1.platform.fileTransferName} using @getConnectionsText(connection._1.transports)
               </li>
             }
         </ul>

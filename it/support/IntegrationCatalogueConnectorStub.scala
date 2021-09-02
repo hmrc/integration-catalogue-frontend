@@ -132,9 +132,9 @@ trait IntegrationCatalogueConnectorStub {
     )
   }
 
-  def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(exceptionCode: Int): StubMapping = {
+  def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(params: String, exceptionCode: Int): StubMapping = {
 
-    stubFor(get(urlEqualTo(getFileTransferTransportsByPlatformUrl("")))
+    stubFor(get(urlEqualTo(getFileTransferTransportsByPlatformUrl(params)))
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
