@@ -78,7 +78,7 @@ class FileTransferController @Inject() (
       form.fold(
         formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.get("dataSource").getOrElse(""))),
         okForm => 
-        Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource, okForm.dataTarget))
+        Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource.getOrElse(""), okForm.dataTarget.getOrElse("")))
 
       )
     }

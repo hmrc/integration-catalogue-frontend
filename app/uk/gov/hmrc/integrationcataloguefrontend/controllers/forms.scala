@@ -27,7 +27,7 @@ object SelectedDataSourceForm {
 
   def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
    
-    if (s.isDefined)  Valid else Invalid(message) 
+    if (s.isDefined)  Valid else Invalid(message)
   }
 
   def form: Form[SelectedDataSourceForm] = Form(mapping(
@@ -35,14 +35,19 @@ object SelectedDataSourceForm {
   (SelectedDataSourceForm.apply)(SelectedDataSourceForm.unapply))
 }
 
-final case class SelectedDataTargetForm(dataSource: String, dataTarget: String)
+final case class SelectedDataTargetForm(dataSource: Option[String], dataTarget: Option[String])
 
 object SelectedDataTargetForm {
 
+  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
+
+    if (s.isDefined)  Valid else Invalid(message)
+  }
+
   def form: Form[SelectedDataTargetForm] = Form(mapping(
     "dataSource" ->
-    text.verifying("SOME BIG ERROR", isNotBlank(_)),
-    "dataTarget" ->  text.verifying("SOME BIG ERROR", isNotBlank(_)))
+    optional(text).verifying( nonEmpty("SOME BIG ERROR")),
+    "dataTarget" ->  optional(text).verifying(nonEmpty("SOME BIG ERROR")))
   (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
 
 }
