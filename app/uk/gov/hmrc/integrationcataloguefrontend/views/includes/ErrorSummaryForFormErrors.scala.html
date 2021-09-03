@@ -13,7 +13,7 @@
     <ul class="govuk-list govuk-error-summary__list">
         @for(error <- errors.zipWithIndex) {
         <li>
-            <a id=s"error-link-${error._2}" href="#@error._1.key">@Messages(s"${error._1.messages.head}")</a>
+            <a id="error-link-@{error._2}" href="#@error._1.key">@Messages(s"${error._1.messages.head}")</a>
         </li>
         }
     </ul>

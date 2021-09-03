@@ -22,14 +22,8 @@ import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.{
-  FileTransferWizardDataSource,
-  FileTransferWizardDataTarget,
-  FileTransferWizardFoundConnections,
-  FileTransferWizardStart
-}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -76,8 +70,8 @@ class FileTransferController @Inject() (
   
     Future.successful {
       form.fold(
-        formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.get("dataSource").getOrElse(""))),
-        okForm => 
+        formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.getOrElse("dataSource", ""))),
+        okForm =>
         Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource.getOrElse(""), okForm.dataTarget.getOrElse("")))
 
       )

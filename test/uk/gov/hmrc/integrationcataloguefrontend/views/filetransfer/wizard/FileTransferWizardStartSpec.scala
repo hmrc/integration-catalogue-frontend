@@ -26,16 +26,16 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.F
 class FileTransferWizardStartSpec extends CommonViewSpec {
 
   trait Setup {
-    val startPage = app.injector.instanceOf[FileTransferWizardStart]
+    val startPage: FileTransferWizardStart = app.injector.instanceOf[FileTransferWizardStart]
   }
 
   "FT wizard start page" should {
 
     "render start page correctly" in new Setup {
-       val page : Html =    startPage.render(FakeRequest(), messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
-       document.getElementById("poc-banner-title").text() shouldBe "Important"
-       document.getElementById("page-heading").text() shouldBe "Reusing file transfer connections"
+      val page: Html = startPage.render(FakeRequest(), messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("poc-banner-title").text() shouldBe "Important"
+      document.getElementById("page-heading").text() shouldBe "Reusing file transfer connections"
       document.getElementById("paragraph1").text() shouldBe "Check if a file transfer connection exists for your service to reuse."
       document.getElementById("paragraph2").text() shouldBe "Tell us where your data is stored and where you want to send your data."
 
