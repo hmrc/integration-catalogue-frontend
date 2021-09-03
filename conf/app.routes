@@ -15,3 +15,9 @@ GET        /integrations/:id/:title                   uk.gov.hmrc.integrationcat
 GET        /integrations/:id/:title/technical         uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetailTechnical(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
 GET        /integrations/:id/:title/redoc             uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetailTechnicalRedoc(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
 
+GET        /filetransfer/wizard/start                 uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.wizardStart
+GET        /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceView
+POST       /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceAction
+GET        /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataTargetView(source: String)
+POST       /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataTargetAction()
+GET        /filetransfer/wizard/connections           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.getFileTransferTransportsByPlatform(source: String, target: String)

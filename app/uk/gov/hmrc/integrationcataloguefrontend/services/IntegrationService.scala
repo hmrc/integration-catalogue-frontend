@@ -17,21 +17,17 @@
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationResponse
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, FileTransferTransportsForPlatform, IntegrationDetail, IntegrationFilter, IntegrationResponse, PlatformContactResponse}
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationDetail
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
+
 import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
-import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationFilter
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 
 @Singleton
@@ -88,6 +84,10 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
 
   def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
     integrationCatalogueConnector.getPlatformContacts()
+  }
+
+  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
+    integrationCatalogueConnector.getFileTransferTransportsByPlatform(source, target)
   }
 
 }

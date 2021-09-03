@@ -1,0 +1,21 @@
+
+@(errors: Seq[FormError])(implicit messages: Messages)
+
+@if(errors.nonEmpty) {
+  <div class="govuk-error-summary"
+    id="error-summary-display"
+    role="alert"
+    aria-labelledby="error-summary-heading"
+    tabindex="-1">
+    
+    <h2 id="error-summary-heading" class="govuk-error-summary__title">There is a problem</h2>
+    
+    <ul class="govuk-list govuk-error-summary__list">
+        @for(error <- errors.zipWithIndex) {
+        <li>
+            <a id="error-link-@{error._2}" href="#@error._1.key">@Messages(s"${error._1.messages.head}")</a>
+        </li>
+        }
+    </ul>
+  </div>
+}

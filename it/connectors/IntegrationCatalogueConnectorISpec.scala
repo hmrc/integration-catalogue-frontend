@@ -27,6 +27,7 @@ import support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
@@ -178,8 +179,29 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         }
       }
     }
- 
 
-}
+    "getFileTransferTransportsByPlatform" should {
+      "return Right with List of FileTransferTransportsForPlatform" in new Setup {
+        val expectedResult = List(
+          FileTransferTransportsForPlatform(API_PLATFORM, List("S3", "WTM")),
+          FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
+        )
+        primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody("?source=CESA&target=DPS", OK, Json.toJson(expectedResult).toString())
+        val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
+        result match {
+          case Right(response) => response mustBe expectedResult
+          case _ => fail
+        }
+      }
 
+      "return Left with Bad Request" in new Setup {
+        primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError("?source=CESA&target=DPS", BAD_REQUEST)
+        val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
+        result match {
+          case Left(_) => succeed
+          case _ => fail
+        }
+      }
+    }
+  }
 }

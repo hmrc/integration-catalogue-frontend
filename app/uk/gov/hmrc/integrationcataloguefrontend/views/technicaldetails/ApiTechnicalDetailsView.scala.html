@@ -16,12 +16,10 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailLayout
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiEndpoints
-@import org.joda.time.format.DateTimeFormat
-@import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.BareLayout
 
 @this(layout: BareLayout)
+
 
 @(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
