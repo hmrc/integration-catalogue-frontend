@@ -34,7 +34,7 @@
                 @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), 'class -> "form", 'id -> "selectedDataTargetForm") {
                     @helper.CSRF.formField 
                   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                      <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="ftwizard-datatarget-heading-label">
+                      <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="page-heading">
                           Where do you want to send your data?
                       </h1>
                   </legend>
@@ -43,8 +43,8 @@
                   <div class="govuk-radios">
                   @for(item <- FileTransferBackends.radiobuttons) {
                       <div class="govuk-radios__item">
-                          <input class="govuk-radios__input" id="ftwizard-datatarget-radios-@item.displayName" name="dataTarget" type="radio" value="@item.name">
-                          <label class="govuk-label govuk-radios__label" for="ftwizard-datatarget-radios-@item.displayName" id="ftwizard-datatarget-radios-@item.displayName-label" >
+                          <input class="govuk-radios__input" id="filetransfer-backends-radio-button-@item.displayName" name="dataTarget" type="radio" value="@item.name">
+                          <label class="govuk-label govuk-radios__label" for="ftwizard-datatarget-radios-@item.displayName" id="filetransfer-backends-radio-button-@item.displayName-label" >
                           @item.displayName
                           </label>
                       </div>
@@ -56,7 +56,7 @@
                 }
               </fieldset>
 
-              <a id="contactlink" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
+              <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
                 The HoD I want isn’t listed
             </a>
             

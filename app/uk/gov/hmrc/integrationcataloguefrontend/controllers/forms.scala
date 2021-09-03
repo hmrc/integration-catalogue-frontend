@@ -31,7 +31,7 @@ object SelectedDataSourceForm {
   }
 
   def form: Form[SelectedDataSourceForm] = Form(mapping(
-    "dataSource" -> optional(text).verifying(nonEmpty("You must select a Source")))
+    "dataSource" -> optional(text).verifying(nonEmpty("Select the HoD your data is currently stored in")))
   (SelectedDataSourceForm.apply)(SelectedDataSourceForm.unapply))
 }
 
@@ -45,9 +45,8 @@ object SelectedDataTargetForm {
   }
 
   def form: Form[SelectedDataTargetForm] = Form(mapping(
-    "dataSource" ->
-    optional(text).verifying( nonEmpty("SOME BIG ERROR")),
-    "dataTarget" ->  optional(text).verifying(nonEmpty("SOME BIG ERROR")))
+    "dataSource" -> optional(text).verifying( nonEmpty("Select the HoD your data is currently stored in")),
+    "dataTarget" ->  optional(text).verifying(nonEmpty("Select the HoD you want to send data to")))
   (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
 
 }

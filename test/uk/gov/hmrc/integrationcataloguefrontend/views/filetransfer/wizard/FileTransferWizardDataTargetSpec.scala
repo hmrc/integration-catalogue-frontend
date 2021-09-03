@@ -21,42 +21,46 @@ import org.jsoup.nodes.Document
 import play.api.test.FakeRequest
 import play.api.test.CSRFTokenHelper._
 import play.twirl.api.Html
-import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataSourceForm
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataSource
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataTarget
+import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataTargetForm
 
-class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferRadioButtonHelper {
+class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferRadioButtonHelper {
 
   trait Setup {
-    val dataSourcePage: FileTransferWizardDataSource = app.injector.instanceOf[FileTransferWizardDataSource]
+    val dataTargetPage: FileTransferWizardDataTarget = app.injector.instanceOf[FileTransferWizardDataTarget]
   }
 
-  "FT wizard data source page" should {
+  "FT wizard data target page" should {
 
     "render page correctly" in new Setup {
-      val page: Html = dataSourcePage.render(SelectedDataSourceForm.form, FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
+      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form, "source", FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("poc-banner-title").text() shouldBe "Important"
-      document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
+      document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
       Option(document.getElementById("error-link-0")) shouldBe None
 
       document.getElementById("hod-link").text shouldBe "The HoD I want isn’t listed"
       document.getElementById("hod-link").attr("href") shouldBe "/api-catalogue/contact"
       document.getElementById("submit").text() shouldBe "Continue"
 
+      document.getElementById("dataSource").attr("value") shouldBe "source"
+
       testFileTransferBackends(document, false)
 
     }
 
     "render page correctly with errors" in new Setup {
-      val page: Html = dataSourcePage.render(SelectedDataSourceForm.form.withError("dataSource", "error"), FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
+      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form.withError("dataSource", "error"), "source", FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("poc-banner-title").text() shouldBe "Important"
-      document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
+      document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
       document.getElementById("error-link-0").text() shouldBe "error"
       // do we check that errors element is not displayed?
       document.getElementById("submit").text() shouldBe "Continue"
+
+      document.getElementById("dataSource").attr("value") shouldBe "source"
 
       testFileTransferBackends(document, false)
 
