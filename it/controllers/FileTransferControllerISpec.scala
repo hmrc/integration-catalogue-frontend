@@ -91,7 +91,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
 
-        document.getElementById("ftwizard-datasource-heading-label").text mustBe "Where is your data currently stored?"
+        document.getElementById("page-heading").text mustBe "Where is your data currently stored?"
 
       }
 
@@ -104,7 +104,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
 
-        document.getElementById("ftwizard-datatarget-heading-label").text mustBe "Where do you want to send your data?"
+        document.getElementById("page-heading").text mustBe "Where do you want to send your data?"
 
       }
 
