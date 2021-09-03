@@ -58,6 +58,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
   private val mockWizardDataSourceView: FileTransferWizardDataSource = mock[FileTransferWizardDataSource]
   private val mockWizardDataTargetView: FileTransferWizardDataTarget = mock[FileTransferWizardDataTarget]
   private val mockWizardFoundConnectionsView: FileTransferWizardFoundConnections = mock[FileTransferWizardFoundConnections]
+  private val mockWizardNoConnectionsView: FileTransferWizardNoConnections = mock[FileTransferWizardNoConnections]
   private val mockErrorTemplate = mock[ErrorTemplate]
   private val mockIntegrationService: IntegrationService = mock[IntegrationService]
 
@@ -73,6 +74,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
     mockWizardDataSourceView,
     mockWizardDataTargetView,
     mockWizardFoundConnectionsView,
+    mockWizardNoConnectionsView,
     mockIntegrationService,
     mockErrorTemplate
   )
@@ -130,7 +132,8 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
        val dataSource = "SOURCE"
        val dataTarget = "TARGET"   
        val htmlVal = "<head></head>"
-     "return 200 and have correct view when called" in {
+
+     "return 200 when connections found and have correct view when called" in {
       
        when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms))(*, *, *))
          .thenReturn(HtmlFormat.raw(htmlVal))
@@ -141,6 +144,21 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
        contentAsString(result) shouldBe htmlVal
      
        verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms))(*, *, *)
+       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+     }
+
+    "return 200 when no connections found and have correct view when called" in {
+      
+       when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *))
+         .thenReturn(HtmlFormat.raw(htmlVal))
+       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+         .thenReturn(Future.successful(Right(List.empty)))
+       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+       status(result) shouldBe Status.OK
+       contentAsString(result) shouldBe htmlVal
+     
+       verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *)
+       verifyZeroInteractions(mockWizardFoundConnectionsView)
        verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
      }
 

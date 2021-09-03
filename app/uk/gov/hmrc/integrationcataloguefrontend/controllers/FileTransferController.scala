@@ -36,6 +36,7 @@ class FileTransferController @Inject() (
     wizardDataSourceView: FileTransferWizardDataSource,
     wizardDataTargetView: FileTransferWizardDataTarget,
     wizardFoundConnectionsView: FileTransferWizardFoundConnections,
+    wizardNoConnectionsView: FileTransferWizardNoConnections,
     integrationService: IntegrationService,
     errorTemplate: ErrorTemplate
   )(implicit val ec: ExecutionContext)
@@ -80,6 +81,7 @@ class FileTransferController @Inject() (
 
   def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
     integrationService.getFileTransferTransportsByPlatform(source, target).map {
+      case Right(result: List[FileTransferTransportsForPlatform]) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
       case Right(result: List[FileTransferTransportsForPlatform]) => Ok(wizardFoundConnectionsView(source, target, result))
       case Left(_: BadRequestException)                           => BadRequest(errorTemplate("Bad request", "Bad request", "Bad request"))
       case Left(_)                                                => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))

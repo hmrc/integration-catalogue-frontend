@@ -117,7 +117,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
 
     "GET /filetransfer/wizard/connections" should {
 
-      "respond with 200 and render data target page" in {
+      "respond with 200 and render connections found page when backend returns connections" in {
         val expectedResult = List(
           FileTransferTransportsForPlatform(API_PLATFORM, List("S3", "WTM")),
           FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
@@ -134,6 +134,19 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         document.getElementById("paragraph1").text mustBe "CESA and DPS are connected by:"
         document.getElementById("connection-0").text mustBe "API Platform using S3 and WTM"
         document.getElementById("connection-1").text mustBe "IF using UTM"
+      }
+
+      "respond with 200 and render no connections found page when backend returns no connections" in {
+
+        val source = "CESA"
+        val target = "DPS"
+        primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody(s"?source=$source&target=$target", OK, "[]")
+
+        val result = callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty)
+        result.status mustBe OK
+        val document = Jsoup.parse(result.body)
+
+        document.getElementById("page-heading").text mustBe s"No file transfer connection exists between $source and $target"
       }
 
       "respond with 400 and render error template correctly when backend returns 400" in {

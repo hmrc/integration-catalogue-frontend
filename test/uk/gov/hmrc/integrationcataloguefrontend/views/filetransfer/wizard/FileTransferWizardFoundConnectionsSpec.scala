@@ -31,7 +31,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     val foundConnectionsPage: FileTransferWizardFoundConnections = app.injector.instanceOf[FileTransferWizardFoundConnections]
   }
 
-  "FT wizard start page" should {
+  "FT wizard found connection page" should {
     val results = List(
       FileTransferTransportsForPlatform(API_PLATFORM, List("AB", "S3", "WTM")),
       FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
@@ -40,7 +40,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     val source = "BMA"
     val target = "CESA"
 
-  "render start page correctly" in new Setup {
+  "render page correctly" in new Setup {
       val page: Html = foundConnectionsPage.render(source, target, results, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("poc-banner-title").text() shouldBe "Important"
