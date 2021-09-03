@@ -39,5 +39,55 @@ object Backends {
     BackendFilterItem("NPS", "NPS"),
     BackendFilterItem("RTI", "RTI")
     ).sorted
+}
 
+case class FileTransferBackendItem(name: String, displayName: String)
+
+object FileTransferBackendItem {
+  // Note that because `Ordering[A]` is not contravariant, the declaration
+  // must be type-parametrized in the event that you want the implicit
+  // ordering to apply to subclasses of `BackendFilterItem`.
+  implicit def orderingByName: Ordering[FileTransferBackendItem] = Ordering.by(_.name.toUpperCase)
+
+}
+
+object FileTransferBackends {
+  val radiobuttons = List(
+    FileTransferBackendItem("BMC", "BMC"),
+    FileTransferBackendItem("BVD", "BVD"),
+    FileTransferBackendItem("CASEFLOW", "CASEFLOW"),
+    FileTransferBackendItem("CESA", "CESA"),
+    FileTransferBackendItem("CESASAACEX", "CESASAACEX"),
+    FileTransferBackendItem("CISR", "CISR"),
+    FileTransferBackendItem("COBRA2", "COBRA2"),
+    FileTransferBackendItem("CompaniesHouse", "CompaniesHouse"),
+    FileTransferBackendItem("DMS", "DMS"),
+    FileTransferBackendItem("DPS", "DPS"),
+    FileTransferBackendItem("DS", "DS"),
+    FileTransferBackendItem("DTR", "DTR"),
+    FileTransferBackendItem("EDM", "EDM"),
+    FileTransferBackendItem("ETMP", "ETMP"),
+    FileTransferBackendItem("EUI", "EUI"),
+    FileTransferBackendItem("FIM", "FIM"),
+    FileTransferBackendItem("FWKS", "FWKS"),
+    FileTransferBackendItem("INTDS", "INTDS"),
+    FileTransferBackendItem("ISA", "ISA"),
+    FileTransferBackendItem("MAE", "MAE"),
+    FileTransferBackendItem("MAG", "MAG"),
+    FileTransferBackendItem("MDTP", "MDTP"),
+    FileTransferBackendItem("MTIC", "MTIC"),
+    FileTransferBackendItem("OI", "OI"),
+    FileTransferBackendItem("OSD", "OSD"),
+    FileTransferBackendItem("OSI", "OSI"),
+    FileTransferBackendItem("RDCO", "RDCO"),
+    FileTransferBackendItem("RTI", "RTI"),
+    FileTransferBackendItem("SAP", "SAP"),
+    FileTransferBackendItem("SAS", "SAS"),
+    FileTransferBackendItem("ServiceNow", "ServiceNow"),
+    FileTransferBackendItem("SWORD", "SWORD"),
+    FileTransferBackendItem("TIED", "TIED"),
+    FileTransferBackendItem("VDB", "VDB"),
+    FileTransferBackendItem("VIES", "VIES"),
+    FileTransferBackendItem("VMF", "VMF")
+  ).sorted
 }

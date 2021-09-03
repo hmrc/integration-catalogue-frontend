@@ -30,6 +30,8 @@ import java.util.UUID
 import scala.concurrent.Future
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
@@ -260,6 +262,40 @@ class IntegrationServiceSpec
       verify(mockIntegrationCatalogueConnector).getPlatformContacts()(eqTo(hc))
 
     }
+  }
+
+  "getFileTransferTransportsByPlatform" should {
+    //TODO add param mock check
+    "return Right with List of FileTransferTransportsForPlatform" in new SetUp {
+      val expectedResult = List(
+        FileTransferTransportsForPlatform(API_PLATFORM, List("S3", "WTM")),
+        FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
+      )
+      when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(*,*)(*))
+        .thenReturn(Future.successful(Right(expectedResult)))
+      val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
+      result match {
+        case Right(response) => response shouldBe expectedResult
+        case _ => fail
+      }
+
+      verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(*,*)(eqTo(hc))
+    }
+  }
+
+  "return Left when error in backend" in new SetUp {
+    val dataSource = "SOURCE"
+    val dataTarget = "TARGET"
+    when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(eqTo(dataSource),eqTo(dataTarget))(*))
+      .thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
+
+    val result = await(objInTest.getFileTransferTransportsByPlatform(dataSource, dataTarget))
+    result match {
+      case Left(_)  => succeed
+      case Right(_) => fail()
+    }
+
+    verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(eqTo(dataSource),eqTo(dataTarget))(eqTo(hc))
   }
 
 }

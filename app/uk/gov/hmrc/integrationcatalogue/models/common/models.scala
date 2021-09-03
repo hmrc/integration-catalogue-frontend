@@ -28,18 +28,18 @@ object IntegrationId {
 }
 
 
-sealed abstract class PlatformType(val displayName: String, val shortName: String) extends EnumEntry
+sealed abstract class PlatformType(val displayName: String, val shortName: String, val fileTransferName: String) extends EnumEntry
 
 object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {
 
   val values = findValues
 
-  case object TRANSACTION_ENGINE extends PlatformType("Transaction Engine", "TRANSACTION_ENGINE")
-  case object DES extends PlatformType("Data Exchange Service (DES)", "DES")
-  case object CDS_CLASSIC extends PlatformType("Customs Declaration System (CDS Classic)", "CDS_CLASSIC")
-  case object CMA extends PlatformType("Containerised Managed Architecture (CMA)", "CMA")
-  case object CORE_IF extends PlatformType("Integration Framework (IF)", "CORE IF")
-  case object API_PLATFORM extends PlatformType("API Platform", "API Platform")
+  case object TRANSACTION_ENGINE extends PlatformType("Transaction Engine", "TRANSACTION_ENGINE", "TRANSACTION ENGINE")
+  case object DES extends PlatformType("Data Exchange Service (DES)", "DES", "DES")
+  case object CDS_CLASSIC extends PlatformType("Customs Declaration System (CDS Classic)", "CDS_CLASSIC", "CDS Classic")
+  case object CMA extends PlatformType("Containerised Managed Architecture (CMA)", "CMA", "CMA")
+  case object CORE_IF extends PlatformType("Integration Framework (IF)", "CORE IF", "IF")
+  case object API_PLATFORM extends PlatformType("API Platform", "API Platform", "API Platform")
 }
 
 sealed trait SpecificationType extends EnumEntry
