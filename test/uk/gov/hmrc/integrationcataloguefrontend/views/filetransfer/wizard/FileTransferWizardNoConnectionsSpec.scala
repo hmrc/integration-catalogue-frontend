@@ -38,9 +38,7 @@ class FileTransferWizardNoConnectionsSpec extends CommonViewSpec {
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe s"No file transfer connection exists between $source and $target"
-      document.getElementById("paragraph1").text() shouldBe "Speak to your Business Relationship Manager to find out how to create a file transfer connection for your service."
-      document.getElementById("paragraph2").text() shouldBe "You can find your Business Relationship Manager in your business area on the HMRC intranet."
-
+    
     }
   }
 
