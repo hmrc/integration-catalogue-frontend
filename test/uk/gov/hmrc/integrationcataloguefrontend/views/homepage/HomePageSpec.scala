@@ -35,8 +35,8 @@ class HomePageSpec extends CommonViewSpec {
        val page : Html =    homePage.render(FakeRequest(), messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
        document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
-       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs and file transfers"
-       document.getElementById("page-title-searchlink-text").text() shouldBe "See all APIs and file transfers"
+       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"
+       document.getElementById("page-title-searchlink-text").text() shouldBe "See all APIs"
     }
   }
 }

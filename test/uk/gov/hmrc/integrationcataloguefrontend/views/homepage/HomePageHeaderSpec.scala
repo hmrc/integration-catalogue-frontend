@@ -33,8 +33,8 @@ class HomePageHeaderSpec extends CommonViewSpec {
        val page : Html =    landingPage.render(appConfig)
        val document: Document = Jsoup.parse(page.body)
        document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
-       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs and file transfers"
-       document.getElementById("page-title-searchlink-text").text() shouldBe "See all APIs and file transfers"
+       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"
+       document.getElementById("page-title-searchlink-text").text() shouldBe "See all APIs"
        document.getElementById("page-title-searchlink").attr("href") shouldBe "/api-catalogue/search"
 
        document.getElementById("heading-box-title").text() shouldBe "First time using this service?"

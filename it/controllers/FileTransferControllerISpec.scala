@@ -77,7 +77,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         val result = callGetEndpoint(s"$url/filetransfer/wizard/start", List.empty)
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
-
+        document.getElementById("home-link").attr("href") mustBe "/api-catalogue"
         document.getElementById("page-heading").text mustBe "Reusing file transfer connections"
 
       }
@@ -90,7 +90,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         val result = callGetEndpoint(s"$url/filetransfer/wizard/data-source", List.empty)
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
-
+        document.getElementById("home-link").attr("href") mustBe "/api-catalogue"
         document.getElementById("page-heading").text mustBe "Where is your data currently stored?"
 
       }
@@ -103,7 +103,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         val result = callGetEndpoint(s"$url/filetransfer/wizard/data-target?source=BMC", List.empty)
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
-
+        document.getElementById("home-link").attr("href") mustBe "/api-catalogue"
         document.getElementById("page-heading").text mustBe "Where do you want to send your data?"
 
       }
@@ -130,6 +130,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
 
+        document.getElementById("home-link").attr("href") mustBe "/api-catalogue"
         document.getElementById("page-heading").text mustBe "A file transfer connection exists"
         document.getElementById("paragraph1").text mustBe "CESA and DPS are connected by:"
         document.getElementById("connection-0").text mustBe "API Platform using S3 and WTM"
@@ -145,7 +146,8 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         val result = callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty)
         result.status mustBe OK
         val document = Jsoup.parse(result.body)
-
+        
+        document.getElementById("home-link").attr("href") mustBe "/api-catalogue"
         document.getElementById("page-heading").text mustBe s"No file transfer connection exists between $source and $target"
       }
 

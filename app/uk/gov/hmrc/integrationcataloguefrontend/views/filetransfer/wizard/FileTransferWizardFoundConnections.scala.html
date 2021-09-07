@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 @import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 
-@this(layout: DefaultLayout)
+@this(layout: FileTransferWizardLayout)
 
 
 @(source: String, target: String, connections: List[FileTransferTransportsForPlatform])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
@@ -43,9 +43,7 @@
               </li>
             }
         </ul>
-        <p id="paragraph2" class="govuk-body">Speak to your Business Relationship Manager to find out how to reuse the file transfer connection.</p>
-        <p id="paragraph3" class="govuk-body">You can find your Business Relationship Manager in your business area on the HMRC intranet.</p>
-
+       
       </div>
   </form>
 }

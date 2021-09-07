@@ -50,9 +50,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
       document.getElementById("connection-0").text() shouldBe "API Platform using AB, S3 and WTM"
       document.getElementById("connection-1").text() shouldBe "IF using UTM"
 
-      document.getElementById("paragraph2").text() shouldBe "Speak to your Business Relationship Manager to find out how to reuse the file transfer connection."
-      document.getElementById("paragraph3").text() shouldBe "You can find your Business Relationship Manager in your business area on the HMRC intranet."
-
+     
     }
   }
 
