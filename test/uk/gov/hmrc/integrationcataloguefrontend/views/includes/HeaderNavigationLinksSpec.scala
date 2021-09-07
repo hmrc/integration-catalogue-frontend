@@ -38,7 +38,7 @@ class HeaderNavigationLinksSpec extends CommonViewSpec {
       document.getElementById("nav-get-started-link").text() shouldBe "Get started"
       document.getElementById("nav-get-started-link").attr("href" ) shouldBe "/api-catalogue/get-started"      
       
-      document.getElementById("nav-apis-link").text() shouldBe "Apis"
+      document.getElementById("nav-apis-link").text() shouldBe "APIs"
       document.getElementById("nav-apis-link").attr("href" ) shouldBe "/api-catalogue/search"      
       
       document.getElementById("nav-file-transfers-link").text() shouldBe "File transfers"
