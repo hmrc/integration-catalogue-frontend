@@ -36,6 +36,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
     "render page correctly" in new Setup {
       val page: Html = dataTargetPage.render(SelectedDataTargetForm.form, "source", FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
+      document.title shouldBe "Where do you want to send your data? -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
       Option(document.getElementById("error-link-0")) shouldBe None

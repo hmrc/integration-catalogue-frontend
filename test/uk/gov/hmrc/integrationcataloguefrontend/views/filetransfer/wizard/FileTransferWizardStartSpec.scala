@@ -34,6 +34,7 @@ class FileTransferWizardStartSpec extends CommonViewSpec {
     "render start page correctly" in new Setup {
       val page: Html = startPage.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
+      document.title shouldBe "Reusing file transfer connections -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Reusing file transfer connections"
       document.getElementById("paragraph1").text() shouldBe "Check if a file transfer connection exists for your service to reuse."
