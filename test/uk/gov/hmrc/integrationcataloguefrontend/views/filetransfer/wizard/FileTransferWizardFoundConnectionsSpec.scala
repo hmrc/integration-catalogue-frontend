@@ -43,6 +43,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
   "render page correctly" in new Setup {
       val page: Html = foundConnectionsPage.render(source, target, results, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
+      document.title shouldBe "A file transfer connection exists -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
       document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"

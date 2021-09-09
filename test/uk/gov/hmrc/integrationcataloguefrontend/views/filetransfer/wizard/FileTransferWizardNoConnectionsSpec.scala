@@ -36,6 +36,7 @@ class FileTransferWizardNoConnectionsSpec extends CommonViewSpec {
   "render page correctly" in new Setup {
       val page: Html = noConnectionsPage.render(source, target, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
+      document.title shouldBe "No file transfer connection exists -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe s"No file transfer connection exists between $source and $target"
     
