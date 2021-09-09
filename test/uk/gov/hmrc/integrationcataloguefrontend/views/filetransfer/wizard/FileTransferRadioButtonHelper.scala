@@ -25,7 +25,12 @@ trait FileTransferRadioButtonHelper extends Matchers{
 
   private def testFileTransferBackendsLabels(document: Document) = {
     for (item <- FileTransferBackends.radiobuttons) {
+      val inputId = s"filetransfer-backends-radio-button-${item.displayName}"
+      Option(document.getElementById(inputId)).isDefined shouldBe true
+      
       document.getElementById(s"filetransfer-backends-radio-button-${item.displayName}-label").text() shouldBe item.displayName
+
+      document.getElementById(s"filetransfer-backends-radio-button-${item.displayName}-label").attr("for") shouldBe inputId
     }
   }
 
