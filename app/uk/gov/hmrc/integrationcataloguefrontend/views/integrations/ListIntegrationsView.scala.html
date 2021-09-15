@@ -19,9 +19,10 @@
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PagingNavigation
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FileTransferInterruptBox
 @import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper._
 
-@this(layout: Layout3, pagingNavigation: PagingNavigation)
+@this(layout: Layout3, pagingNavigation: PagingNavigation, fileTransferInterruptBox: FileTransferInterruptBox)
 
 
 @(apiList: List[IntegrationDetail],
@@ -35,7 +36,8 @@
     fromResults: Int,
     toResults: Int,
     firstPageLink: Int,
-    lastPageLink: Int)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+    lastPageLink: Int,
+    showFileTransferInterrupt: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.Layout3
 @getEncodedTitle(title: String) = @{
@@ -49,6 +51,9 @@
     platformFilter=platformFilter,
     backendsFilter=backendsFilter) {
 
+@if(showFileTransferInterrupt) {
+    @fileTransferInterruptBox()
+}
     @if(apiList.nonEmpty){
        
         <h1 class="govuk-body" id="page-heading">@totalCount result@if(totalCount > 1){s} </h1>

@@ -480,3 +480,34 @@ pre {
   background-color: #F7F7F7;
   line-height: 1.1em;
 }
+
+// File transfer box
+
+.search-banner {
+  overflow: hidden;
+  background: #1d70b8;
+  color: govuk-colour("white");
+  padding-left: 10px;
+  &-padding {
+    padding-top: 25px;
+  }
+}
+
+.white {
+  color: govuk-colour("white");
+}
+
+/*** Interrupt button ***/
+
+a.interrupt-button {
+  background: govuk-colour("white");
+  color: govuk-colour("blue") !important;
+  box-shadow: 0 2px 0 #144E81;
+  font-weight: 700;
+}
+
+a.interrupt-button:hover {
+  background: govuk-colour("light-grey");
+  box-shadow: 0 2px 0 govuk-colour("dark-blue");
+}
+
