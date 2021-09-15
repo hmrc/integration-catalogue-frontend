@@ -49,7 +49,7 @@ class IntegrationController @Inject() (
     apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
-    with Logging with PagingHelper {
+    with Logging with ListIntegrationsHelper {
 
   implicit val config: AppConfig = appConfig
 
@@ -113,6 +113,7 @@ class IntegrationController @Inject() (
       val currentPageCalc = currentPage.getOrElse(1)
       integrationService.findWithFilters(IntegrationFilter(List(keywords.getOrElse("")), platformFilter, backendsFilter), Some(itemsPerPageCalc), currentPage).map {
         case Right(response)              =>
+         //are keywords in list? Boolean
           Ok(listIntegrationsView(
             response.results,
             keywords.getOrElse(""),
@@ -125,7 +126,8 @@ class IntegrationController @Inject() (
             calculateFromResults(currentPageCalc, itemsPerPageCalc),
             calculateToResults(currentPageCalc, itemsPerPageCalc),
             calculateFirstPageLink(currentPageCalc),
-            calculateLastPageLink(currentPageCalc, calculateNumberOfPages(response.count, itemsPerPageCalc))
+            calculateLastPageLink(currentPageCalc, calculateNumberOfPages(response.count, itemsPerPageCalc)),
+            false
           ))
         
         case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))

@@ -19,7 +19,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import org.scalatest.WordSpec
 import org.scalatest.Matchers
 
-class PagingHelperSpec extends WordSpec with Matchers with PagingHelper {
+class ListIntegrationsHelperSpec extends WordSpec with Matchers with ListIntegrationsHelper {
 
   "PagingHelper" when {
     "calculateNumberOfPages" should {

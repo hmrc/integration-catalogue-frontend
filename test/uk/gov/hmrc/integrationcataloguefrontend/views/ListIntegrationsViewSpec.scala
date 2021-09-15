@@ -48,6 +48,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         5,
         1,
         3,
+        false,
         FakeRequest(), messagesProvider.messages,  appConfig)
       val document: Document = Jsoup.parse(page.body)
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
@@ -68,6 +69,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         5,
         1,
         3,
+        false,
         FakeRequest(), messagesProvider.messages,  appConfig)
       val document: Document = Jsoup.parse(page.body)
 
