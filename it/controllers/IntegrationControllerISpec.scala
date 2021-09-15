@@ -10,6 +10,8 @@ import support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
   with IntegrationCatalogueConnectorStub with ApiTestData with FileTransferTestData {
@@ -24,7 +26,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         "auditing.consumer.baseUri.host" -> wireMockHost,
         "auditing.consumer.baseUri.port" -> wireMockPort,
         "microservice.services.integration-catalogue.host" -> wireMockHost,
-        "microservice.services.integration-catalogue.port" -> wireMockPort
+        "microservice.services.integration-catalogue.port" -> wireMockPort,
+        "search.fileTransferTerms" -> Seq("File Transfer", "filetransfer")
       )
 
   val url = s"http://localhost:$port/api-catalogue"
@@ -50,6 +53,27 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
           Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe OK
+
+      }
+
+      "respond with 200 and render fileTransferInterruptBox when keyword matches fileTransferSearchTerm" in {
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+                          Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=filetransfer&itemsPerPage=30&integrationType=API")
+        val result = callGetEndpoint(s"$url/search?keywords=filetransfer", List.empty)
+        result.status mustBe OK
+
+        val document: Document = Jsoup.parse(result.body)
+        Option(document.getElementById("ft-interrupt-heading")).isDefined mustBe true
+      }
+
+      "respond with 200 and do not render fileTransferInterruptBox when keyword does not match any fileTransferSearchTerms" in {
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
+                          Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=api&itemsPerPage=30&integrationType=API")
+        val result = callGetEndpoint(s"$url/search?keywords=api", List.empty)
+        result.status mustBe OK
+
+        val document: Document = Jsoup.parse(result.body)
+        Option(document.getElementById("ft-interrupt-heading")).isDefined mustBe false
 
       }
 
