@@ -21,7 +21,7 @@ import org.scalatest.Matchers
 
 class ListIntegrationsHelperSpec extends WordSpec with Matchers with ListIntegrationsHelper {
 
-  "PagingHelper" when {
+  "ListIntegrationsHelper" when {
     "calculateNumberOfPages" should {
       "return 5 when totalCount is 15 and itemsPerPage is 3" in {
         calculateNumberOfPages(totalCount = 15, itemsPerPage = 3) shouldBe 5
@@ -67,6 +67,20 @@ class ListIntegrationsHelperSpec extends WordSpec with Matchers with ListIntegra
       }
       "return 2 when current page is 1 and totalNumberOfPages is 2" in {
         calculateLastPageLink(1, 2) shouldBe 2
+      }
+    }
+    "showFileTransferInterrupt" should {
+      "return true when keyword is in searchTerm" in {
+        showFileTransferInterrupt(List("File Transfer", "filetransfers"), Some("file transfer")) shouldBe true
+      }
+      "return false when keyword is not in searchTerm" in {
+        showFileTransferInterrupt(List("File Transfer", "filetransfers"), Some("keyword")) shouldBe false
+      }
+      "return false when searchTerm list is empty" in {
+        showFileTransferInterrupt(List.empty, Some("keyword")) shouldBe false
+      }
+      "return false when there is no keyword" in {
+        showFileTransferInterrupt(List("File Transfer", "filetransfers"), None) shouldBe false
       }
     }
   }

@@ -127,7 +127,7 @@ class IntegrationController @Inject() (
             calculateToResults(currentPageCalc, itemsPerPageCalc),
             calculateFirstPageLink(currentPageCalc),
             calculateLastPageLink(currentPageCalc, calculateNumberOfPages(response.count, itemsPerPageCalc)),
-            false
+            showFileTransferInterrupt(config.fileTransferSearchTerms.toList, keywords)
           ))
         
         case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
