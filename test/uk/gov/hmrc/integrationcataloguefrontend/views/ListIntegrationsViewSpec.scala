@@ -34,7 +34,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
 
   "ListApisView" should {
 
-    "render list apis page correct and not show api list when no apis are passed into the view" in new Setup {
+    "render list apis page without File Transfer Interrupt Box and do not show api list when no apis are passed into the view" in new Setup {
       val page : Html =    listApisView.render(
         List.empty,
         "",
@@ -53,9 +53,32 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
       val document: Document = Jsoup.parse(page.body)
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
+      Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
     }
 
-    "render list apis page correctly and list the apis" in new Setup {
+    "render list apis page with File Transfer Interrupt Box and do not show api list when no apis are passed into the view" in new Setup {
+      val page : Html =    listApisView.render(
+        List.empty,
+        "",
+        List.empty,
+        List.empty,
+        5,
+        20,
+        5,
+        1,
+        1,
+        5,
+        1,
+        3,
+        true,
+        FakeRequest(), messagesProvider.messages,  appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
+      maybeApiListElements.isDefined shouldBe false
+      Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe true
+    }
+
+    "render list apis page without File Transfer Interrupt Box and list the apis" in new Setup {
       val page : Html =    listApisView.render(
         integrationsList,
         "",
@@ -72,6 +95,8 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         false,
         FakeRequest(), messagesProvider.messages,  appConfig)
       val document: Document = Jsoup.parse(page.body)
+
+      Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
 
       document.getElementById("poc-banner-title").text() shouldBe "Important"
 
