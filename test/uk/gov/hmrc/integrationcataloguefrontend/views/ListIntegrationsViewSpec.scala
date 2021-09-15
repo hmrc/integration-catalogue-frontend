@@ -100,7 +100,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
 
       document.getElementById("poc-banner-title").text() shouldBe "Important"
 
-      document.getElementById("page-heading").text() shouldBe "20 results"
+      document.getElementById("page-heading").text() shouldBe "20 API results"
       document.getElementById("api-name-0").text() shouldBe apiDetail0.title
       document.getElementById("api-name-1").text() shouldBe apiDetail1.title
       document.getElementById("api-name-2").text() shouldBe apiDetail2.title
