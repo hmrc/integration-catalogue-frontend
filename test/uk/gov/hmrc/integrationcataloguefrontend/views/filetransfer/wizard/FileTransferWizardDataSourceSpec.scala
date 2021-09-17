@@ -40,6 +40,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
       Option(document.getElementById("error-link-0")) shouldBe None
+       Option(document.getElementById("file-transfer-source-error")) shouldBe None
 
       document.getElementById("hod-link").text shouldBe "The HoD I want isn’t listed"
       document.getElementById("hod-link").attr("href") shouldBe "/api-catalogue/contact"
@@ -58,6 +59,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       document.getElementById("error-link-0").text() shouldBe "error"
       // do we check that errors element is not displayed?
       document.getElementById("submit").text() shouldBe "Continue"
+      document.getElementById("file-transfer-source-error").text() shouldBe "Error: Select where your data currently stored"
 
       testFileTransferBackends(document, false)
 

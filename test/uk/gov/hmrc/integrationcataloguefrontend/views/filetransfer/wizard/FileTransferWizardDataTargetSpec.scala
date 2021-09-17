@@ -40,6 +40,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
       Option(document.getElementById("error-link-0")) shouldBe None
+      Option(document.getElementById("file-transfer-target-error")) shouldBe None
 
       document.getElementById("hod-link").text shouldBe "The HoD I want isn’t listed"
       document.getElementById("hod-link").attr("href") shouldBe "/api-catalogue/contact"
@@ -62,6 +63,8 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
       document.getElementById("submit").text() shouldBe "Continue"
 
       document.getElementById("dataSource").attr("value") shouldBe "source"
+     document.getElementById("file-transfer-target-error").text() shouldBe "Error: Select where you want to send your data"
+
 
       testFileTransferBackends(document, false)
 

@@ -27,7 +27,7 @@
 @(form: Form[SelectedDataTargetForm], dataSource: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Where do you want to send your data? - ${appConfig.serviceName}"), activePage=Some("contact")) {
-  <div class="govuk-form-group govuk-form-group--error">
+  <div class="govuk-form-group @if(form.hasErrors){govuk-form-group--error}">
     @ErrorSummary(form)
     <fieldset class="govuk-fieldset" aria-describedby="file-transfer-target-error">
       @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), 'class -> "form", 'id -> "selectedDataTargetForm") {
@@ -38,9 +38,11 @@
           </h1>
         </legend>
         <a name="dataTarget"></a>
-        <span id="file-transfer-target-error" class="govuk-error-message">
-          <span class="govuk-visually-hidden">Error:</span> Select where you want to send your data
-        </span>
+        @if(form.hasErrors){
+          <span id="file-transfer-target-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Select where you want to send your data
+          </span>
+        }
         <div class="govuk-radios">
           @for(item <- FileTransferBackends.radiobuttons) {
             <div class="govuk-radios__item">
