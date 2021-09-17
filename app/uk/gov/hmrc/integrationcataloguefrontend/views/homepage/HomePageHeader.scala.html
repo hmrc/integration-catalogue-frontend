@@ -51,17 +51,13 @@
                 <h1 class="govuk-heading-xl govuk-find-api-title" id="page-title">Find existing ways to access data and transfer data across HMRC</h1>
                 <p class="govuk-body-l govuk-find-api-description" id="page-title-desc">Search available HMRC APIs</p>
                 <div>
-                    @searchBox("govuk-int-search-black", "Search Apis")
+                    @searchBox("govuk-int-search-black", "Search APIs")
                 </div>
                 <br />
                 <p class="govuk-body govuk-find-api-filter-text" id="page-title-searchlink-text">
-                    <a class="govuk-find-api-filter" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None)" id="page-title-searchlink">
-                        Review all APIs
-                    </a>
+                    <a class="govuk-find-api-filter" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None)" id="page-title-searchlink"> Review all APIs</a>
                     <span class="white"> or </span>
-                    <a class="govuk-find-api-filter" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart.url" id="page-title-ftwizard-link">
-                        check file transfer connections
-                    </a>
+                    <a class="govuk-find-api-filter" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart.url" id="page-title-ftwizard-link"> check file transfer connections </a>
                 </p>
             </div>
             <div class="govuk-grid-column-one-third govuk-find-api-black-box-padding">
