@@ -20,7 +20,6 @@
 
 @this(apiExamples: ApiExamples)
 
-
 @(response: Response)
 
 @getHttpStatusTitle(status: String) = @{
@@ -72,12 +71,6 @@
           case _ => s"$status"
       }
   }.getOrElse(status)
-
-
-  }
-
+}
 
 @apiExamples(getHttpStatusTitle(response.statusCode), response.examples, "response")
-
-
-

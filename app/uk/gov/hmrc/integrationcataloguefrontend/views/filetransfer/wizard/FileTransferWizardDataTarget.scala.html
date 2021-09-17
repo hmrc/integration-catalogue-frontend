@@ -27,39 +27,37 @@
 @(form: Form[SelectedDataTargetForm], dataSource: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Where do you want to send your data? - ${appConfig.serviceName}"), activePage=Some("contact")) {
-      <div>
-          <div class="govuk-form-group">
-            @ErrorSummary(form)
-              <fieldset class="govuk-fieldset">
-                @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), 'class -> "form", 'id -> "selectedDataTargetForm") {
-                    @helper.CSRF.formField 
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                      <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="page-heading">
-                          Where do you want to send your data?
-                      </h1>
-                  </legend>
-                  <a name="dataTarget"></a>
-
-                  <div class="govuk-radios">
-                  @for(item <- FileTransferBackends.radiobuttons) {
-                      <div class="govuk-radios__item">
-                          <input class="govuk-radios__input" id="filetransfer-backends-radio-button-@item.displayName" name="dataTarget" type="radio" value="@item.name">
-                          <label class="govuk-label govuk-radios__label" for="filetransfer-backends-radio-button-@item.displayName" id="filetransfer-backends-radio-button-@item.displayName-label" >
-                          @item.displayName
-                          </label>
-                      </div>
-                  }
-                  </div>
-                  <br><br>
-                  <input id="dataSource" type="hidden" name="dataSource" value="@dataSource" />
-                  <button id="submit" class="govuk-button" type="submit">Continue</button>
-                }
-              </fieldset>
-
-              <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
-                The HoD I want isn’t listed
-            </a>
-            
-          </div>
-      </div>
+  <div class="govuk-form-group govuk-form-group--error">
+    @ErrorSummary(form)
+    <fieldset class="govuk-fieldset" aria-describedby="file-transfer-target-error">
+      @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), 'class -> "form", 'id -> "selectedDataTargetForm") {
+        @helper.CSRF.formField 
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="page-heading">
+            Where do you want to send your data?
+          </h1>
+        </legend>
+        <a name="dataTarget"></a>
+        <span id="file-transfer-target-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Select where you want to send your data
+        </span>
+        <div class="govuk-radios">
+          @for(item <- FileTransferBackends.radiobuttons) {
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="filetransfer-backends-radio-button-@item.displayName" name="dataTarget" type="radio" value="@item.name">
+              <label class="govuk-label govuk-radios__label" for="filetransfer-backends-radio-button-@item.displayName" id="filetransfer-backends-radio-button-@item.displayName-label" >
+                @item.displayName
+              </label>
+            </div>
+          }
+        </div>
+        <br><br>
+        <input id="dataSource" type="hidden" name="dataSource" value="@dataSource" />
+        <button id="submit" class="govuk-button" type="submit">Continue</button>
+      }
+    </fieldset>
+  </div>
+  <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
+    The HoD I want isn’t listed
+  </a>
 }
