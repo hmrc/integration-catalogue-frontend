@@ -45,11 +45,11 @@
     </div>
   </summary>
   <div class="govuk-details__text custom-detail-box">
-    <h3 class="govuk-heading-m" id="request-heading-@index">Request</h3>
+    <h3 class="govuk-heading-s" id="request-heading-@index">Request</h3>
     @{
       endpointMethod.request.map(apiEndpointMethodRequest(_)).getOrElse("")
     }
-    <h3 class="govuk-heading-m" id="responses-heading-@index">Responses</h3>
+    <h3 class="govuk-heading-s" id="responses-heading-@index">Responses</h3>
     @for(response <- endpointMethod.responses.zipWithIndex){
       @apiEndpointMethodResponse(response._1)
     }
