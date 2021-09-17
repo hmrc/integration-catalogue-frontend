@@ -71,6 +71,8 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
        val page : Html = filterApisComponent.render("", List.empty, List.empty)
        val document: Document = Jsoup.parse(page.body)
+      document.getElementById("intCatSearch").attr("placeholder") shouldBe "Search APIs"
+      document.getElementById("intCatSearchButton").text() shouldBe "Search"
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
       document.getElementById("filter-label").text() shouldBe "Filter by Api name."
       document.getElementById("IntCatSearchHint").text() shouldBe "Filter by API name. There is no auto complete."
