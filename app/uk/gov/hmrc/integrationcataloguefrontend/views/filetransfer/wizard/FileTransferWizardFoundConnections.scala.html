@@ -31,19 +31,16 @@
 
 @layout(pageTitle = Some(s"A file transfer connection exists - ${appConfig.serviceName}"), activePage=Some("contact")) {
   <form name="Go to data source" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart" method="get">
-      <div>
-        <h1 id="page-heading"  class="govuk-heading-l">
-            A file transfer connection exists
-        </h1>
-        <p id="paragraph1" class="govuk-body">@source and @target are connected by:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            @for(connection <- connections.zipWithIndex){
-              <li id="connection-@connection._2">
-                @{connection._1.platform.fileTransferName} using @getConnectionsText(connection._1.transports)
-              </li>
-            }
-        </ul>
-       
-      </div>
+    <h1 id="page-heading"  class="govuk-heading-l">
+      A file transfer connection exists
+    </h1>
+    <p id="paragraph1" class="govuk-body">@source and @target are connected by:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      @for(connection <- connections.zipWithIndex){
+        <li id="connection-@connection._2">
+          @{connection._1.platform.fileTransferName} using @getConnectionsText(connection._1.transports)
+        </li>
+      }
+    </ul>
   </form>
 }
