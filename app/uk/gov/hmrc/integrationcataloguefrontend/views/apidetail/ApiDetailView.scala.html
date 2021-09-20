@@ -26,60 +26,61 @@
 @(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @gridItem(heading:String, dataValue: String, indentifier: String) = {
-<div class="govuk-grid-column-one-quarter">
-  <h3 class="govuk-heading-s  govuk-!-display-inline-block" id="@indentifier-heading">@heading</h3>
-</div>
-<div class="govuk-grid-column-two-thirds">
-  <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
-</div>
+  <div class="govuk-grid-column-one-quarter">
+    <h3 class="govuk-heading-s  govuk-!-display-inline-block" id="@indentifier-heading">@heading</h3>
+  </div>
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
+  </div>
 }
-
 
 @layout(pageTitle = Some(s"${apiDetail.title} - API summary - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
 
   <br />
-  <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-5" id="page-reviewed-date">Page reviewed @DateTimeFormat.forPattern("d MMMM yyyy").print(apiDetail.reviewedDate)</p>
 
+  <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-5" id="page-reviewed-date">
+    Page reviewed @DateTimeFormat.forPattern("d MMMM yyyy").print(apiDetail.reviewedDate)
+  </p>
 
   <h2 class="govuk-heading-m" id="api-summary-heading">
     API summary
   </h2>
+
   <div class="govuk-grid-row">
-  @gridItem("Version", apiDetail.version, "version")
-  @if(apiDetail.hods.nonEmpty){
-    @gridItem("HoDs", apiDetail.hods.mkString(", "), "hods")
+    @gridItem("Version", apiDetail.version, "version")
+    @if(apiDetail.hods.nonEmpty){
+      @gridItem("HoDs", apiDetail.hods.mkString(", "), "hods")
+    }
+    @gridItem("Platform", apiDetail.platform.displayName, "platform")
+    @gridItem("Status", apiDetail.apiStatus.displayName, "status")
+  </div>
+
+  @if(apiDetail.maintainer.contactInfo.nonEmpty) {
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
+
+    <h2 class="govuk-heading-m" id="contact-information-heading">Contact</h2>
+
+    <div class="govuk-grid-row">
+      @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.name.isDefined)){
+        @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(x =>
+        x.name.getOrElse("")).getOrElse("Unknown"), "contact-name")
+      }
+    </div>
+
+    <div class="govuk-grid-row">
+      @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.emailAddress.isDefined)) {
+        @gridItem("Contact email", apiDetail.maintainer.contactInfo.headOption.map(x => x.emailAddress.getOrElse("")).getOrElse("Unknown"), "contact-email")
+      }
+    </div>
   }
-  @gridItem("Platform", apiDetail.platform.displayName, "platform")
-  @gridItem("Status", apiDetail.apiStatus.displayName, "status")
-</div>
 
+  <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
 
-@if(apiDetail.maintainer.contactInfo.nonEmpty) {
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
+  <h2 class="govuk-heading-m" id="endpoints-examples-schemas-heading">Endpoints, examples and schemas</h2>
 
-<h2 class="govuk-heading-m" id="contact-information-heading">Contact</h2>
-
-<div class="govuk-grid-row">
-  @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.name.isDefined)){
-  @gridItem("Contact name", apiDetail.maintainer.contactInfo.headOption.map(x =>
-  x.name.getOrElse("")).getOrElse("Unknown"), "contact-name")
-  }
-</div>
-
-<div class="govuk-grid-row">
-  @if(apiDetail.maintainer.contactInfo.headOption.exists(x => x.emailAddress.isDefined)) {
-  @gridItem("Contact email", apiDetail.maintainer.contactInfo.headOption.map(x => x.emailAddress.getOrElse("")).getOrElse("Unknown"), "contact-email")
-  }
-</div>
-}
-
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
-
-<h2 class="govuk-heading-m" id="endpoints-examples-schemas-heading">Endpoints, examples and schemas</h2>
-
-<p class="govuk-body">
-  <a id="api-detail-link"
-    href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetailTechnicalRedoc(apiDetail.id, encodeTitle(apiDetail.title))"
-    class="govuk-link govuk-link--no-visited-state">See API details</a>
-</p>
+  <p class="govuk-body">
+    <a id="api-detail-link"
+      href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.getIntegrationDetailTechnicalRedoc(apiDetail.id, encodeTitle(apiDetail.title))"
+      class="govuk-link govuk-link--no-visited-state">See API details</a>
+  </p>
 }

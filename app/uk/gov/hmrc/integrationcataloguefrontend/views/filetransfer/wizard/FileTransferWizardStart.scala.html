@@ -24,16 +24,14 @@
 
 @layout(pageTitle = Some(s"Reusing file transfer connections - ${appConfig.serviceName}"), activePage=Some("contact")) {
   <form name="Go to data source" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart" method="get">
-      <div>
-        <h1 id="page-heading"  class="govuk-heading-xl">
-            Reusing file transfer connections
-        </h1>
-        <p id="paragraph1" class="govuk-body">Check if a file transfer connection exists for your service to reuse.</p>
-        <p id="paragraph2" class="govuk-body">Tell us where your data is stored and where you want to send your data.</p>
+    <h1 id="page-heading"  class="govuk-heading-l">
+      Reusing file transfer connections
+    </h1>
+    <p id="paragraph1" class="govuk-body">Check if a file transfer connection exists for your service to reuse.</p>
+    <p id="paragraph2" class="govuk-body">Tell us where your data is stored and where you want to send your data.</p>
 
-        <a id="continue-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceView" class="govuk-button" data-module="govuk-button">
-            Continue
-        </a>
-      </div>
+    <a id="continue-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceView" class="govuk-button" data-module="govuk-button">
+      Continue
+    </a>
   </form>
 }

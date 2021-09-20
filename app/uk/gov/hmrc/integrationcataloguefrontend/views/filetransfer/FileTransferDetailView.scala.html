@@ -28,11 +28,11 @@
 
 @gridItem(heading:String, dataValue: String, indentifier: String, gridSize: String) = {
   <div class="govuk-grid-column-one-@gridSize">
-    <h4 class="govuk-heading-s  govuk-!-display-inline-block" id="@indentifier-heading">@heading </h4> 
-</div>    
-<div class="govuk-grid-column-one-@gridSize">
-  <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
-</div>
+    <h3 class="govuk-heading-s  govuk-!-display-inline-block" id="@indentifier-heading">@heading</h3> 
+  </div>    
+  <div class="govuk-grid-column-one-@gridSize">
+    <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
+  </div>
 }
 
 @layout(pageTitle = Some(s"File transfer details - ${appConfig.serviceName}"), fileTransferDetail = Some(fileTransferDetail)) {
@@ -40,7 +40,7 @@
   <br />
   <br />
 
-  <h2 class="govuk-heading-l" id="file-transfer-details-heading">File transfer details</h2>
+  <h2 class="govuk-heading-m" id="file-transfer-details-heading">File transfer details</h2>
 
   <div class="govuk-grid-row">
     @gridItem("Platform", fileTransferDetail.platform.displayName, "platform", "quarter")
@@ -58,7 +58,7 @@
    
   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible" />
 
-  <h2 class="govuk-heading-l" id="contact-information-heading">Contact information</h2>
+  <h2 class="govuk-heading-m" id="contact-information-heading">Contact information</h2>
 
   <div class="govuk-grid-row">
     @gridItem("Development team", fileTransferDetail.maintainer.name, "development-team", "half")

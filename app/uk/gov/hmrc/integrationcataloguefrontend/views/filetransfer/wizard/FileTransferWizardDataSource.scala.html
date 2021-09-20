@@ -27,42 +27,40 @@
 @(form: Form[SelectedDataSourceForm])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Where is your data currently stored? - ${appConfig.serviceName}"), activePage=Some("contact")) {
-    
-    <div>
-          <div class="govuk-form-group">
-            @ErrorSummary(form)
-              <fieldset class="govuk-fieldset">
-                @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceAction(), 'class -> "form", 'id -> "selectedDataSourceForm") {
-                @helper.CSRF.formField 
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                      <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="page-heading">
-                          Where is your data currently stored?
-                      </h1>
-                  </legend>
 
-                  <a name="dataSource"></a>
-                  <div class="govuk-radios">
-                  @for(item <- FileTransferBackends.radiobuttons) {
-                      <div class="govuk-radios__item">
-                          <input class="govuk-radios__input" id="filetransfer-backends-radio-button-@item.displayName" name="dataSource" type="radio" value="@item.name">
-                          <label class="govuk-label govuk-radios__label" for="filetransfer-backends-radio-button-@item.displayName" id="filetransfer-backends-radio-button-@item.displayName-label" >
-                          @item.displayName
-                          </label>
-                      </div>
-                  }
-                  </div>
-                  <br><br>
-                  <button id="submit" class="govuk-button" type="submit">Continue</button>
-                }
-              </fieldset>
+  <div class="govuk-form-group @if(form.hasErrors){govuk-form-group--error}">
+    @ErrorSummary(form)
+    <fieldset class="govuk-fieldset" aria-describedby="file-transfer-source-error">
+      @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceAction(), 'class -> "form", 'id -> "selectedDataSourceForm") {
+        @helper.CSRF.formField 
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading govuk-!-margin-bottom-3" id="page-heading">
+            Where is your data currently stored?
+          </h1>
+        </legend>
+        <a name="dataSource"></a>
+        @if(form.hasErrors) {
+            <span id="file-transfer-source-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> Select where your data currently stored
+            </span>
+        }
+        <div class="govuk-radios">
+          @for(item <- FileTransferBackends.radiobuttons) {
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="filetransfer-backends-radio-button-@item.displayName" name="dataSource" type="radio" value="@item.name">
+              <label class="govuk-label govuk-radios__label" for="filetransfer-backends-radio-button-@item.displayName" id="filetransfer-backends-radio-button-@item.displayName-label" >
+                @item.displayName
+              </label>
+            </div>
+          }
+        </div>
+        <br><br>
+        <button id="submit" class="govuk-button" type="submit">Continue</button>
+      }
+    </fieldset>
+  </div>
 
-              <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
-                The HoD I want isn’t listed
-            </a>
-            
-          </div>
-
-
-
-      </div>
+  <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
+    The HoD I want isn’t listed
+  </a>
 }
