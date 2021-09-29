@@ -17,16 +17,19 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import play.api.mvc._
-import uk.gov.hmrc.http.BadRequestException
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
+import uk.gov.hmrc.integrationcatalogue.models.{FileTransferTransportsForPlatform, PlatformContactResponse}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import cats.data.EitherT
 
 @Singleton
 class FileTransferController @Inject() (
@@ -40,7 +43,7 @@ class FileTransferController @Inject() (
     integrationService: IntegrationService,
     errorTemplate: ErrorTemplate
   )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc) {
+    extends FrontendController(mcc) with FtWizardHelper {
 
   implicit val config: AppConfig = appConfig
 
@@ -79,12 +82,22 @@ class FileTransferController @Inject() (
     }
   }
 
+
+
   def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
-    integrationService.getFileTransferTransportsByPlatform(source, target).map {
-      case Right(result: List[FileTransferTransportsForPlatform]) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
-      case Right(result: List[FileTransferTransportsForPlatform]) => Ok(wizardFoundConnectionsView(source, target, result))
-      case Left(_: BadRequestException)                           => BadRequest(errorTemplate("Bad request", "Bad request", "Bad request"))
-      case Left(_)                                                => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
+
+    val results = for{
+      contacts <- EitherT(integrationService.getPlatformContacts)
+      transfers <- EitherT(integrationService.getFileTransferTransportsByPlatform(source, target))
+    } yield (transfers, contacts)
+
+    results.value.map {
+      case Right((result: List[FileTransferTransportsForPlatform], _ )) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
+      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse] )) =>
+          val platformIntersect: List[PlatformType] = result.map(_.platform).intersect(platformContacts.map(_.platformType))
+
+          Ok(wizardFoundConnectionsView(source, target, result, getPlatformEmails(platformContacts, platformIntersect)))
+       case _                          => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
     }
   }
 }
