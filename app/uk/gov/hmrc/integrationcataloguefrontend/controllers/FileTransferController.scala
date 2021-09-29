@@ -42,7 +42,7 @@ class FileTransferController @Inject() (
     wizardNoConnectionsView: FileTransferWizardNoConnections,
     integrationService: IntegrationService,
     errorTemplate: ErrorTemplate
-  )(implicit val ec: ExecutionContext, hc: HeaderCarrier)
+  )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc) {
 
   implicit val config: AppConfig = appConfig
@@ -83,6 +83,7 @@ class FileTransferController @Inject() (
   }
 
 
+
   def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
 
     val results = for{
@@ -90,20 +91,23 @@ class FileTransferController @Inject() (
       transfers <- EitherT(integrationService.getFileTransferTransportsByPlatform(source, target))
     } yield (transfers, contacts)
 
-    results.value.map { 
-      
-      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse] )) => 
+    results.value.map {
+      case Right((result: List[FileTransferTransportsForPlatform], _ )) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
+      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse] )) =>
           val platformIntersect: List[PlatformType] = result.map(_.platform).intersect(platformContacts.map(_.platformType))
-          
-          Ok(wizardFoundConnectionsView(source, target, result,getPlatformEmails(platformContacts, platformIntersect)))
-       case Right((result: List[FileTransferTransportsForPlatform], _ )) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
+
+          Ok(wizardFoundConnectionsView(source, target, result, getPlatformEmails(platformContacts, platformIntersect)))
        case _                          => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
     }
   }
 
   private def getPlatformEmails(platformContacts: List[PlatformContactResponse], platformIntersect: List[PlatformType] ): List[PlatformEmail] = {
-     val filteredByPlatformContacts = platformContacts.filter(platformIntersect.contains(_))
-          val filteredByHasEmail = platformContacts.filter(x => x.contactInfo.isDefined && x.contactInfo.get.emailAddress.isDefined)
-         filteredByHasEmail.map(x => PlatformEmail(x.platformType, x.contactInfo.map(x.emailAddress).getOrElse("SHould never be used")))
+     val filteredByPlatformContacts = platformContacts.filter(x => platformIntersect.contains(x.platformType))
+          val filteredByHasEmail = filteredByPlatformContacts.filter(x => x.contactInfo.isDefined && x.contactInfo.get.emailAddress.isDefined)
+       filteredByHasEmail.map(x => (x.platformType, x.contactInfo) match {
+          case (platform: PlatformType, Some(contactInfo)) => contactInfo.emailAddress.map(PlatformEmail(platform, _ ))
+          case _ => None
+        }).flatten
+
   }
 }

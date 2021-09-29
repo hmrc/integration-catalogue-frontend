@@ -135,7 +135,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
 
      "return 200 when connections found and have correct view when called" in {
       
-       when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms))(*, *, *))
+       when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *))
          .thenReturn(HtmlFormat.raw(htmlVal))
        when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
          .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
@@ -143,7 +143,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
        status(result) shouldBe Status.OK
        contentAsString(result) shouldBe htmlVal
      
-       verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms))(*, *, *)
+       verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *)
        verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
      }
 
