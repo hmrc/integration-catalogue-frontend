@@ -19,7 +19,8 @@ object AppDependencies {
     "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-yaml"         % jacksonVersion,
     "io.swagger.parser.v3"              % "swagger-parser-v3"               % "2.0.24",
     "com.beachape"                      %% "enumeratum-play-json"           % enumeratumVersion,
-    "com.typesafe.play"                 %% "play-json-joda"                 % "2.9.2"
+    "com.typesafe.play"                 %% "play-json-joda"                 % "2.9.2",
+    "org.typelevel"                     %% "cats-core"                      % "2.4.2"
   )
 
   val test = Seq(

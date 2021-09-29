@@ -16,6 +16,10 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.models
 
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+
+case class PlatformEmail(platorm: PlatformType, email: String)
+
 case class BackendFilterItem(name: String, displayName: String)
 
 object BackendFilterItem {
