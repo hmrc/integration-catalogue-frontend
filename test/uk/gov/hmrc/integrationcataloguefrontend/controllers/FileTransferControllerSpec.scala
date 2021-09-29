@@ -64,7 +64,8 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockIntegrationService)
+    reset(mockIntegrationService, mockWizardDataSourceView, mockWizardStartView, mockWizardDataTargetView, mockWizardFoundConnectionsView,
+    mockWizardNoConnectionsView, mockErrorTemplate)
   }
 
   private val controller = new FileTransferController(
@@ -139,6 +140,9 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
          .thenReturn(HtmlFormat.raw(htmlVal))
        when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
          .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
+       
+       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+       .thenReturn(Future.successful(Right(List.empty)))
        val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
        status(result) shouldBe Status.OK
        contentAsString(result) shouldBe htmlVal
@@ -153,6 +157,8 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
          .thenReturn(HtmlFormat.raw(htmlVal))
        when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
          .thenReturn(Future.successful(Right(List.empty)))
+       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+       .thenReturn(Future.successful(Right(List.empty)))  
        val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
        status(result) shouldBe Status.OK
        contentAsString(result) shouldBe htmlVal
@@ -162,17 +168,20 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
        verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
      }
 
-       "return 400 when service returns BadRequest Exception" in {
+       "return 500 when service returns BadRequest Exception" in {
 
         when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
        when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
          .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
+        when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+       .thenReturn(Future.successful(Right(List.empty)))  
+      
        val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
-       status(result) shouldBe Status.BAD_REQUEST
+       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
        contentAsString(result) shouldBe htmlVal
      
        verifyZeroInteractions(mockWizardFoundConnectionsView)
-       verify(mockErrorTemplate).apply(eqTo("Bad request"), eqTo("Bad request"), eqTo("Bad request"))(*, *, *)
+       verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
        verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
      }
 
@@ -182,6 +191,9 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
         when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
        when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
          .thenReturn(Future.successful(Left(new NotFoundException("error"))))
+        when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+       .thenReturn(Future.successful(Right(List.empty)))  
+      
        val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
        contentAsString(result) shouldBe htmlVal

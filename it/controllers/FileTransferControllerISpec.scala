@@ -12,6 +12,9 @@ import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
+import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 
 class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEach with IntegrationCatalogueConnectorStub with FileTransferTestData {
 
@@ -34,6 +37,9 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
   val validHeaders = List(CONTENT_TYPE -> "application/json")
   val validPostHeaders = List(CONTENT_TYPE -> "application/x-www-form-urlencoded", "Csrf-Token" -> "nocheck")
 
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))))
+
+    
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
       .url(url)
@@ -124,6 +130,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         )
         val source = "CESA"
         val target = "DPS"
+         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(apiPlatformContact)).toString())
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody(s"?source=$source&target=$target", OK, Json.toJson(expectedResult).toString())
 
         val result = callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty)
@@ -142,6 +149,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         val source = "CESA"
         val target = "DPS"
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody(s"?source=$source&target=$target", OK, "[]")
+ primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(apiPlatformContact)).toString())
 
         val result = callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty)
         result.status mustBe OK
@@ -151,19 +159,22 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
         document.getElementById("page-heading").text mustBe s"No file transfer connection exists between $source and $target"
       }
 
-      "respond with 400 and render error template correctly when backend returns 400" in {
+      "respond with 500 and render error template correctly when backend returns 400" in {
 
         val source = "CESA"
         val target = "DPS"
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(apiPlatformContact)).toString())
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(s"?source=$source&target=$target", BAD_REQUEST)
 
-        shouldDisplayBadRequestTemplate(callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty))
+        shouldDisplayInternalServerErrorTemplate(callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty))
       }
 
       "respond with 500 and render error template correctly when backend returns 404" in {
 
         val source = "CESA"
         val target = "DPS"
+          primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(apiPlatformContact)).toString())
+      
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(s"?source=$source&target=$target", NOT_FOUND)
 
         shouldDisplayInternalServerErrorTemplate(callGetEndpoint(s"$url/filetransfer/wizard/connections?source=$source&target=$target", List.empty))
