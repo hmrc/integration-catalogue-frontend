@@ -41,7 +41,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     val target = "CESA"
 
   "render page correctly" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, results, FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = foundConnectionsPage.render(source, target, results, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "A file transfer connection exists -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"
