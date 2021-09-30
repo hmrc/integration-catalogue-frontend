@@ -53,8 +53,8 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
   private val serviceConfig = new ServicesConfig(configuration)
   private val appConfig = new AppConfig(configuration, serviceConfig)
 
- // private val mockWizardStartView: FileTransferWizardStart = app.injector.instanceOf[FileTransferWizardStart]
- private val mockWizardStartView: FileTransferWizardStart = mock[FileTransferWizardStart]
+  // private val mockWizardStartView: FileTransferWizardStart = app.injector.instanceOf[FileTransferWizardStart]
+  private val mockWizardStartView: FileTransferWizardStart = mock[FileTransferWizardStart]
   private val mockWizardDataSourceView: FileTransferWizardDataSource = mock[FileTransferWizardDataSource]
   private val mockWizardDataTargetView: FileTransferWizardDataTarget = mock[FileTransferWizardDataTarget]
   private val mockWizardFoundConnectionsView: FileTransferWizardFoundConnections = mock[FileTransferWizardFoundConnections]
@@ -65,7 +65,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockIntegrationService, mockWizardDataSourceView, mockWizardStartView, mockWizardDataTargetView, mockWizardFoundConnectionsView,
-    mockWizardNoConnectionsView, mockErrorTemplate)
+      mockWizardNoConnectionsView, mockErrorTemplate)
   }
 
   private val controller = new FileTransferController(
@@ -83,41 +83,41 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
   "GET  /filetransfer/wizard/start" should {
     "return 200 and have correct view when called" in {
       when(mockWizardStartView.apply()(*, *, *)).thenReturn(HtmlFormat.raw("some HTML"))
-  
+
       val result = controller.wizardStart()(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "some HTML"
-     
+
       verify(mockWizardStartView).apply()(*, *, *)
       verifyZeroInteractions(mockIntegrationService)
     }
 
-   
+
   }
 
-    "GET  /filetransfer/wizard/data-source" should {
+  "GET  /filetransfer/wizard/data-source" should {
     "return 200 and have correct view when called" in {
       when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(*, *, *)).thenReturn(HtmlFormat.raw("more HTML"))
-  
+
       val result = controller.dataSourceView()(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "more HTML"
-     
+
       verify(mockWizardDataSourceView).apply(any[Form[SelectedDataSourceForm]])(*, *, *)
       verifyZeroInteractions(mockIntegrationService)
     }
 
   }
 
-    "GET  /filetransfer/wizard/data-target" should {
+  "GET  /filetransfer/wizard/data-target" should {
     "return 200 and have correct view when called" in {
       val dataSource = "BMC"
       when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)).thenReturn(HtmlFormat.raw("more HTML"))
-  
+
       val result = controller.dataTargetView(dataSource)(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "more HTML"
-     
+
       verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)
       verifyZeroInteractions(mockIntegrationService)
     }
@@ -126,82 +126,96 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
 
   "GET  /filetransfer/wizard/connections" should {
     val fileTransferTransportsForPlatforms = List(
-          FileTransferTransportsForPlatform(API_PLATFORM, List("AB", "S3", "WTM")),
-          FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
-        )
+      FileTransferTransportsForPlatform(API_PLATFORM, List("AB", "S3", "WTM")),
+      FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
+    )
 
-       val dataSource = "SOURCE"
-       val dataTarget = "TARGET"   
-       val htmlVal = "<head></head>"
+    val dataSource = "SOURCE"
+    val dataTarget = "TARGET"
+    val htmlVal = "<head></head>"
 
-     "return 200 when connections found and have correct view when called" in {
-      
-       when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *))
-         .thenReturn(HtmlFormat.raw(htmlVal))
-       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
-         .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
-       
-       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
-       .thenReturn(Future.successful(Right(List.empty)))
-       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
-       status(result) shouldBe Status.OK
-       contentAsString(result) shouldBe htmlVal
-     
-       verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *)
-       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
-     }
+    "return 200 when connections found and have correct view when called" in {
+
+      when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *))
+        .thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
+
+      when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Right(List.empty)))
+      val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe htmlVal
+
+      verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *)
+      verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+    }
 
     "return 200 when no connections found and have correct view when called" in {
-      
-       when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *))
-         .thenReturn(HtmlFormat.raw(htmlVal))
-       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
-         .thenReturn(Future.successful(Right(List.empty)))
-       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
-       .thenReturn(Future.successful(Right(List.empty)))  
-       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
-       status(result) shouldBe Status.OK
-       contentAsString(result) shouldBe htmlVal
-     
-       verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *)
-       verifyZeroInteractions(mockWizardFoundConnectionsView)
-       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
-     }
 
-       "return 500 when service returns BadRequest Exception" in {
+      when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *))
+        .thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Right(List.empty)))
+      when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Right(List.empty)))
+      val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe htmlVal
 
-        when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
-       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
-         .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
-        when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
-       .thenReturn(Future.successful(Right(List.empty)))  
-      
-       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
-       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-       contentAsString(result) shouldBe htmlVal
-     
-       verifyZeroInteractions(mockWizardFoundConnectionsView)
-       verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
-       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
-     }
+      verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *)
+      verifyZeroInteractions(mockWizardFoundConnectionsView)
+      verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+    }
+
+    "return 500 when service call to get transports returns BadRequest Exception" in {
+
+      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
+      when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
+
+      val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      contentAsString(result) shouldBe htmlVal
+
+      verifyZeroInteractions(mockWizardFoundConnectionsView)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+    }
+
+    "return 500 when service call to get contacts BadRequest Exception" in {
+
+      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
+
+      val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      contentAsString(result) shouldBe htmlVal
+
+      verifyZeroInteractions(mockWizardFoundConnectionsView)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verify(mockIntegrationService, times(0)).getFileTransferTransportsByPlatform(any[String], any[String])(any[HeaderCarrier])
+      verify(mockIntegrationService).getPlatformContacts()(any[HeaderCarrier])
+    }
 
 
-      "return 500 when service returns NotFound Exception" in {
+    "return 500 when service returns NotFound Exception" in {
 
-        when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
-       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
-         .thenReturn(Future.successful(Left(new NotFoundException("error"))))
-        when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
-       .thenReturn(Future.successful(Right(List.empty)))  
-      
-       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
-       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-       contentAsString(result) shouldBe htmlVal
-     
-       verifyZeroInteractions(mockWizardFoundConnectionsView)
-       verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
-       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
-     }
+      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Left(new NotFoundException("error"))))
+      when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
+
+      val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      contentAsString(result) shouldBe htmlVal
+
+      verifyZeroInteractions(mockWizardFoundConnectionsView)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
+    }
 
   }
 
@@ -216,18 +230,18 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
     }
 
     "show error page when form is invalid" in {
-       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", ""))
+      val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", ""))
       when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
-        val result = controller.dataSourceAction()(requestWithForm)
-        status(result) shouldBe Status.OK
-         contentAsString(result) shouldBe "htmlVal"
+      val result = controller.dataSourceAction()(requestWithForm)
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe "htmlVal"
     }
 
   }
 
-    "POST       /filetransfer/wizard/data-target" should {
-      val dataSource = "BTM"
-      val dataTarget = "BFG"
+  "POST       /filetransfer/wizard/data-target" should {
+    val dataSource = "BTM"
+    val dataTarget = "BFG"
 
     "redirect to getFileTransferTransportsByPlatform when successful" in {
 
@@ -240,15 +254,15 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
     }
 
     "show error page when form is invalid" in {
-       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", ""))
+      val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", ""))
       when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], any[String])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
-        val result = controller.dataTargetAction()(requestWithForm)
-        status(result) shouldBe Status.OK
-         contentAsString(result) shouldBe "htmlVal"
+      val result = controller.dataTargetAction()(requestWithForm)
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe "htmlVal"
 
-         verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)
+      verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)
     }
 
   }
- 
+
 }
