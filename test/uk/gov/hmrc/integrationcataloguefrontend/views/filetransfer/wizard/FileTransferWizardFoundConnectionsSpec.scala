@@ -24,6 +24,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardFoundConnections
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
+import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
 
 class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
 
@@ -40,9 +41,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     val source = "BMA"
     val target = "CESA"
 
-  "render page correctly" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, results, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
-      val document: Document = Jsoup.parse(page.body)
+    def assertCommonPageElements(document: Document) = {
       document.title shouldBe "A file transfer connection exists -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
@@ -50,9 +49,46 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
 
       document.getElementById("connection-0").text() shouldBe "API Platform using AB, S3 and WTM"
       document.getElementById("connection-1").text() shouldBe "IF using UTM"
-
-     
     }
+
+    "render page correctly when  contacts are provided" in new Setup {
+      val page: Html = foundConnectionsPage.render(source, target, results, List(PlatformEmail(CORE_IF, "me@myemail.com")), FakeRequest(), messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      assertCommonPageElements(document)
+
+      document.getElementById("contact-section").text() shouldBe "For information about the IF connection, email me@myemail.com."
+      document.getElementById("contact-link").text() shouldBe "me@myemail.com"
+      document.getElementById("contact-link").attr("href") shouldBe "mailto:me@myemail.com"
+
+    }
+
+    "render page correctly when  contacts are not provided" in new Setup {
+      val page: Html = foundConnectionsPage.render(source, target, results, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      assertCommonPageElements(document)
+
+      Option(document.getElementById("contact-section")) shouldBe None
+      Option(document.getElementById("contact-link")) shouldBe None
+
+    }
+
+    // This should never happen due to controller logic
+    "render page correctly when no contacts and no file transfer results are provided" in new Setup {
+      val page: Html = foundConnectionsPage.render(source, target, List.empty, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      document.title shouldBe "A file transfer connection exists -"
+      document.getElementById("poc-banner-title").text() shouldBe "Important"
+      document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
+      document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"
+
+      Option(document.getElementById("connection-0")) shouldBe None
+
+
+      Option(document.getElementById("contact-section")) shouldBe None
+      Option(document.getElementById("contact-link")) shouldBe None
+
+    }
+
   }
 
 }
