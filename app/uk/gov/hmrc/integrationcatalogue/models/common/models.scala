@@ -40,6 +40,8 @@ object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {
   case object CMA extends PlatformType("Containerised Managed Architecture (CMA)", "CMA", "CMA")
   case object CORE_IF extends PlatformType("Integration Framework (IF)", "CORE IF", "IF")
   case object API_PLATFORM extends PlatformType("API Platform", "API Platform", "API Platform")
+  case object DIGI_DAPI extends PlatformType("DIGI & DAPI", "DIGI and DAPI", "DIGI and DAPI")
+  case object SDES extends PlatformType("SDES", "SDES", "SDES")
 }
 
 sealed trait SpecificationType extends EnumEntry
