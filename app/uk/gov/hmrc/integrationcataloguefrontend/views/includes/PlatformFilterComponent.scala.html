@@ -37,9 +37,23 @@
             </div>
 
             <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="des-if" name="platformFilter" type="checkbox" value="DES" @if(platformFilter.contains(DES)){ checked }>
-                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="des-if" id="des-if-filter-label">
+                <input class="govuk-checkboxes__input" id="dapi" name="platformFilter" type="checkbox" value="DAPI" @if(platformFilter.contains(DAPI)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="dapi" id="dapi-filter-label">
+                   DAPI
+                </label>
+            </div>
+
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="des" name="platformFilter" type="checkbox" value="DES" @if(platformFilter.contains(DES)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="des" id="des-filter-label">
                    Data Exchange Service (DES)
+                </label>
+            </div>
+
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="digi" name="platformFilter" type="checkbox" value="DIGI" @if(platformFilter.contains(DIGI)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="digi" id="digi-filter-label">
+                   DIGI
                 </label>
             </div>
 
