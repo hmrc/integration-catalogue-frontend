@@ -20,7 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CDS_CLASSIC, CMA, CORE_IF, DES, TRANSACTION_ENGINE}
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CDS_CLASSIC, CMA, CORE_IF, DES, DIGI, DAPI, TRANSACTION_ENGINE}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FilterApisComponent
 import scala.collection.JavaConverters._
@@ -34,13 +34,15 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
   "FilterApisComponent" should {
     val apiNameSearch: String = "someSearch"
-    val platformFilter: List[PlatformType] = List(API_PLATFORM, CMA, CDS_CLASSIC, DES, CORE_IF, TRANSACTION_ENGINE)
+    val platformFilter: List[PlatformType] = List(API_PLATFORM, CMA, CDS_CLASSIC, DES, DIGI, DAPI, CORE_IF, TRANSACTION_ENGINE)
 
     def testPlatformFilterLabels(document : Document)={
       document.getElementById("api-platform-filter-label").text() shouldBe "API Platform"
       document.getElementById("cma-filter-label").text() shouldBe "Containerised Managed Architecture (CMA)"
       document.getElementById("cds-classic-filter-label").text() shouldBe "Customs Declaration System (CDS Classic)"
-      document.getElementById("des-if-filter-label").text() shouldBe "Data Exchange Service (DES)"
+      document.getElementById("dapi-filter-label").text() shouldBe "DAPI"
+      document.getElementById("des-filter-label").text() shouldBe "Data Exchange Service (DES)"
+      document.getElementById("digi-filter-label").text() shouldBe "DIGI"
       document.getElementById("core-if-filter-label").text() shouldBe "Integration Framework (IF)"
       document.getElementById("transaction-engine-filter-label").text() shouldBe "Transaction Engine"
     }
@@ -54,7 +56,9 @@ class FilterApisComponentSpec extends CommonViewSpec {
         testCheckBox(document, "api-platform", isChecked )
         testCheckBox(document, "cma", isChecked )
         testCheckBox(document, "cds-classic", isChecked )
-        testCheckBox(document, "des-if", isChecked )
+        testCheckBox(document, "dapi", isChecked )
+        testCheckBox(document, "des", isChecked )
+        testCheckBox(document, "digi", isChecked )
         testCheckBox(document, "core-if", isChecked)
         testCheckBox(document, "transaction-engine", isChecked )
     }
