@@ -20,6 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.ApiPlatformAutomation
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
@@ -34,6 +35,7 @@ class MainController @Inject()(appConfig: AppConfig,
                                mcc: MessagesControllerComponents,
                                landingPageView: HomePage,
                                caseStudiesView: CaseStudies,
+                               apiPlatformAutomationView: ApiPlatformAutomation,
                                getStartedView: GetStarted,
                                aboutView: About,
                                contactView: ContactView,
@@ -62,9 +64,11 @@ class MainController @Inject()(appConfig: AppConfig,
     Future.successful(Ok(caseStudiesView()))
   }
 
-    def fileTransferPatternsPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(fileTransferPattern()))
+  def apiPlatformAutomationPage(): Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(apiPlatformAutomationView()))
   }
 
-
+  def fileTransferPatternsPage(): Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(fileTransferPattern()))
+  }
 }
