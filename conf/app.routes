@@ -6,7 +6,6 @@ GET        /about                                     uk.gov.hmrc.integrationcat
 GET        /contact                                   uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.contactPage
 GET        /get-started                               uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.getStartedPage
 GET        /case-studies                              uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.caseStudiesPage
-GET        /case-studies/api-platform-automation      uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.apiPlatformAutomationPage
 GET        /file-transfer-patterns                    uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.fileTransferPatternsPage
 
 #dynamic pages
