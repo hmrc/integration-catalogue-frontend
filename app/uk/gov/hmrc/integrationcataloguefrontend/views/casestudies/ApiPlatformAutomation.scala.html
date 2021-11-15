@@ -24,9 +24,37 @@
 
 @layout(pageTitle = Some(s"API Platform automated publishing - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
     <h1 class="govuk-heading-l" id="page-heading">API Platform automated publishing</h1>
-    <p class="govuk-body" id="page-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    
+    <p class="govuk-body" id="page-content">
+        The API Platform running in the MDTP Platform has about 100 APIs. These expose over 500 different endpoints. They
+        are consumed by third party software developers as well as other government departments (OGDs).
+    </p>
+
+    <p class="govuk-body" id="page-content">
+        We are continually onboarding new APIs onto the platform, as well as updating existing APIs with new versions and
+        functionality. Typically there are many releases of different APIs per week. It would be very hard to manually
+        publish these changes to the API catalogue and make sure it is up-to-date.</p>
+
+    <p class="govuk-body" id="page-content">
+        So automation was added to the API platform. When a new version of an API is released onto the API platform it
+        automatically updates the entry in the API catalogue - so that is always up to date!</p>
+
+    <h2 class="govuk-heading-m" id="page-heading">So what does this mean?</h2>
+    <p class="govuk-body" id="page-content">
+        <ul class="govuk-list govuk-list--bullet">
+            <li id="page-content-bullet-1">when an API is deployed it is published into the API catalogue</li>
+            <li id="page-content-bullet-2">the API teams don’t have to do anything</li>
+            <li id="page-content-bullet-3">encourages change and innovation</li>
+            <li id="page-content-bullet-4">the content in the API catalogue can’t be out of date</li>
+        </ul>
+    </p>
+
+    <h2 class="govuk-heading-m" id="page-heading">How does it technically work?</h2>
     <img id="homepage-img-1" class="content-section__image" src='@controllers.routes.Assets.versioned("/images/apiPlatformAutomation/lifecycle.png")' alt="API Platform API Lifecycle" />
-    <p class="govuk-body" id="page-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p class="govuk-body" id="page-content">
+        The API Platform has a CI/CD pipeline as a Jenkins job. As part of this process, it converts the APIs RAML to an
+        OpenAPI specification (Swagger) definition file and publishes it into the API catalogue via the publish API
+        (documented <a id="homepage-link-3" href="/guides/api-catalogue-publish-guide" class="govuk-link">here</a>).
+    </p>
     <img id="homepage-img-1" class="content-section__image" src='@controllers.routes.Assets.versioned("/images/apiPlatformAutomation/pipeline.png")' alt="API Platform pipeline" />
-    <p class="govuk-body" id="page-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 }
