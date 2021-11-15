@@ -25,17 +25,141 @@
 
 @layout(pageTitle = Some(s"Case studies - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
     <h1 class="govuk-heading-l" id="page-heading">Case studies</h1>
-    <p class="govuk-body" id="page-content">We’ll be adding case studies to help you understand how other HMRC teams have reused APIs and file transfer patterns to get data or transfer data across HMRC.</p>
-    <p class="govuk-body" id="page-content-2">By reusing what’s already available, HMRC teams don’t need to build a single use solution which:</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li id="page-content-bullet-1">saves time and money</li>
-        <li id="page-content-bullet-2">improves flexibility, governance, speed and usability</li>
-        <li id="page-content-bullet-3">encourages change and innovation</li>
-        <li id="page-content-bullet-4">removes the need for single use APIs or file transfers</li>
-    </ul>
-    <h2 class="govuk-heading-m" id="page-heading">API Platform Publishing</h2>
+
     <p class="govuk-body" id="page-content">
-        <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.apiPlatformAutomationPage().url" class="govuk-link">API Platform  Publishing</a>
+        <a href="#Enhancing_existing_APIs_for_reuse">Enhancing existing APIs for reuse</a>
     </p>
 
+    <p class="govuk-body" id="page-content">
+        <a href="#Automating_publishing_to_the_API_catalogue">Automating publishing to the API catalogue</a>
+    </p>
+
+    <p class="govuk-body" id="page-content">
+        We’ll add more case studies later.
+    </p>
+
+    <h2 id="Enhancing_existing_APIs_for_reuse" class="govuk-heading-m">
+        Enhancing existing APIs for reuse
+    </h2>
+
+    <p class="govuk-body" id="page-content">
+        The Individual Employment API retrieves an individual’s employment history from a NINO.
+    </p>
+
+    <p class="govuk-body" id="page-content">
+        The API was made by HMRC’s Integration Framework (IF) platform for the Home Office, which MOJ reused.
+    </p>
+
+    <p class="govuk-body" id="page-content">
+        When the IF team get new enquiries from the EIS front door, they assess requirements and impact the work.
+    </p>
+
+    <p class="govuk-body" id="page-content">
+        The team check to see if any existing APIs meet the new requirements.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        In this example, The Individual Employment API already satisfied the vision MOJ had for a new API.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        The Home Office and MOJ requirements are similar. Both in terms of what was sent on the frontend and what they wanted from the backend. 
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        Although, some individual enhancements were made to the API, including:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>specific error messages that MOJ needed</li>
+        <li>schema amendments</li>
+        <li>filtering data (MOJ don’t want to see the entire body of information from the backend response)</li>
+    </ul>
+
+    <p class="govuk-body" id="page-content">    
+        IF enhanced the Individual Employment API so that responses coming from the backend system could be filtered. This means, MOJ and the Home Office can choose a specific subset of information instead of returning everything.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        IF assessed to see if it’s possible to implement changes without breaking the API in production. They were non-breaking changes. 
+    </p>
+
+    <h3 class="govuk-heading-s">
+        How it works
+    </h3>
+
+    <p class="govuk-body" id="page-content">    
+        Before a team can reuse an API, it has to be enhanced for filtering. 
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        You can develop an API to return a subset of information from a body of information. You don’t always have to return everything a system sends back.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        The core team on the IF platform is responsible for building the capability that other APIs can reuse, such as filtering or validation.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        The API delivery team on the IF platform takes advantage of capabilities and develops the extra logic to make the filtering work.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        The filtering capability was needed so that MOJ and the Home Office only receive the required information, reducing data overlap. 
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        By reusing what’s already available, MOJ doesn’t need to build a single use solution which:
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>saves time and money</li>
+        <li>improves flexibility, governance, speed and usability</li>
+        <li>encourages change and innovation</li>
+        <li>removes the need for single use APIs </li>
+    </ul>
+
+    <h2 id ="Automating_publishing_to_the_API_catalogue" class="govuk-heading-m">
+        Automating publishing to the API catalogue
+    </h2>
+
+    <p class="govuk-body" id="page-content">    
+        The API Platform on MDTP has over 100 APIs exposing 500 endpoints. 
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        APIs are used by third party software developers and other government departments. 
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        We onboard new APIs, and update existing APIs with new versions and functionality every week.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        So, it’s difficult to manually publish changes to the API catalogue and keep it updated.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        We automated the publishing process on the API platform. Which means when a new API or API version is released onto the API platform, it automatically updates the entry in the API catalogue.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        Using an automated publish process means:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>new or updated APIs are published automatically into the API catalogue</li>
+        <li>API teams don’t have to do anything</li>
+        <li>content in the API catalogue is never out of date</li>
+    </ul>
+
+    <h3 class="govuk-heading-s">
+        The technical bit
+    </h3>
+
+    <p class="govuk-body" id="page-content">    
+        You can create an automatic publishing process for your platform. Here’s how.
+    </p>
+
+    <p class="govuk-body" id="page-content">    
+        The API Platform has a CI/CD pipeline as a Jenkins job. As part of this process, it converts the API’s RAML to an OpenAPI specification (Swagger) definition file and publishes it into the API catalogue via the <a id="homepage-link-3" href="/guides/api-catalogue-publish-guide" class="govuk-link">API catalogue publish API</a>.
+    </p>
 }
