@@ -62,9 +62,7 @@ class MainController @Inject()(appConfig: AppConfig,
     Future.successful(Ok(caseStudiesView()))
   }
 
-    def fileTransferPatternsPage(): Action[AnyContent] = Action.async { implicit request =>
+  def fileTransferPatternsPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(fileTransferPattern()))
   }
-
-
 }
