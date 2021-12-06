@@ -75,6 +75,7 @@ object FileTransferBackends {
     FileTransferBackendItem("EUI", "EUI (Experienced User )"),
     FileTransferBackendItem("FCMS", "FCMS (Fraud Case Management System)"),
     FileTransferBackendItem("FIM", "FIM (Forefront Identity Management)"),
+    FileTransferBackendItem("Frameworks", "Frameworks"),
     FileTransferBackendItem("FWKS", "FWKS (Citizen Frameworks)"),
     FileTransferBackendItem("INTDS", "INTDS (Barclays)"),
     FileTransferBackendItem("Individual", "Individual"), 
