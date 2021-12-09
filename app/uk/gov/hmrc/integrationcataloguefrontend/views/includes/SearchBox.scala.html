@@ -19,7 +19,7 @@
 @(searchClass: String = "govuk-int-search", placeholder: String)
 <form class="@searchClass" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" method="get">
     <label style="display: none;" for="intCatSearch">Search for API</label>
-    <input class="govuk-input @searchClass-input" id="intCatSearch" name="keywords" type="text" placeholder="@placeholder" spellcheck="false" aria-autocomplete="both" autocomplete="off" aria-describedby="IntCatSearchHint">
+    <input class="govuk-input @searchClass-input search-placeholder" id="intCatSearch" name="keywords" type="text" placeholder="@placeholder" spellcheck="false" aria-autocomplete="both" autocomplete="off" aria-describedby="IntCatSearchHint">
     <div class="@searchClass-button-container" aria-hidden="true">
         <button id="intCatSearchButton" class="@searchClass-button" type="submit">@placeholder</button>
     </div>
