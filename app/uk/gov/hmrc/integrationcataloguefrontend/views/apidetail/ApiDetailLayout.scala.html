@@ -63,10 +63,7 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          @govukBackLink(BackLink(
-              href = "javascript:history.back()",
-              content = Text("Back")
-          ))
+            <a href="javascript:history.back()" name="previous-page-link" role="link" class="govuk-back-link" value="previous-page">Back</a>
         </div>
     </div>
     <br />
