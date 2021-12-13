@@ -18,10 +18,10 @@
 
 @(searchClass: String = "govuk-int-search", placeholder: String)
 <form class="@searchClass" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" method="get">
-    <label style="display: none;" for="intCatSearch">Search for API</label>
+    <label class="govuk-visually-hidden" for="intCatSearch">Search by typing a API name</label>
     <input class="govuk-input @searchClass-input search-placeholder" id="intCatSearch" name="keywords" type="text" placeholder="@placeholder" spellcheck="false" aria-autocomplete="both" autocomplete="off" aria-describedby="IntCatSearchHint">
     <div class="@searchClass-button-container" aria-hidden="true">
         <button id="intCatSearchButton" class="@searchClass-button" type="submit">@placeholder</button>
     </div>
-    <span style="display: none;" id="IntCatSearchHint">Search for API or file transfer name. There is no auto complete.</span>
+    <span class="govuk-visually-hidden" id="IntCatSearchHint">Search for API or file transfer name. There is no auto complete.</span>
 </form>

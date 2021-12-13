@@ -522,4 +522,9 @@ a.interrupt-button:hover {
   &::-ms-input-placeholder {
     color: #505A5F;
   }
+ }
+
+.display-inline {
+  white-space: normal;
+  display: inline;
 }
