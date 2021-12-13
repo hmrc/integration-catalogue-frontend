@@ -26,19 +26,18 @@
 <form class="govuk-int-search" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" method="get">
     <div>
         <div class="govuk-filter-search-container">
-            <label style="display: none;" for="intCatSearch" id="filter-label">Filter by Api name.</label>
+            <label class="govuk-visually-hidden" for="intCatSearch" id="filter-label">Search by typing a API name</label>
             <input class="govuk-input govuk-int-search-input" id="intCatSearch" name="keywords" type="text" placeholder="Search APIs" spellcheck="false" aria-autocomplete="both" autocomplete="off" aria-describedby="IntCatSearchHint" value="@apiNameSearch">
             <div class="govuk-int-search-button-container search-button-height" aria-hidden="true">
                 <button id="intCatSearchButton" class="govuk-int-search-button" type="submit">Search</button>
             </div>
-            <span style="display: none;" id="IntCatSearchHint">Filter by API name. There is no auto complete.</span>
+            <span class="govuk-visually-hidden" id="IntCatSearchHint">Filter by API name. There is no auto complete.</span>
         </div>
         <br />
         <!-- Filter 2 -->
         @backendsFilterComponent(backendsFilter)
         @platformFilterComponent(platformFilter)
-        
-        <button class="govuk-button" data-module="govuk-button">
+        <button class="govuk-button" name="api-filter-button" role="button" data-module="govuk-button" value="filter">
             Filter
         </button>
     </div>

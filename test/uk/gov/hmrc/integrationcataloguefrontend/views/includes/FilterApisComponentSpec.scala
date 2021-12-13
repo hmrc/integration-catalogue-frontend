@@ -78,7 +78,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       document.getElementById("intCatSearch").attr("placeholder") shouldBe "Search APIs"
       document.getElementById("intCatSearchButton").text() shouldBe "Search"
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
-      document.getElementById("filter-label").text() shouldBe "Filter by Api name."
+      document.getElementById("filter-label").text() shouldBe "Search by typing a API name"
       document.getElementById("IntCatSearchHint").text() shouldBe "Filter by API name. There is no auto complete."
       //test filter labels
       testPlatformFilter(document, false)
@@ -91,7 +91,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
-      document.getElementById("filter-label").text() shouldBe "Filter by Api name."
+      document.getElementById("filter-label").text() shouldBe "Search by typing a API name"
 
       //test filter labels
       testPlatformFilter(document, true)
