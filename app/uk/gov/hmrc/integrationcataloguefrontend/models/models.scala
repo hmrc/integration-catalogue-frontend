@@ -79,7 +79,6 @@ object FileTransferBackends {
     FileTransferBackendItem("EDH", "EDH"),
     FileTransferBackendItem("EDM", "EDM (HMRC's selected third party scanning provider)"),
     FileTransferBackendItem("ETMP", "ETMP (Enterprise Tax Management Platform)"),
-    FileTransferBackendItem("EMTP", "EMTP"),
     FileTransferBackendItem("EUI", "EUI (Experienced User )"),
     FileTransferBackendItem("FCMS", "FCMS (Fraud Case Management System)"),
     FileTransferBackendItem("FIM", "FIM (Forefront Identity Management)"),
