@@ -24,7 +24,7 @@ import play.api.test.Helpers
 import uk.gov.hmrc.http.{BadGatewayException, HttpClient, _}
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common._
-import uk.gov.hmrc.integrationcataloguefrontend.AwaitTestSupport
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AwaitTestSupport
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 

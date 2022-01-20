@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.integrationcataloguefrontend
+package uk.gov.hmrc.integrationcataloguefrontend.utils
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

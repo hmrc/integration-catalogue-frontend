@@ -22,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
-import uk.gov.hmrc.integrationcataloguefrontend.AwaitTestSupport
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AwaitTestSupport
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 
