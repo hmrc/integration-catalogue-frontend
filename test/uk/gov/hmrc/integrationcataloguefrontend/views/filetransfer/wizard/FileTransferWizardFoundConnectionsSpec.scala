@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     }
 
     "render page correctly when  contacts are provided" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, results, List(PlatformEmail(CORE_IF, "me@myemail.com")), FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = foundConnectionsPage.render(source, target, results, List(PlatformEmail(CORE_IF, "me@myemail.com")), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       assertCommonPageElements(document)
 
@@ -63,7 +63,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     }
 
     "render page correctly when  contacts are not provided" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, results, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = foundConnectionsPage.render(source, target, results, List.empty, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       assertCommonPageElements(document)
 
@@ -74,7 +74,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
 
     // This should never happen due to controller logic
     "render page correctly when no contacts and no file transfer results are provided" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, List.empty, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = foundConnectionsPage.render(source, target, List.empty, List.empty, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "A file transfer connection exists -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"

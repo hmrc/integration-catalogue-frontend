@@ -14,15 +14,12 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.SearchBox
-
-
 @this(searchBox: SearchBox)
 
 
 @(activePage: Option[String], includeSearch: Boolean)
 
-@handleLinkClasses(expectedPage: String = "")= @{
+@handleLinkClasses(expectedPage: String)= @{
     val activeClass = "govuk-sub-nav-link govuk-sub-nav-link--active"
     val inactiveClass = "govuk-sub-nav-link"
     if(activePage.getOrElse("").equals(expectedPage)) activeClass else inactiveClass

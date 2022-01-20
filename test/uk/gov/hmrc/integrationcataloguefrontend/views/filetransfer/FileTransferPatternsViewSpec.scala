@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.integrationcataloguefrontend.views
+package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -32,7 +32,7 @@ class FileTransferPatternsViewSpec extends CommonViewSpec {
   "FileTransferPatternPage" should {
  
     "render file transfer patterns page correctly" in new Setup {
-       val page : Html =    fileTransferPatPage.render(FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    fileTransferPatPage.render(messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
        document.getElementById("page-heading").text() shouldBe "File Transfer Patterns"
        document.getElementById("pattern-1").text() shouldBe "External to corporate"

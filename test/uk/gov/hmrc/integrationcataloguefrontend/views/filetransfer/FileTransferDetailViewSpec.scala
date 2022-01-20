@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.integrationcataloguefrontend.views
+package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -34,7 +34,7 @@ class FileTransferDetailViewSpec extends CommonViewSpec with FileTransferTestDat
 
     "render page with api details" in new Setup {
 
-       val page : Html =    apiDetailView.render(fileTransfer1, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(fileTransfer1, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe fileTransfer1.title

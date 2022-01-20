@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,19 @@
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import org.mockito.captor.{ArgCaptor, Captor}
-import org.mockito.scalatest.MockitoSugar
 import org.mockito.stubbing.ScalaOngoingStubbing
-import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{BadGatewayException, HttpClient, _}
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common._
-import uk.gov.hmrc.integrationcataloguefrontend.AwaitTestSupport
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class IntegrationCatalogueConnectorSpec extends WordSpec with Matchers with OptionValues
-  with MockitoSugar with BeforeAndAfterEach with AwaitTestSupport with ApiTestData {
+class IntegrationCatalogueConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
   private val mockHttpClient = mock[HttpClient]
   private val mockAppConfig = mock[AppConfig]

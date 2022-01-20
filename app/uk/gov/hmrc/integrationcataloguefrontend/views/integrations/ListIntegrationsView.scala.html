@@ -37,12 +37,8 @@
     toResults: Int,
     firstPageLink: Int,
     lastPageLink: Int,
-    showFileTransferInterrupt: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+    showFileTransferInterrupt: Boolean)(implicit appConfig: AppConfig)
 
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.Layout3
-@getEncodedTitle(title: String) = @{
-    encodeTitle(title)
-}
 
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
@@ -32,7 +32,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class MainControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
+class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   private val landingPageRequest = FakeRequest("GET", "/")
   private val caseStudiesPageRequest = FakeRequest("GET", "/case-studies")
   private val getStartedPageRequest = FakeRequest("GET", "/get-started")

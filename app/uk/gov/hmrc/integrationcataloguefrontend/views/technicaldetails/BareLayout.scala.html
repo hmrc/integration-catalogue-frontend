@@ -16,14 +16,13 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
 @this(
   govukBackLink : GovukBackLink
 )
 @(pageTitle: Option[String] = None,
   apiDetail: Option[ApiDetail] = None,
-)(contentBlock: Html)(implicit request: Request[_],  appConfig: AppConfig)
+)(contentBlock: Html)
 
 
 <html lang="en">

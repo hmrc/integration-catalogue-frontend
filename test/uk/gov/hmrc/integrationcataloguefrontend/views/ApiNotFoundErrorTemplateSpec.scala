@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class ApiNotFoundErrorTemplateSpec extends CommonViewSpec {
   "ApiNotFoundErrorTemplate" should {
 
     "render api not found page correctly" in new Setup {
-      val page: Html = apiNotFoundErrorTemplate.render(FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = apiNotFoundErrorTemplate.render(messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "API not found"

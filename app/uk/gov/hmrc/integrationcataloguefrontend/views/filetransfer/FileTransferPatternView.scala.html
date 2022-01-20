@@ -15,13 +15,12 @@
  *@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 
 @this(layout: DefaultLayout)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"File Transfer Patterns - ${appConfig.serviceName}"), activePage=Some("file-transfer-pattern")) {
     <h1 class="govuk-heading-l" id="page-heading">File Transfer Patterns</h1>

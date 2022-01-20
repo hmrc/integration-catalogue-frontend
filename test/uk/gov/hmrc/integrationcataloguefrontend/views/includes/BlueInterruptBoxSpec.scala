@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class BlueInterruptBoxSpec extends CommonViewSpec {
   "BlueInterruptBox" should {
 
     "render the blue interrupt box correctly" in new Setup {
-       val page : Html =    blueInterruptBox.render("API 1001", "API Description", FakeRequest())
+       val page : Html =    blueInterruptBox.render("API 1001", "API Description")
        val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("interrupt-box-heading").text() shouldBe "API 1001"

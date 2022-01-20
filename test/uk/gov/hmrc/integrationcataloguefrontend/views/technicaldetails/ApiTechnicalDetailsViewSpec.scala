@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class ApiTechnicalDetailsViewSpec  extends CommonViewSpec with ApiTestData {
   "ApiTechnicalDetailsView" should {
       "render" in new Setup {
           val apiParsed: ApiDetail = apiDetail0
-           val page : Html = techDetailsView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+           val page : Html = techDetailsView.render(apiParsed, appConfig)
            val document: Document = Jsoup.parse(page.body)
           Option(document.getElementById("backlink"))
           .map(_.attr("href")).getOrElse("") shouldBe "javascript:history.back()"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class FileTransferInterruptBoxSpec extends CommonViewSpec {
   "FileTransferInterruptBox" should {
 
     "render the blue interrupt box correctly" in new Setup {
-      val page : Html =    blueInterruptBox.render(FakeRequest())
+      val page : Html =    blueInterruptBox.render
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("ft-interrupt-heading").text() shouldBe "File transfers"

@@ -16,12 +16,11 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.BareLayout
 
 @this(layout: BareLayout)
 
 
-@(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(apiDetail: ApiDetail)(implicit appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
 

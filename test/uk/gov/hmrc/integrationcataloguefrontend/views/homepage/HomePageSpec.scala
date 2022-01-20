@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class HomePageSpec extends CommonViewSpec {
   "HomePage" should {
 
     "render The home page correctly" in new Setup {
-      val page: Html = homePage.render(FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = homePage.render(appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"

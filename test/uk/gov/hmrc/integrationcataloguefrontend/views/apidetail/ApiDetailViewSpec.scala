@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details but no contact information as the Api does not have any contact information" in new Setup {
       val apiParsed: ApiDetail = apiDetail0
-       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(apiParsed, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
@@ -65,7 +65,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details that only has a contact email address" in new Setup {
       val apiParsed: ApiDetail = apiDetailWithOnlyContactEmail
-       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(apiParsed, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
@@ -96,7 +96,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details that has contact name and email address" in new Setup {
       val apiParsed: ApiDetail = apiDetail1
-       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(apiParsed, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
@@ -123,7 +123,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details that has status LIVE" in new Setup {
       val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE)
-       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(apiParsed, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
@@ -152,7 +152,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
   
     "render page with api details that has status BETA" in new Setup {
       val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.BETA)
-       val page : Html =    apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(apiParsed, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title

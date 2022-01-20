@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class FileTransferWizardNoConnectionsSpec extends CommonViewSpec {
     val target = "target"
 
     "render page correctly" in new Setup {
-      val page: Html = noConnectionsPage.render(source, target, FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = noConnectionsPage.render(source, target, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "No file transfer connection exists -"
       document.getElementById("poc-banner-title").text() shouldBe "Important"

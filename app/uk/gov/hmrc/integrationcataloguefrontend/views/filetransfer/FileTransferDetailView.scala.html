@@ -15,16 +15,13 @@
  *@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-@import _root_.uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
-@import _root_.uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-@import _root_.uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailLayout
+@import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
 @import org.joda.time.format.DateTimeFormat
 
 @this(layout: FileTransferDetailLayout)
 
 
-@(fileTransferDetail: FileTransferDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(fileTransferDetail: FileTransferDetail)(implicit appConfig: AppConfig)
 
 @gridItem(heading:String, dataValue: String, indentifier: String, gridSize: String) = {
   <div class="govuk-grid-column-one-@gridSize">

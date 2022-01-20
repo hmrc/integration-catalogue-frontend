@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         false,
-        FakeRequest(), messagesProvider.messages,  appConfig)
+        appConfig)
       val document: Document = Jsoup.parse(page.body)
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
@@ -71,7 +71,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         true,
-        FakeRequest(), messagesProvider.messages,  appConfig)
+        appConfig)
       val document: Document = Jsoup.parse(page.body)
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
@@ -93,7 +93,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         false,
-        FakeRequest(), messagesProvider.messages,  appConfig)
+        appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
