@@ -16,15 +16,14 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import org.scalatest.WordSpec
-import org.scalatest.Matchers
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
 
-class FtWizardHelperSpec extends WordSpec with Matchers with FtWizardHelper {
+class FtWizardHelperSpec extends AsyncHmrcSpec with FtWizardHelper {
   
   trait Setup {
 

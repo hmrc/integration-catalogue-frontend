@@ -34,7 +34,7 @@ class FileTransferDetailViewSpec extends CommonViewSpec with FileTransferTestDat
 
     "render page with api details" in new Setup {
 
-       val page : Html =    apiDetailView.render(fileTransfer1, FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    apiDetailView.render(fileTransfer1, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe fileTransfer1.title

@@ -32,7 +32,7 @@ class HomePageSpec extends CommonViewSpec {
   "HomePage" should {
 
     "render The home page correctly" in new Setup {
-      val page: Html = homePage.render(FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = homePage.render(appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"

@@ -42,7 +42,7 @@ class MainController @Inject()(appConfig: AppConfig,
 
   implicit val config: AppConfig = appConfig
 
-  def landingPage(): Action[AnyContent] = Action.async { implicit request =>
+  def landingPage(): Action[AnyContent] = Action.async {
     Future.successful(Ok(landingPageView()))
   }
 

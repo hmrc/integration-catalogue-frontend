@@ -16,12 +16,11 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.LayoutHomePage
 
 @this(layout: LayoutHomePage, blueInterruptBox: BlueInterruptBox)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit appConfig: AppConfig)
 
 @layout(pageTitle = Some(appConfig.serviceName)) {
   <div class="content-section">

@@ -38,13 +38,7 @@
     activePage: Option[String] = None,
     apiDetail: Option[ApiDetail] = None,
     bodyEndBlock: Option[Html] = None,
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
-
-@handleLinkClasses(expectedPage: String = "") = @{
-    val activeClass = "govuk-sub-nav-link govuk-sub-nav-link--active"
-    val inactiveClass = "govuk-sub-nav-link"
-    if(activePage.getOrElse("").equals(expectedPage)) activeClass else inactiveClass
-}
+)(contentBlock: Html)(implicit appConfig: AppConfig)
 
 @scripts = {
     <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>

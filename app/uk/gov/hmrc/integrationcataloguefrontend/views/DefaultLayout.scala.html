@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html._
+
 
 
 @this(
@@ -34,7 +34,7 @@
     scriptsBlock: Option[Html] = None,
     activePage: Option[String] = None,
     bodyEndBlock: Option[Html] = None
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+)(contentBlock: Html)(implicit messages: Messages, appConfig: AppConfig)
 
 @footerBlock = {
     @footer()

@@ -15,13 +15,12 @@
  *@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 
 @this(layout: DefaultLayout)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Contacting the API catalogue team - ${appConfig.serviceName}"), activePage=Some("contact")) {
 

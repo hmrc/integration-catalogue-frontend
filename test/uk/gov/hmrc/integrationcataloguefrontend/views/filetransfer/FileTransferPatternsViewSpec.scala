@@ -32,7 +32,7 @@ class FileTransferPatternsViewSpec extends CommonViewSpec {
   "FileTransferPatternPage" should {
  
     "render file transfer patterns page correctly" in new Setup {
-       val page : Html =    fileTransferPatPage.render(FakeRequest(), messagesProvider.messages,  appConfig)
+       val page : Html =    fileTransferPatPage.render(messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
        document.getElementById("page-heading").text() shouldBe "File Transfer Patterns"
        document.getElementById("pattern-1").text() shouldBe "External to corporate"

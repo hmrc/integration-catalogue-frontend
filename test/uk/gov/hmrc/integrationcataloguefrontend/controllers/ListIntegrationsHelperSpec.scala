@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import org.scalatest.WordSpec
-import org.scalatest.Matchers
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
-class ListIntegrationsHelperSpec extends WordSpec with Matchers with ListIntegrationsHelper {
+class ListIntegrationsHelperSpec extends AsyncHmrcSpec with ListIntegrationsHelper {
 
   "ListIntegrationsHelper" when {
     "calculateNumberOfPages" should {

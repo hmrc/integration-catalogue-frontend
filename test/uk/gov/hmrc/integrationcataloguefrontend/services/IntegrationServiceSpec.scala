@@ -16,34 +16,25 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import org.mockito.scalatest.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.integrationcatalogue.models._
-import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
-import uk.gov.hmrc.integrationcataloguefrontend.utils.AwaitTestSupport
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, PlatformType}
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
 import java.util.UUID
-import scala.concurrent.Future
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
-
 import scala.concurrent.ExecutionContext.Implicits.global
-import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+import scala.concurrent.Future
 
 class IntegrationServiceSpec
-    extends WordSpec
-    with Matchers
+    extends AsyncHmrcSpec
     with GuiceOneAppPerSuite
-    with MockitoSugar
     with ApiTestData
-    with FileTransferTestData
-    with AwaitTestSupport
-    with BeforeAndAfterEach {
+    with FileTransferTestData {
 
   val mockIntegrationCatalogueConnector: IntegrationCatalogueConnector = mock[IntegrationCatalogueConnector]
   val mockAppConfig = mock[AppConfig]

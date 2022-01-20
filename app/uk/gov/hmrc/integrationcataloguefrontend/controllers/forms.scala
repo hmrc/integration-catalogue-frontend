@@ -18,7 +18,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import play.api.data.Form
 import play.api.data.Forms._
-import org.apache.commons.lang3.StringUtils.isNotBlank
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 final case class SelectedDataSourceForm(dataSource: Option[String])

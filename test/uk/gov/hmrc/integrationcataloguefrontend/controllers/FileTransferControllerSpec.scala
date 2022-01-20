@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import org.mockito.scalatest.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Form
 import play.api.http.Status
@@ -25,25 +23,24 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
-import uk.gov.hmrc.http.BadRequestException
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.NotFoundException
 
 
-class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with ApiTestData
-  with FileTransferTestData with BeforeAndAfterEach {
+class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData
+  with FileTransferTestData  {
 
   private val fakeRequest = FakeRequest("GET", "/")
 
@@ -82,13 +79,13 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
 
   "GET  /filetransfer/wizard/start" should {
     "return 200 and have correct view when called" in {
-      when(mockWizardStartView.apply()(*, *, *)).thenReturn(HtmlFormat.raw("some HTML"))
+      when(mockWizardStartView.apply()(*, *)).thenReturn(HtmlFormat.raw("some HTML"))
 
       val result = controller.wizardStart()(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "some HTML"
 
-      verify(mockWizardStartView).apply()(*, *, *)
+      verify(mockWizardStartView).apply()(*, *)
       verifyZeroInteractions(mockIntegrationService)
     }
 
@@ -136,7 +133,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
 
     "return 200 when connections found and have correct view when called" in {
 
-      when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *))
+      when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *))
         .thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
@@ -147,13 +144,13 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe htmlVal
 
-      verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *)
+      verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
     "return 200 when no connections found and have correct view when called" in {
 
-      when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *))
+      when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(*, *))
         .thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Right(List.empty)))
@@ -163,14 +160,14 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe htmlVal
 
-      verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *)
+      verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(*, *)
       verifyZeroInteractions(mockWizardFoundConnectionsView)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
     "return 500 when service call to get transports returns BadRequest Exception" in {
 
-      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockErrorTemplate.apply(*, *, *)(*, *)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
@@ -180,13 +177,13 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
       contentAsString(result) shouldBe htmlVal
 
       verifyZeroInteractions(mockWizardFoundConnectionsView)
-      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
     "return 500 when service call to get contacts BadRequest Exception" in {
 
-      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockErrorTemplate.apply(*, *, *)(*, *)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
 
@@ -195,7 +192,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
       contentAsString(result) shouldBe htmlVal
 
       verifyZeroInteractions(mockWizardFoundConnectionsView)
-      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *)
       verify(mockIntegrationService, times(0)).getFileTransferTransportsByPlatform(any[String], any[String])(any[HeaderCarrier])
       verify(mockIntegrationService).getPlatformContacts()(any[HeaderCarrier])
     }
@@ -203,7 +200,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
 
     "return 500 when service returns NotFound Exception" in {
 
-      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockErrorTemplate.apply(*, *, *)(*, *)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(new NotFoundException("error"))))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
@@ -213,7 +210,7 @@ class FileTransferControllerSpec extends WordSpec with Matchers with GuiceOneApp
       contentAsString(result) shouldBe htmlVal
 
       verifyZeroInteractions(mockWizardFoundConnectionsView)
-      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 

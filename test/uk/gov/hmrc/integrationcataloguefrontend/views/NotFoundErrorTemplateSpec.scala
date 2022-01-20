@@ -32,7 +32,7 @@ class NotFoundErrorTemplateSpec extends CommonViewSpec {
   "NotFoundErrorTemplate" should {
 
     "render not found page correctly" in new Setup {
-      val page: Html = notFoundErrorPage.render(FakeRequest(), messagesProvider.messages, appConfig)
+      val page: Html = notFoundErrorPage.render(messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Page not found"

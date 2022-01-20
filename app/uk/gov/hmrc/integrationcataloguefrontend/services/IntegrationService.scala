@@ -23,7 +23,6 @@ import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueC
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 
 import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
