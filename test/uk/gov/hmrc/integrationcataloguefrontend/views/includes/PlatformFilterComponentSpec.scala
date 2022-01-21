@@ -78,7 +78,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
 
       //test filter labels
-      testPlatformFilter(document, false)
+      testPlatformFilter(document, isChecked = false)
      
     }
 
@@ -90,7 +90,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
       document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
 
       //test filter labels
-      testPlatformFilter(document, true)
+      testPlatformFilter(document, isChecked = true)
     }
   }
 }

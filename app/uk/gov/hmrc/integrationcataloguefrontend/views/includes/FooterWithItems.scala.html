@@ -1,0 +1,20 @@
+
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.footer.Footer
+@import uk.gov.hmrc.govukfrontend.views.Aliases.FooterItem
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Meta
+
+
+@this(footer: GovukFooter)
+
+
+@()(implicit messages: Messages)
+
+@footerlinkItems()  = @{
+    Seq( FooterItem(
+        Some(messages("footer.links.accessibility.text")),
+        Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.accessibilityStatementPage().url)
+    ))
+}
+
+
+@footer(new Footer(meta = Some(Meta(items = Some(footerlinkItems)))))

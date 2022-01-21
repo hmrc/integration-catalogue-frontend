@@ -2,9 +2,9 @@ service.name = integration-catalogue-frontend
 service.homePageUrl = /integration-catalogue-frontend
 service.text = This is your new service
 
-footer.accessibility   = Accessibility statement
-footer.cookies         = Cookies
-footer.privacy         = Privacy policy
-footer.termsConditions = Terms and conditions
-footer.govukHelp       = Help using GOV.UK
+footer.links.accessibility.text = Accessibility statement
+footer.links.cookies         = Cookies
+footer.links.privacy         = Privacy policy
+footer.links.termsConditions = Terms and conditions
+footer.links.govukHelp       = Help using GOV.UK
 

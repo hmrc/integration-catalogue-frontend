@@ -25,6 +25,7 @@
 @this(layout: Layout3, pagingNavigation: PagingNavigation, fileTransferInterruptBox: FileTransferInterruptBox)
 
 
+
 @(apiList: List[IntegrationDetail],
     apiNameSearch: String,
     platformFilter: List[PlatformType],
@@ -37,7 +38,7 @@
     toResults: Int,
     firstPageLink: Int,
     lastPageLink: Int,
-    showFileTransferInterrupt: Boolean)(implicit appConfig: AppConfig)
+    showFileTransferInterrupt: Boolean)(implicit messages: Messages, appConfig: AppConfig)
 
 
 

@@ -19,7 +19,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
-import play.api.test.FakeRequest
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.BlueInterruptBox
 

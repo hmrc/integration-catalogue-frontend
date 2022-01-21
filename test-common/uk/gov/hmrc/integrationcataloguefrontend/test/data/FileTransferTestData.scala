@@ -37,9 +37,9 @@ trait FileTransferTestData {
   val flowId3 = "XXXX-DPS-ZZZDaily-pull"
   val flowId4 = "XXXX-PPP-ZZZDaily-pull"
 
-  val fileTransferDateValue = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"));
+  val fileTransferDateValue = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
 
-  val fileTransferReviewedDate = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"));
+  val fileTransferReviewedDate = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
 
   val contactInfo = List(ContactInformation(Some("Services"), Some("services@example.com")))
   val coreIfFileTransferMaintainer: Maintainer = Maintainer("Maintainer", "N/A", contactInfo)

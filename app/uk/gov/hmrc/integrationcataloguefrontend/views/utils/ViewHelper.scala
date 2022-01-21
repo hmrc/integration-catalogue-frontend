@@ -24,10 +24,9 @@ object ViewHelper {
 
   def handleDescription(integration: IntegrationDetail): String = {
     integration match {
-      case api: ApiDetail                   => {
+      case api: ApiDetail                   =>
         if (api.shortDescription.isDefined) api.shortDescription.get
         else  truncateStringAddEllipses(replaceOrRemoveInvalidChars(api.description), 180)
-      }
       case fileTransfer: FileTransferDetail => fileTransfer.description
     }
   }
@@ -40,8 +39,8 @@ object ViewHelper {
   }
 
   def truncateStringAddEllipses(value: String, max: Int): String = {
-    if (value.size > max) {
-      // we need to ignore /n or change to spaces.... 
+    if (value.length > max) {
+      // we need to ignore /n or change to spaces....
       value
       .slice(0, max - 3) + "..."
     } else {

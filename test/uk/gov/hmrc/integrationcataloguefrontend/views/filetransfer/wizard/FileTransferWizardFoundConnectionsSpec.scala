@@ -18,13 +18,12 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardFoundConnections
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
+import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardFoundConnections
 
 class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
 

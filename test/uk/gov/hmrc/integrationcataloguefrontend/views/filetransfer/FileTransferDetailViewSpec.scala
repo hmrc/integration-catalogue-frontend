@@ -18,11 +18,10 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.test.FakeRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
 
 class FileTransferDetailViewSpec extends CommonViewSpec with FileTransferTestData {
 
@@ -34,7 +33,7 @@ class FileTransferDetailViewSpec extends CommonViewSpec with FileTransferTestDat
 
     "render page with api details" in new Setup {
 
-       val page : Html =    apiDetailView.render(fileTransfer1, appConfig)
+       val page : Html =    apiDetailView.render(fileTransfer1,  messagesProvider.messages, appConfig)
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("interrupt-box-heading").text() shouldBe fileTransfer1.title

@@ -48,7 +48,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
 
       document.getElementById("dataSource").attr("value") shouldBe "source"
 
-      testFileTransferBackends(document, false)
+      testFileTransferBackends(document, isChecked = false)
 
     }
 
@@ -66,7 +66,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
      document.getElementById("file-transfer-target-error").text() shouldBe "Error: Select where you want to send your data"
 
 
-      testFileTransferBackends(document, false)
+      testFileTransferBackends(document, isChecked = false)
 
     }
   }

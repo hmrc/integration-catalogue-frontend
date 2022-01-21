@@ -81,7 +81,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       document.getElementById("filter-label").text() shouldBe "Search by typing a API name"
       document.getElementById("IntCatSearchHint").text() shouldBe "Filter by API name. There is no auto complete."
       //test filter labels
-      testPlatformFilter(document, false)
+      testPlatformFilter(document, isChecked = false)
      
     }
 
@@ -94,7 +94,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       document.getElementById("filter-label").text() shouldBe "Search by typing a API name"
 
       //test filter labels
-      testPlatformFilter(document, true)
+      testPlatformFilter(document, isChecked = true)
     }
   }
 }

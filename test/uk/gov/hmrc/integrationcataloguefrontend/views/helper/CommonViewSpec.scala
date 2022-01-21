@@ -27,7 +27,7 @@ import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
-trait CommonViewSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
+trait CommonViewSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite  {
   val mcc = app.injector.instanceOf[MessagesControllerComponents]
   val messagesApi = mcc.messagesApi
   implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)

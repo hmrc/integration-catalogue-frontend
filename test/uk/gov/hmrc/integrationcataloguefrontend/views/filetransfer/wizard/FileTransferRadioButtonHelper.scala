@@ -17,13 +17,15 @@
 package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.nodes.Document
+import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.integrationcataloguefrontend.models.FileTransferBackends
+
 import scala.collection.JavaConverters._
-import org.scalatest.Matchers
+
 
 trait FileTransferRadioButtonHelper extends Matchers{
 
-  private def testFileTransferBackendsLabels(document: Document) = {
+  private def testFileTransferBackendsLabels(document: Document): Unit = {
     for (item <- FileTransferBackends.radiobuttons) {
       val inputId = s"filetransfer-backends-radio-button-${item.displayName}"
       Option(document.getElementById(inputId)).isDefined shouldBe true
@@ -34,7 +36,7 @@ trait FileTransferRadioButtonHelper extends Matchers{
     }
   }
 
-  private def testBackendsFilterRadioButtons(document: Document, isChecked: Boolean) = {
+  private def testBackendsFilterRadioButtons(document: Document, isChecked: Boolean): Unit = {
     for (item <- FileTransferBackends.radiobuttons) {
       testRadioButton(document, s"filetransfer-backends-radio-button-${item.displayName}", isChecked)
     }
@@ -48,7 +50,7 @@ trait FileTransferRadioButtonHelper extends Matchers{
     }
   }
 
-  def testFileTransferBackends(document: Document, isChecked: Boolean) = {
+  def testFileTransferBackends(document: Document, isChecked: Boolean): Unit = {
     testFileTransferBackendsLabels(document)
     testBackendsFilterRadioButtons(document, isChecked)
   }

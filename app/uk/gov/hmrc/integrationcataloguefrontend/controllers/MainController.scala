@@ -23,6 +23,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudi
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -36,18 +37,23 @@ class MainController @Inject()(appConfig: AppConfig,
                                caseStudiesView: CaseStudies,
                                getStartedView: GetStarted,
                                aboutView: About,
+                               accessibilityStatementView: AccessibilityStatementView,
                                contactView: ContactView,
                                fileTransferPattern: FileTransferPatternView)
   extends FrontendController(mcc) {
 
   implicit val config: AppConfig = appConfig
 
-  def landingPage(): Action[AnyContent] = Action.async {
+  def landingPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(landingPageView()))
   }
 
    def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(aboutView()))
+  }
+
+  def accessibilityStatementPage(): Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(accessibilityStatementView()))
   }
 
   def contactPage(): Action[AnyContent] = Action.async { implicit request =>

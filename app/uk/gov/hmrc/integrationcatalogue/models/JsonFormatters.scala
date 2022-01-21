@@ -27,7 +27,7 @@ object JsonFormatters {
   implicit val JodaDateTimeFormat: Format[org.joda.time.DateTime] = Format(JodaDateReads, JodaDateWrites)
 
   implicit val formatContactInformation : Format[ContactInformation] = Json.format[ContactInformation]
-  
+
   implicit val formatMaintainer : Format[Maintainer] = Json.format[Maintainer]
 
   implicit val formatIntegrationDetail : OFormat[IntegrationDetail] = Json.format[IntegrationDetail]
@@ -56,7 +56,7 @@ object JsonFormatters {
   implicit val formatFileTransferDetail : Format[FileTransferDetail] = Json.format[FileTransferDetail]
 
   implicit val formatIntegrationResponse : Format[IntegrationResponse] = Json.format[IntegrationResponse]
-  
+
   implicit val formatPlatformContactResponse : Format[PlatformContactResponse] = Json.format[PlatformContactResponse]
 
   implicit val formatFileTransferTransportsForPlatform : Format[FileTransferTransportsForPlatform] = Json.format[FileTransferTransportsForPlatform]

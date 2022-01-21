@@ -20,7 +20,7 @@
 @this(layout: LayoutHomePage, blueInterruptBox: BlueInterruptBox)
 
 
-@()(implicit appConfig: AppConfig)
+@()(implicit messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(appConfig.serviceName)) {
   <div class="content-section">

@@ -25,10 +25,10 @@ trait FtWizardHelper {
 def getPlatformEmails(platformContacts: List[PlatformContactResponse], platformIntersect: List[PlatformType] ): List[PlatformEmail] = {
      val filteredByPlatformContacts = platformContacts.filter(x => platformIntersect.contains(x.platformType))
           val filteredByHasEmail = filteredByPlatformContacts.filter(x => x.contactInfo.isDefined && x.contactInfo.get.emailAddress.isDefined)
-       filteredByHasEmail.map(x => (x.platformType, x.contactInfo) match {
-          case (platform: PlatformType, Some(contactInfo)) => contactInfo.emailAddress.map(PlatformEmail(platform, _ ))
-          case _ => None
-        }).flatten
+       filteredByHasEmail.flatMap(x => (x.platformType, x.contactInfo) match {
+         case (platform: PlatformType, Some(contactInfo)) => contactInfo.emailAddress.map(PlatformEmail(platform, _))
+         case _ => None
+       })
 
   }
 
