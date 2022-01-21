@@ -17,7 +17,13 @@
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, FileTransferTransportsForPlatform, IntegrationDetail, IntegrationFilter, IntegrationResponse, PlatformContactResponse}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail,
+  FileTransferDetail,
+  FileTransferTransportsForPlatform,
+  IntegrationDetail,
+  IntegrationFilter,
+  IntegrationResponse,
+  PlatformContactResponse}
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 
 import javax.inject.{Inject, Singleton}
@@ -26,11 +32,10 @@ import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 
 import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
-import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 
 @Singleton
-class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector, appConfig: AppConfig)(implicit ec: ExecutionContext) {
+class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector)(implicit ec: ExecutionContext) {
 
   def findWithFilters(
       integrationFilter: IntegrationFilter,
@@ -45,12 +50,12 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
 
     def handleDefaultContact(integration: IntegrationDetail): Future[IntegrationDetail] = {
 
-      def constructMaintainer(intzegration: IntegrationDetail, contacts: List[ContactInformation]) ={
+      def constructMaintainer(integration: IntegrationDetail, contacts: List[ContactInformation]) ={
            val copyMaintainer: Maintainer = integration.maintainer.copy(contactInfo = contacts)
               integration match {
                 case x: ApiDetail => x.copy(maintainer = copyMaintainer)
                 case y: FileTransferDetail => y.copy(maintainer = copyMaintainer)
-              }            
+              }
       }
 
       val contacts = integration.maintainer.contactInfo
@@ -58,26 +63,21 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
         Future.successful(integration)
       } else {
         integrationCatalogueConnector.getPlatformContacts()
-          .map(contactResult => {
-            contactResult match {
-              case Right(result: List[PlatformContactResponse]) => {
-                val matchedDefault = result.filter(p => p.platformType == integration.platform)
-                if (matchedDefault.nonEmpty && matchedDefault.head.contactInfo.isDefined) {
-                  constructMaintainer(integration, List(matchedDefault.head.contactInfo.get))
-                } else constructMaintainer(integration, List.empty)
-              }
-              case _                                            => constructMaintainer(integration, List.empty)
+          .map {
+            case Right(result: List[PlatformContactResponse]) =>
+              val matchedDefault = result.filter(p => p.platformType == integration.platform)
+              if (matchedDefault.nonEmpty && matchedDefault.head.contactInfo.isDefined) {
+                constructMaintainer(integration, List(matchedDefault.head.contactInfo.get))
+              } else constructMaintainer(integration, List.empty)
+            case _ => constructMaintainer(integration, List.empty)
           }
-       })
     }
   }
     integrationCatalogueConnector.findByIntegrationId(integrationId)
-      .flatMap(result =>
-        result match {
-          case Right(integration: IntegrationDetail) =>  handleDefaultContact(integration).map(Right(_))
-          case result                                => Future.successful(result)
-        }
-      )
+      .flatMap {
+        case Right(integration: IntegrationDetail) => handleDefaultContact(integration).map(Right(_))
+        case result => Future.successful(result)
+      }
 
   }
 
@@ -85,7 +85,8 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
     integrationCatalogueConnector.getPlatformContacts()
   }
 
-  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
+  def getFileTransferTransportsByPlatform(source: String, target: String)
+                                         (implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
     integrationCatalogueConnector.getFileTransferTransportsByPlatform(source, target)
   }
 

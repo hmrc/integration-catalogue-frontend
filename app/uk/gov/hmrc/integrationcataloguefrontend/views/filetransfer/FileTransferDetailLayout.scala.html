@@ -24,7 +24,7 @@
 @this(
     govukTemplate: GovukTemplate,
     siteHeader: SiteHeader,
-    footer: GovukFooter,
+    footerWithItems: FooterWithItems,
     blueInterruptBox: BlueInterruptBox,
     govukBackLink : GovukBackLink,
     head: Head,
@@ -36,7 +36,7 @@
     activePage: Option[String] = None,
     fileTransferDetail: Option[FileTransferDetail] = None,
     bodyEndBlock: Option[Html] = None,
-)(contentBlock: Html)(implicit appConfig: AppConfig)
+)(contentBlock: Html)(implicit messages: Messages, appConfig: AppConfig)
 
 
 @scripts = {
@@ -80,7 +80,7 @@
 }
 
 @footerBlock = {
-    @footer()
+    @footerWithItems()
 }
 
 @govukTemplate(

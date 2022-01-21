@@ -33,7 +33,7 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
 
   "BackendsFilterComponent" should {
 
-    def testBackendsFilterLabels(document: Document) = {
+    def testBackendsFilterLabels(document: Document): Unit = {
       for (item <- Backends.filters) {
         document.getElementById(s"backend-filter-${item.displayName}-label").text() shouldBe item.displayName
       }
@@ -49,7 +49,7 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
       document.getElementById("contactlink").text shouldBe "The HoD I want isn’t listed"
     }
 
-    def testBackendsFilterCheckBoxes(document: Document, isChecked: Boolean) = {
+    def testBackendsFilterCheckBoxes(document: Document, isChecked: Boolean): Unit = {
       for (item <- Backends.filters) {
         testCheckBox(document, s"backend-filter-${item.displayName}", isChecked)
       }
@@ -70,7 +70,7 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
       //test filter labels
-      testBackendsFilter(document, false)
+      testBackendsFilter(document, isChecked = false)
 
     }
 
@@ -81,7 +81,7 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
       //test filter labels
-      testBackendsFilter(document, true)
+      testBackendsFilter(document, isChecked = true)
     }
   }
 }

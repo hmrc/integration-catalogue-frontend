@@ -18,7 +18,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.contact
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
@@ -29,9 +28,9 @@ class ContactViewSpec extends CommonViewSpec {
     val getStartedPage = app.injector.instanceOf[ContactView]
   }
 
-  "GetStartedPage" should {
+  "ContactPage" should {
  
-    "render case studies page correctly" in new Setup {
+    "render contact page correctly" in new Setup {
        val page : Html =    getStartedPage.render(messagesProvider.messages,  appConfig)
        val document: Document = Jsoup.parse(page.body)
        document.getElementById("poc-banner-title").text() shouldBe "Important"

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 object UrlEncodingHelper {
-  
+
   def encodeTitle(title: String) : String = {
     val encodedTitle = title.trim()
     .toLowerCase()
@@ -26,8 +26,8 @@ object UrlEncodingHelper {
     .replaceAll("[-]+", "-")
 
     if("^(.*[^-])\\-$".r.findFirstMatchIn(encodedTitle).isDefined) {
-       encodedTitle.substring(0, encodedTitle.size - 1)
+       encodedTitle.substring(0, encodedTitle.length - 1)
     } else encodedTitle
-    
+
   }
 }

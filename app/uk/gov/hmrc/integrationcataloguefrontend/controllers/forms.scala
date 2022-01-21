@@ -25,7 +25,7 @@ final case class SelectedDataSourceForm(dataSource: Option[String])
 object SelectedDataSourceForm {
 
   def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
-   
+
     if (s.isDefined)  Valid else Invalid(message)
   }
 

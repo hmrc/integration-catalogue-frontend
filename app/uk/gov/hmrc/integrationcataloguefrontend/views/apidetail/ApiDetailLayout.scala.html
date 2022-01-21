@@ -25,7 +25,7 @@
 @this(
     govukTemplate: GovukTemplate,
     siteHeader: SiteHeader,
-    footer: GovukFooter,
+    footerWithItems: FooterWithItems,
     blueInterruptBox: BlueInterruptBox,
     pocBanner: PocBanner,
     govukBackLink : GovukBackLink,
@@ -38,7 +38,7 @@
     activePage: Option[String] = None,
     apiDetail: Option[ApiDetail] = None,
     bodyEndBlock: Option[Html] = None,
-)(contentBlock: Html)(implicit appConfig: AppConfig)
+)(contentBlock: Html)(implicit messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
@@ -89,7 +89,7 @@
 }
 
 @footerBlock = {
-    @footer()
+    @footerWithItems()
 }
 
 @govukTemplate(

@@ -46,7 +46,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       document.getElementById("hod-link").attr("href") shouldBe "/api-catalogue/contact"
       document.getElementById("submit").text() shouldBe "Continue"
 
-      testFileTransferBackends(document, false)
+      testFileTransferBackends(document, isChecked = false)
 
     }
 
@@ -61,7 +61,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       document.getElementById("submit").text() shouldBe "Continue"
       document.getElementById("file-transfer-source-error").text() shouldBe "Error: Select where your data currently stored"
 
-      testFileTransferBackends(document, false)
+      testFileTransferBackends(document, isChecked = false)
 
     }
   }

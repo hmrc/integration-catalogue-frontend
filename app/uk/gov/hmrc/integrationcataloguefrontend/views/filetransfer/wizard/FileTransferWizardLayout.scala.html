@@ -21,7 +21,7 @@
 
 @this(
     govukLayout: GovukLayout,
-    footer: GovukFooter,
+    footerWithItems: FooterWithItems,
     govukBackLink : GovukBackLink,
     siteHeader: SiteHeader,
     pocBanner: PocBanner,
@@ -38,7 +38,7 @@
 )(contentBlock: Html)(implicit  messages: Messages, appConfig: AppConfig)
 
 @footerBlock = {
-    @footer()
+    @footerWithItems()
 }
 
 @mainContentDefault = {

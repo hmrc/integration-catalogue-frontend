@@ -18,7 +18,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardNoConnections

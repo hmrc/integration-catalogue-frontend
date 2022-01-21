@@ -32,11 +32,16 @@ case class FileTransferPublishRequest(
                               lastUpdated: DateTime,
                               contact: ContactInformation, // (single name + email)
                               sourceSystem: List[String], // One or many
-                              targetSystem: List[String], 
+                              targetSystem: List[String],
                               fileTransferPattern: String)
 
 case class PlatformContactResponse(platformType: PlatformType, contactInfo: Option[ContactInformation])
 
-case class IntegrationFilter(searchText: List[String] = List.empty, platforms: List[PlatformType] = List.empty, backendsFilter: List[String] = List.empty, backends: List[String] = List.empty, itemsPerPage: Option[Int] = None, currentPage: Option[Int] = None)
+case class IntegrationFilter(searchText: List[String] = List.empty,
+                             platforms: List[PlatformType] = List.empty,
+                             backendsFilter: List[String] = List.empty,
+                             backends: List[String] = List.empty,
+                             itemsPerPage: Option[Int] = None,
+                             currentPage: Option[Int] = None)
 
 case class FileTransferTransportsForPlatform(platform: PlatformType, transports: List[String])

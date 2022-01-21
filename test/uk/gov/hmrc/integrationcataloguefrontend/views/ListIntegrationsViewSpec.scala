@@ -48,8 +48,8 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         5,
         1,
         3,
-        false,
-        appConfig)
+        showFileTransferInterrupt = false,
+        messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
@@ -70,8 +70,8 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         5,
         1,
         3,
-        true,
-        appConfig)
+        showFileTransferInterrupt = true,
+        messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
@@ -92,8 +92,8 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         5,
         1,
         3,
-        false,
-        appConfig)
+        showFileTransferInterrupt = false,
+        messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false

@@ -24,6 +24,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
@@ -37,22 +38,32 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   private val caseStudiesPageRequest = FakeRequest("GET", "/case-studies")
   private val getStartedPageRequest = FakeRequest("GET", "/get-started")
   private val aboutPageRequest = FakeRequest("GET", "/about")
+  private val accessibilityPageRequest = FakeRequest("GET", "/accessibility-statement")
   private val fileTransferPatternPageRequest = FakeRequest("GET", "/file-transfer-patterns")
   private val contactViewPageRequest = FakeRequest("GET", "/contact")
-  private val env           = Environment.simple()
+  private val env = Environment.simple()
   private val configuration = Configuration.load(env)
 
   private val serviceConfig = new ServicesConfig(configuration)
-  private val appConfig     = new AppConfig(configuration, serviceConfig)
+  private val appConfig = new AppConfig(configuration, serviceConfig)
 
   val homePage: HomePage = app.injector.instanceOf[HomePage]
   val caseStudiesPage: CaseStudies = app.injector.instanceOf[CaseStudies]
   val getStartedPage: GetStarted = app.injector.instanceOf[GetStarted]
   val contactPage: ContactView = app.injector.instanceOf[ContactView]
   val aboutPage: About = app.injector.instanceOf[About]
+  val accessibilityStatementView: AccessibilityStatementView = app.injector.instanceOf[AccessibilityStatementView]
   val fileTransferPatternPage: FileTransferPatternView = app.injector.instanceOf[FileTransferPatternView]
 
-  private val controller = new MainController(appConfig, stubMessagesControllerComponents(), homePage, caseStudiesPage, getStartedPage, aboutPage, contactPage, fileTransferPatternPage)
+  private val controller = new MainController(appConfig,
+    stubMessagesControllerComponents(),
+    homePage,
+    caseStudiesPage,
+    getStartedPage,
+    aboutPage,
+    accessibilityStatementView,
+    contactPage,
+    fileTransferPatternPage)
 
   "GET /" should {
     "return 200" in {
@@ -88,6 +99,19 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
 
     "return HTML" in {
       val result = controller.getStartedPage()(getStartedPageRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+  "GET /accessibility-statement" should {
+    "return 200" in {
+      val result = controller.accessibilityStatementPage()(accessibilityPageRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = controller.accessibilityStatementPage()(accessibilityPageRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result)     shouldBe Some("utf-8")
     }
