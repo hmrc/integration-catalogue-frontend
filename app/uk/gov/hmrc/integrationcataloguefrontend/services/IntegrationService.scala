@@ -66,18 +66,29 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
       // } else {
       integrationCatalogueConnector.getPlatformContacts()
         .map {
-          case Right(result: List[PlatformContactResponse]) =>
-            val matchedPlatformContact = result.filter(p => p.platformType == integration.platform).headOption
+          case Right(result: List[PlatformContactResponse]) => 
+            val maybeMatchedPlatformContact = result.filter(p => p.platformType == integration.platform).headOption
+            val maybePlatformContactInfo = maybeMatchedPlatformContact.flatMap(_.contactInfo)
+            val overrideOAsContact = maybeMatchedPlatformContact.map(_.overrideOasContacts).getOrElse(false)
 
-            if(oasContacts.isEmpty){
-              if(matchedPlatformContact.isDefined)
-                constructMaintainer(integration, List(matchedPlatformContact.head.contactInfo.get))
-              else constructMaintainer(integration, List.empty)
-            }else{
-                 if((matchedPlatformContact.isDefined && matchedPlatformContact.map(_.overrideOasContacts).getOrElse(false)) || !oasContacts.head.emailAddress.isDefined)
-                    constructMaintainer(integration, List(matchedPlatformContact.head.contactInfo.get))
-                 else constructMaintainer(integration, oasContacts)
-            }
+           (maybePlatformContactInfo, overrideOAsContact, oasContacts) match {
+             case (Some(contactInfo: ContactInformation), _, Nil) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
+             case (Some(contactInfo: ContactInformation), true, oasContacts: List[ContactInformation]) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
+             case (Some(contactInfo: ContactInformation), false, oasContacts: List[ContactInformation]) => { // TODO: check if conatcts have name and email 
+                  constructMaintainer(integration, oasContacts)
+             }   
+             case _ => constructMaintainer(integration, List.empty)
+           }
+
+            // if(oasContacts.isEmpty){
+            //   if(maybeMatchedPlatformContact.isDefined && maybePlatformContactInfo.isDefined)
+            //     constructMaintainer(integration, List(maybePlatformContactInfo.get))
+            //   else constructMaintainer(integration, List.empty)
+            // }else{
+            //      if(maybeMatchedPlatformContact.isDefined && overrideOAsContact  && maybePlatformContactInfo.isDefined || !oasContacts.head.emailAddress.isDefined) {
+            //         constructMaintainer(integration, List(maybePlatformContactInfo.get))
+            //      } else { constructMaintainer(integration, oasContacts) }
+            // }
           case _  =>   constructMaintainer(integration, List.empty)
      
       }
