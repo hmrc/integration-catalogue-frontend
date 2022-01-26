@@ -60,7 +60,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
         }
       }
 
-      val oasContacts = integration.maintainer.contactInfo
+      val oasContacts = integration.maintainer.contactInfo.filter(x => x.emailAddress.isDefined)
       // if (contacts.nonEmpty && contacts.head.emailAddress.isDefined){
       //   Future.successful(integration)
       // } else {
@@ -74,9 +74,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
            (maybePlatformContactInfo, overrideOAsContact, oasContacts) match {
              case (Some(contactInfo: ContactInformation), _, Nil) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
              case (Some(contactInfo: ContactInformation), true, oasContacts: List[ContactInformation]) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
-             case (Some(contactInfo: ContactInformation), false, oasContacts: List[ContactInformation]) => { // TODO: check if conatcts have name and email 
-                  constructMaintainer(integration, oasContacts)
-             }   
+             case (Some(contactInfo: ContactInformation), false, oasContacts: List[ContactInformation]) => constructMaintainer(integration, oasContacts)
              case _ => constructMaintainer(integration, List.empty)
            }
 
