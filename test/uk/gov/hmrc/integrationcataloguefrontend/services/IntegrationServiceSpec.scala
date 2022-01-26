@@ -53,13 +53,12 @@ class IntegrationServiceSpec
         integrationReturned: IntegrationDetail,
         expectedIntegration: IntegrationDetail,
         defaultPlatformContacts: List[PlatformContactResponse] = List.empty,
-        callGetPlatformContacts: Boolean,
         callGetPlatformContactsReturnsError: Boolean = false
 
       ) = {
       val id = IntegrationId(UUID.randomUUID())
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(integrationReturned)))
-      if (callGetPlatformContacts) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
       if(callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
       
       val result: Either[Throwable, IntegrationDetail] =
@@ -71,10 +70,8 @@ class IntegrationServiceSpec
       }
 
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
-    if (callGetPlatformContacts || callGetPlatformContactsReturnsError) {
-        verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
-      }
-        else verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
+    
+      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
     }
 
   }
@@ -131,8 +128,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = exampleApiDetail,
         expectedIntegration = exampleApiDetail,
-        defaultPlatformContacts = List.empty,
-        callGetPlatformContacts = false
+        defaultPlatformContacts = List.empty
       )
     }
 
@@ -140,8 +136,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactEmail,
         expectedIntegration = apiDetailWithOnlyContactEmail,
-        defaultPlatformContacts = List.empty,
-        callGetPlatformContacts = false
+        defaultPlatformContacts = List.empty
       )
     }
 
@@ -152,8 +147,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactName,
         expectedIntegration = expectedApiDetail,
-        defaultPlatformContacts = List(apiPlatformContact),
-        callGetPlatformContacts = true
+        defaultPlatformContacts = List(apiPlatformContact)
       )
 
     }
@@ -164,8 +158,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactName,
         expectedIntegration = expectedApiDetail,
-        defaultPlatformContacts = List.empty,
-        callGetPlatformContacts = true
+        defaultPlatformContacts = List.empty
       )
 
     }
@@ -177,8 +170,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = expectedApiDetail,
-        defaultPlatformContacts = List(apiPlatformContact),
-        callGetPlatformContacts = true
+        defaultPlatformContacts = List(apiPlatformContact)
       )
 
     }
@@ -190,8 +182,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = fileTransfer4,
         expectedIntegration = expectedIntegration,
-        defaultPlatformContacts = List(apiPlatformContact),
-        callGetPlatformContacts = true
+        defaultPlatformContacts = List(apiPlatformContact)
       )
     }
 
@@ -199,8 +190,7 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
-        defaultPlatformContacts = List(apiPlatformNoContact),
-        callGetPlatformContacts = true
+        defaultPlatformContacts = List(apiPlatformNoContact)
       )
     }
 
@@ -208,8 +198,7 @@ class IntegrationServiceSpec
      validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
-        defaultPlatformContacts = List.empty,
-        callGetPlatformContacts = true
+        defaultPlatformContacts = List.empty
       )
     }
 
@@ -219,7 +208,6 @@ class IntegrationServiceSpec
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
         defaultPlatformContacts = List.empty,
-        callGetPlatformContacts = false,
         callGetPlatformContactsReturnsError = true
       )
     }

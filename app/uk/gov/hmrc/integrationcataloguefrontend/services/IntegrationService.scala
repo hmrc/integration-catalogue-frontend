@@ -74,7 +74,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
                 constructMaintainer(integration, List(matchedPlatformContact.head.contactInfo.get))
               else constructMaintainer(integration, List.empty)
             }else{
-                 if(matchedPlatformContact.isDefined && matchedPlatformContact.map(_.overrideOasContacts).getOrElse(false) )
+                 if((matchedPlatformContact.isDefined && matchedPlatformContact.map(_.overrideOasContacts).getOrElse(false)) || !oasContacts.head.emailAddress.isDefined)
                     constructMaintainer(integration, List(matchedPlatformContact.head.contactInfo.get))
                  else constructMaintainer(integration, oasContacts)
             }
