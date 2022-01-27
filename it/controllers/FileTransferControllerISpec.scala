@@ -37,7 +37,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
   val validHeaders = List(CONTENT_TYPE -> "application/json")
   val validPostHeaders = List(CONTENT_TYPE -> "application/x-www-form-urlencoded", "Csrf-Token" -> "nocheck")
 
-    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))))
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), true)
 
     
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =

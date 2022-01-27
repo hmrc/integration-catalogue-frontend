@@ -46,19 +46,22 @@ class IntegrationServiceSpec
   trait SetUp {
     val objInTest = new IntegrationService(mockIntegrationCatalogueConnector)
     val exampleIntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
-    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
+    val apiPlatformContactWithOverride = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), true)
+    val apiPlatformContactNoOverride = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
+  
     val apiPlatformNoContact = PlatformContactResponse(PlatformType.API_PLATFORM, None, false)
 
     def validateDefaultContacts(
         integrationReturned: IntegrationDetail,
         expectedIntegration: IntegrationDetail,
         defaultPlatformContacts: List[PlatformContactResponse] = List.empty,
+        callGetPlatformContacts: Boolean,
         callGetPlatformContactsReturnsError: Boolean = false
 
       ) = {
       val id = IntegrationId(UUID.randomUUID())
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(integrationReturned)))
-      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
+      if (callGetPlatformContacts) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
       if(callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
       
       val result: Either[Throwable, IntegrationDetail] =
@@ -70,8 +73,10 @@ class IntegrationServiceSpec
       }
 
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
-    
-      verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
+    if (callGetPlatformContacts || callGetPlatformContactsReturnsError) {
+        verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
+      }
+        else verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
     }
 
   }
@@ -124,33 +129,58 @@ class IntegrationServiceSpec
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
     }
 
-    "return apidetail that has contact name and email" in new SetUp {
+    "return apidetail with oas contact when oas file has contact name and email and platform override is false" in new SetUp {
       validateDefaultContacts(
-        integrationReturned = exampleApiDetail,
-        expectedIntegration = exampleApiDetail,
-        defaultPlatformContacts = List.empty
+        integrationReturned = apiDetail0,
+        expectedIntegration = apiDetail0.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = List(apiPlatformContactNoOverride.contactInfo.get))),
+        defaultPlatformContacts = List(apiPlatformContactNoOverride),
+        callGetPlatformContacts = true
       )
     }
 
-    "return apidetail that only has a contact email" in new SetUp {
+    "return apidetail with platform default when oas file has contact name and email but platform override is true" in new SetUp {
+      validateDefaultContacts(
+        integrationReturned = apiDetail0,
+        expectedIntegration = apiDetail0.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = List(apiPlatformContactWithOverride.contactInfo.get))),
+        defaultPlatformContacts = List(apiPlatformContactWithOverride),
+        callGetPlatformContacts = true
+      )
+    }
+
+    "return apidetail with oas contact when oas file only has contact email and platform override is false" in new SetUp {
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactEmail,
         expectedIntegration = apiDetailWithOnlyContactEmail,
-        defaultPlatformContacts = List.empty
+        defaultPlatformContacts = List(apiPlatformContactNoOverride),
+        callGetPlatformContacts = true
       )
     }
 
-    "return apidetail with default platform contact info when api only has contact name" in new SetUp {
-      val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+    "return apidetail with platform default when oas contact only has contact email but platform override is true" in new SetUp {
+      validateDefaultContacts(
+        integrationReturned = apiDetailWithOnlyContactEmail,
+        expectedIntegration = apiDetailWithOnlyContactEmail.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = List(apiPlatformContactWithOverride.contactInfo.get))),
+        defaultPlatformContacts = List(apiPlatformContactWithOverride),
+        callGetPlatformContacts = true
+      )
+    }
+
+    // test when override is true but oas contact only has email 
+     // test when override is true but oas contact only has name and email 
+
+    "return apidetail with default platform contact info when api only has contact name and override is false" in new SetUp {
+      val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
 
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactName,
         expectedIntegration = expectedApiDetail,
-        defaultPlatformContacts = List(apiPlatformContact)
+        defaultPlatformContacts = List(apiPlatformContactNoOverride),
+        callGetPlatformContacts = true
       )
 
     }
+
 
     "return apidetail with empty contact list when api only has contact name and defaultPlatformContacts list is empty" in new SetUp {
       val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts)
@@ -158,31 +188,34 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactName,
         expectedIntegration = expectedApiDetail,
-        defaultPlatformContacts = List.empty
+        defaultPlatformContacts = List.empty,
+        callGetPlatformContacts = true
       )
 
     }
 
     "return apidetail with default platform contact info when api does not have any contact information" in new SetUp {
-      val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+      val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedApiDetail = apiDetail0.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
 
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = expectedApiDetail,
-        defaultPlatformContacts = List(apiPlatformContact)
+        defaultPlatformContacts = List(apiPlatformContactNoOverride),
+        callGetPlatformContacts = true
       )
 
     }
 
     "return file transfer detail with default platform contact info when FT does not have any contact information" in new SetUp {
 
-      val contactList = apiPlatformContact.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+      val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedIntegration = fileTransfer4.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
       validateDefaultContacts(
         integrationReturned = fileTransfer4,
         expectedIntegration = expectedIntegration,
-        defaultPlatformContacts = List(apiPlatformContact)
+        defaultPlatformContacts = List(apiPlatformContactNoOverride),
+        callGetPlatformContacts = true
       )
     }
 
@@ -190,7 +223,8 @@ class IntegrationServiceSpec
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
-        defaultPlatformContacts = List(apiPlatformNoContact)
+        defaultPlatformContacts = List(apiPlatformNoContact),
+        callGetPlatformContacts = true
       )
     }
 
@@ -198,7 +232,8 @@ class IntegrationServiceSpec
      validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
-        defaultPlatformContacts = List.empty
+        defaultPlatformContacts = List.empty,
+        callGetPlatformContacts = true
       )
     }
 
@@ -208,6 +243,7 @@ class IntegrationServiceSpec
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
         defaultPlatformContacts = List.empty,
+        callGetPlatformContacts = false,
         callGetPlatformContactsReturnsError = true
       )
     }
@@ -216,11 +252,11 @@ class IntegrationServiceSpec
 
   "getPlatformContacts" should {
     "return Right with List of PlatformContactResponse" in new SetUp {
-      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContact))))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContactNoOverride))))
 
       val result = await(objInTest.getPlatformContacts)
       result match {
-        case Right(platformContacts) => platformContacts shouldBe List(apiPlatformContact)
+        case Right(platformContacts) => platformContacts shouldBe List(apiPlatformContactNoOverride)
         case Left(_)                 => fail()
       }
 
