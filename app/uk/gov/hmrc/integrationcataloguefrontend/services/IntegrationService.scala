@@ -73,6 +73,7 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
              case (Some(contactInfo: ContactInformation), _, Nil) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
              case (Some(contactInfo: ContactInformation), true, oasContacts: List[ContactInformation]) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
              case (Some(contactInfo: ContactInformation), false, oasContacts: List[ContactInformation]) => constructMaintainer(integration, filteredOasContacts)
+             case (None, _, oasContacts: List[ContactInformation]) => constructMaintainer(integration, filteredOasContacts)
              case _ => constructMaintainer(integration, List.empty)
            }
           case _  =>   constructMaintainer(integration, List.empty)
