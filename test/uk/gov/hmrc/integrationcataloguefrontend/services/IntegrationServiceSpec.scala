@@ -156,6 +156,15 @@ class IntegrationServiceSpec
       )
     }
 
+  "return apidetail with oas contact when oas file only has contact email and no platform contact information exists" in new SetUp {
+      validateDefaultContacts(
+        integrationReturned = apiDetailWithOnlyContactEmail,
+        expectedIntegration = apiDetailWithOnlyContactEmail,
+        defaultPlatformContacts = List.empty,
+        callGetPlatformContacts = true
+      )
+    }
+
     "return apidetail with platform default when oas contact only has contact email but platform override is true" in new SetUp {
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactEmail,
