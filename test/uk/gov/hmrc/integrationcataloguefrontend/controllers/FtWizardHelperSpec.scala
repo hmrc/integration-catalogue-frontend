@@ -27,10 +27,10 @@ class FtWizardHelperSpec extends AsyncHmrcSpec with FtWizardHelper {
   
   trait Setup {
 
-    val apiPlatformContact = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))))
-    val ifPlatformContact = PlatformContactResponse(CORE_IF, Some(ContactInformation(Some("Core if"), Some("coreif@email"))))
-    val apiPlatformNoContact = PlatformContactResponse(API_PLATFORM, None)
-    val apiPlatformNoEmail = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("api platform"), None)))
+    val apiPlatformContact = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
+    val ifPlatformContact = PlatformContactResponse(CORE_IF, Some(ContactInformation(Some("Core if"), Some("coreif@email"))), true)
+    val apiPlatformNoContact = PlatformContactResponse(API_PLATFORM, None, false)
+    val apiPlatformNoEmail = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("api platform"), None)), false)
     val platforms = List(API_PLATFORM, CORE_IF, CMA)
   }
 

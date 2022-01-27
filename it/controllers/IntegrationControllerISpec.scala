@@ -12,6 +12,8 @@ import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationRe
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 
 class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
   with IntegrationCatalogueConnectorStub with ApiTestData with FileTransferTestData {
@@ -151,11 +153,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and render correctly when title in url matches integration title when encoded" in {
 
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
-
-        // setting this value whilst we are pulling in the oas files from assets
-        // we need to have a deterministic value for the port as we need to tell
-        // the service where to get the file from
-        System.setProperty("http.port", port.toString)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", validHeaders)
         result.status mustBe OK
@@ -165,11 +163,9 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 303 and render correctly when title in url does not match encoded title from integration" in {
 
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
-        // setting this value whilst we are pulling in the oas files from assets
-        // we need to have a deterministic value for the port as we need to tell
-        // the service where to get the file from
-        System.setProperty("http.port", port.toString)
+      
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/incorrect-title", validHeaders)
         result.status mustBe 303
@@ -220,6 +216,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     "GET /integrations/:id/:title/technical" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
         result.status mustBe OK
@@ -248,6 +245,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     "GET /integrations/:id/files/oas" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
+
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
         result.status mustBe OK
@@ -277,10 +276,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     "GET /integrations/{filetransferId}" should {
       "respond with 200 and render correctly" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(fileTransfer1.asInstanceOf[IntegrationDetail]).toString, fileTransfer1.id)
-        // setting this value whilst we are pulling in the oas files from assets
-        // we need to have a deterministic value for the port as we need to tell
-        // the service where to get the file from
-        System.setProperty("http.port", port.toString)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
 
         val result = callGetEndpoint(s"$url/integrations/${fileTransfer1.id.value.toString}/xx-sas-yyyyydaily-pull", validHeaders)

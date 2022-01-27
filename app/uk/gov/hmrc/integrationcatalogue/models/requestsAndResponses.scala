@@ -35,7 +35,7 @@ case class FileTransferPublishRequest(
                               targetSystem: List[String],
                               fileTransferPattern: String)
 
-case class PlatformContactResponse(platformType: PlatformType, contactInfo: Option[ContactInformation])
+case class PlatformContactResponse(platformType: PlatformType, contactInfo: Option[ContactInformation], overrideOasContacts: Boolean)
 
 case class IntegrationFilter(searchText: List[String] = List.empty,
                              platforms: List[PlatformType] = List.empty,

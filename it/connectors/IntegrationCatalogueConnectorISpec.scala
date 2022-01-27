@@ -79,7 +79,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
 
     val objInTest: IntegrationCatalogueConnector =  app.injector.instanceOf[IntegrationCatalogueConnector]
 
-    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))))
+    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), true)
 
   }
 
