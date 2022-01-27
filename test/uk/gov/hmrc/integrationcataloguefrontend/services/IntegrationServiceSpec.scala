@@ -165,9 +165,6 @@ class IntegrationServiceSpec
       )
     }
 
-    // test when override is true but oas contact only has email 
-     // test when override is true but oas contact only has name and email 
-
     "return apidetail with default platform contact info when api only has contact name and override is false" in new SetUp {
       val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
