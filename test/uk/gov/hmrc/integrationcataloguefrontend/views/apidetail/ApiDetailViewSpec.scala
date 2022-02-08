@@ -173,10 +173,15 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
        document.getElementById("contact-name-heading").text() shouldBe "Contact name"
        document.getElementById("contact-name-value").text() shouldBe "name"
+       document.getElementById("contact-name-value").tag.toString shouldBe "p"
        
        document.getElementById("contact-email-heading").text() shouldBe "Contact email"
        document.getElementById("contact-email-value").text() shouldBe "email"
+       document.getElementById("contact-email-value").tag.toString shouldBe "a"
+       document.getElementById("contact-email-value").attr("href") shouldBe "mailto:email"
 
     }
+
+    
 
 }
