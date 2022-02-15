@@ -54,6 +54,10 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
       val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
+      document.getElementById("page-heading").text shouldBe "Your search did not match any APIs."
+      document.getElementById("contact-link").attr("href") shouldBe "mailto:api-catalogue-g@digital.hmrc.gov.uk"
+      document.getElementById("contact-link").text shouldBe "api-catalogue-g@digital.hmrc.gov.uk"
+
     }
 
     "render list apis page with File Transfer Interrupt Box and do not show api list when no apis are passed into the view" in new Setup {
