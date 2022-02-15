@@ -98,7 +98,6 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
 
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
 
-      document.getElementById("poc-banner-title").text() shouldBe "Important"
 
       document.getElementById("page-heading").text() shouldBe "20 APIs"
       document.getElementById("api-name-0").text() shouldBe apiDetail0.title

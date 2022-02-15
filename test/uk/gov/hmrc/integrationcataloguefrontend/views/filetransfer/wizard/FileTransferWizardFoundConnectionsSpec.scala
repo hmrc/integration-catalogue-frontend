@@ -42,7 +42,6 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
 
     def assertCommonPageElements(document: Document) = {
       document.title shouldBe "A file transfer connection exists -"
-      document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
       document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"
 
@@ -76,7 +75,6 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
       val page: Html = foundConnectionsPage.render(source, target, List.empty, List.empty, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "A file transfer connection exists -"
-      document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
       document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"
 

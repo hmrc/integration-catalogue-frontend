@@ -37,7 +37,6 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       val page: Html = dataSourcePage.render(SelectedDataSourceForm.form, FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "Where is your data currently stored? -"
-      document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
       Option(document.getElementById("error-link-0")) shouldBe None
        Option(document.getElementById("file-transfer-source-error")) shouldBe None
@@ -54,7 +53,6 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       val page: Html = dataSourcePage.render(SelectedDataSourceForm.form.withError("dataSource", "error"), FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
-      document.getElementById("poc-banner-title").text() shouldBe "Important"
       document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
       document.getElementById("error-link-0").text() shouldBe "error"
       // do we check that errors element is not displayed?
