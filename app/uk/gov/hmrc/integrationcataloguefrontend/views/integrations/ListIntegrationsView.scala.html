@@ -76,10 +76,12 @@
 
     }
     @if(apiList.isEmpty){
-        <br />
+        
         <p class="govuk-body govuk-apis-list-description" id="no-results">
-            <p class="govuk-body govuk-apis-list-description" >Your search did not match any APIs.</p>
+            <h1 class="govuk-body" id="page-heading">Your search did not match any APIs.</h1>
             <p class="govuk-body govuk-apis-list-description" >Check all words are spelt correctly or try a different keyword.</p>
+            <p class="govuk-body">If you can’t find the API you are looking for, email the API catalogue team at <a id="contact-link" href="mailto:@HtmlFormat.raw("api-catalogue-g@digital.hmrc.gov.uk")" class="govuk-link">@HtmlFormat.raw("api-catalogue-g@digital.hmrc.gov.uk")</a>.
+            </p>
         </p>
     }
 }
