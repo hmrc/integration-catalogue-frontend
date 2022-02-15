@@ -50,6 +50,9 @@ class HeaderNavigationLinksSpec extends CommonViewSpec {
       document.getElementById("nav-case-studies-link").text() shouldBe "Case studies"
       document.getElementById("nav-case-studies-link").attr("href" ) shouldBe "/api-catalogue/case-studies"
 
+      document.getElementById("nav-contact-link").text() shouldBe "Contact"
+      document.getElementById("nav-contact-link").attr("href" ) shouldBe "/api-catalogue/contact"
+
       Option(document.getElementById("intCatSearch")) shouldBe None
     }
   }
