@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,14 @@
  * limitations under the License.
  *@
 
-@this(navLinks: HeaderNavigationLinks, appConfig : AppConfig)
+@this(navLinks: HeaderNavigationLinks, hmrcInternalHeader: HmrcInternalHeader)
 
-@(activePage: Option[String] = None, includeSearch: Boolean = false)
-<header role="banner" class="hmrc-internal-header govuk-header-box">
-    <div class="govuk-width-container govuk-header-logo-box">
-        <div class="hmrc-internal-header__logo">
-            <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage" class="hmrc-internal-header__logo-link" id="logo-link">
-                HM Revenue &amp; Customs
-            </a>
-        </div>
-        <div class="hmrc-internal-header__service-name govuk-header-service-box">
-            <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage" class="hmrc-internal-header__link" id="site-name-link">
-                @{appConfig.serviceName}
-            </a>
-        </div>
-    </div>
-</header>
+@(activePage: Option[String] = None, includeSearch: Boolean = false)(implicit messages: Messages, appConfig: AppConfig)
+
+@hmrcInternalHeader(InternalHeader(
+    homepageUrl = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage.url,
+    serviceName = Some(messages("service.name")),
+    serviceUrl = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage.url
+))
+
 @navLinks(activePage, includeSearch)

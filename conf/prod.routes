@@ -2,8 +2,6 @@
 
 ->         /api-catalogue             app.Routes
 ->         /                          health.Routes
-->         /api-catalogue/govuk-frontend          govuk.Routes
-->         /api-catalogue/hmrc-frontend           hmrcfrontend.Routes
 
 
 GET        /integration-catalogue                  controllers.Default.redirect(to = "/api-catalogue")

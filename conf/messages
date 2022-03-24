@@ -1,4 +1,4 @@
-service.name = integration-catalogue-frontend
+service.name = API catalogue
 service.homePageUrl = /integration-catalogue-frontend
 service.text = This is your new service
 
