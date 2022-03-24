@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.utils
 
-import org.scalatest.{Matchers, WordSpec}
+
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper._
 
-class ViewHelperSpec extends WordSpec with Matchers with ApiTestData {
+class ViewHelperSpec extends AnyWordSpec with Matchers with ApiTestData {
 
   "ViewHelper" when {
 

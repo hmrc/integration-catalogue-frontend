@@ -4,13 +4,13 @@ import bloop.integrations.sbt.BloopDefaults
 
 val appName = "integration-catalogue-frontend"
 
-val silencerVersion = "1.7.0"
+val silencerVersion = "1.7.6"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .settings(
     majorVersion                     := 0,
-    scalaVersion                     := "2.12.11",
+    scalaVersion                     := "2.12.15",
     routesImport                      += "uk.gov.hmrc.integrationcataloguefrontend.controllers.binders._",
     Test / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
@@ -18,7 +18,6 @@ lazy val microservice = Project(appName, file("."))
       "play.twirl.api.HtmlFormat",
       "uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig",
       "uk.gov.hmrc.govukfrontend.views.html.components._",
-      "uk.gov.hmrc.govukfrontend.views.html.helpers._",
       "uk.gov.hmrc.hmrcfrontend.views.html.components._"
     ),
     // ***************

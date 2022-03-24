@@ -7,14 +7,13 @@ object AppDependencies {
   lazy val scalaCheckVersion = "1.14.0"
   lazy val enumeratumVersion = "1.6.3"
   lazy val jacksonVersion = "2.11.1"
-  lazy val bootstrapVersion = "5.14.0"
+  lazy val bootstrapVersion = "5.21.0"
+  lazy val playFrontendVersion = "3.7.0-play-28"
 
 
   val compile = Seq(
     "uk.gov.hmrc"                       %% "bootstrap-frontend-play-28"     % bootstrapVersion,
-    "uk.gov.hmrc"                       %% "play-frontend-hmrc"             % "0.57.0-play-28",
-    "uk.gov.hmrc"                       %% "play-frontend-govuk"            % "0.71.0-play-28",
-
+    "uk.gov.hmrc"                       %% "play-frontend-hmrc"             % playFrontendVersion,
     "com.fasterxml.jackson.module"      %% "jackson-module-scala"           % jacksonVersion,
     "com.fasterxml.jackson.core"        % "jackson-annotations"             % jacksonVersion,
     "com.fasterxml.jackson.core"        % "jackson-databind"                % jacksonVersion,

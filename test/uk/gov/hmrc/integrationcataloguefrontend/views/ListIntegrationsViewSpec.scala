@@ -19,7 +19,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.views
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import play.api.test.FakeRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec

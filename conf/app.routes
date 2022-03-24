@@ -1,4 +1,5 @@
 # microservice specific routes
+->         /hmrc-frontend                      hmrcfrontend.Routes
 
 #Static pages
 GET        /                                          uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.landingPage
