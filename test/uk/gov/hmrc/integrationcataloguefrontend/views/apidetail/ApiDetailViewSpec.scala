@@ -36,152 +36,129 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details but no contact information as the Api does not have any contact information" in new Setup {
       val apiParsed: ApiDetail = apiDetail0
-       val page : Html =    apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
-       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
+      document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+      document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
-       
-       document.getElementById("api-summary-heading").text() shouldBe "API summary"
+      document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
 
-       Option(document.getElementById("hods-heading")) shouldBe None
+      document.getElementById("api-summary-heading").text() shouldBe "API summary"
+
+      Option(document.getElementById("hods-heading")) shouldBe None
       Option(document.getElementById("hods-value")) shouldBe None
 
-       document.getElementById("platform-heading").text() shouldBe "Platform"
-       document.getElementById("platform-value").text() shouldBe "API Platform"
+      document.getElementById("platform-heading").text() shouldBe "Platform"
+      document.getElementById("platform-value").text() shouldBe "API Platform"
 
-       Option(document.getElementById("development-team-heading")) shouldBe None
-       Option(document.getElementById("development-team-value")) shouldBe None
-       
-       Option(document.getElementById("contact-name-heading")) shouldBe None
-       Option(document.getElementById("contact-name-value")) shouldBe None
-       
-       Option(document.getElementById("contact-email-heading")) shouldBe None
-       Option(document.getElementById("contact-email-value")) shouldBe None
+      Option(document.getElementById("development-team-heading")) shouldBe None
+      Option(document.getElementById("development-team-value")) shouldBe None
+
+      Option(document.getElementById("contact-name-heading")) shouldBe None
+      Option(document.getElementById("contact-name-value")) shouldBe None
+
+      Option(document.getElementById("contact-email-heading")) shouldBe None
+      Option(document.getElementById("contact-email-value")) shouldBe None
 
     }
 
     "render page with api details that only has a contact email address" in new Setup {
       val apiParsed: ApiDetail = apiDetailWithOnlyContactEmail
-       val page : Html =    apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
-       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
+      document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+      document.getElementById("interrupt-box-description").text() shouldBe apiParsed.description
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
-       
-       document.getElementById("api-summary-heading").text() shouldBe "API summary"
+      document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
 
-       document.getElementById("hods-heading").text() shouldBe "HoDs"
-       document.getElementById("hods-value").text() shouldBe "ETMP"
+      document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
-       document.getElementById("platform-heading").text() shouldBe "Platform"
-       document.getElementById("platform-value").text() shouldBe "API Platform"
-       
-       Option(document.getElementById("contact-name-heading")) shouldBe None
-       Option(document.getElementById("contact-name-value")) shouldBe None
-       
-       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
-       document.getElementById("contact-email-value").text() shouldBe "email"
+      document.getElementById("hods-heading").text() shouldBe "HoDs"
+      document.getElementById("hods-value").text() shouldBe "ETMP"
 
-       document.getElementById("endpoints-examples-schemas-heading").text() shouldBe "Endpoints, examples and schemas"
-       document.getElementById("api-detail-link").text() shouldBe "See API details"
-       document.getElementById("api-detail-link").attr("href") shouldBe "/api-catalogue/integrations/b7c649e6-e10b-4815-8a2c-706317ec484d/self-assessment-mtd/redoc"
+      document.getElementById("platform-heading").text() shouldBe "Platform"
+      document.getElementById("platform-value").text() shouldBe "API Platform"
 
+      document.getElementById("contact-heading").text() shouldBe "Contact"
+      document.getElementById("contact-link").html().nonEmpty shouldBe true
 
+      document.getElementById("endpoints-examples-schemas-heading").text() shouldBe "Endpoints, examples and schemas"
+      document.getElementById("api-detail-link").text() shouldBe "See API details"
+      document.getElementById("api-detail-link").attr("href") shouldBe "/api-catalogue/integrations/b7c649e6-e10b-4815-8a2c-706317ec484d/self-assessment-mtd/redoc"
     }
 
     "render page with api details that has contact name and email address" in new Setup {
       val apiParsed: ApiDetail = apiDetail1
-       val page : Html =    apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
-       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
+      document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+      document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
-       
-       document.getElementById("api-summary-heading").text() shouldBe "API summary"
+      document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
 
-       Option(document.getElementById("hods-heading"))shouldBe None
-       Option(document.getElementById("hods-value")) shouldBe None
+      document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
-       document.getElementById("platform-heading").text() shouldBe "Platform"
-       document.getElementById("platform-value").text() shouldBe "API Platform"
-       
-       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
-       document.getElementById("contact-name-value").text() shouldBe "name"
-       
-       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
-       document.getElementById("contact-email-value").text() shouldBe "email"
+      Option(document.getElementById("hods-heading")) shouldBe None
+      Option(document.getElementById("hods-value")) shouldBe None
 
+      document.getElementById("platform-heading").text() shouldBe "Platform"
+      document.getElementById("platform-value").text() shouldBe "API Platform"
+
+      document.getElementById("contact-heading").text() shouldBe "Contact"
+      document.getElementById("contact-link").html().nonEmpty shouldBe true
     }
   }
 
-    "render page with api details that has status LIVE" in new Setup {
-      val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE)
-       val page : Html =    apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-       val document: Document = Jsoup.parse(page.body)
+  "render page with api details that has status LIVE" in new Setup {
+    val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE)
+    val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+    val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
-       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
+    document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+    document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
-       
-       document.getElementById("api-summary-heading").text() shouldBe "API summary"
+    document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
 
-       Option(document.getElementById("hods-heading"))shouldBe None
-       Option(document.getElementById("hods-value")) shouldBe None
+    document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
-       document.getElementById("platform-heading").text() shouldBe "Platform"
-       document.getElementById("platform-value").text() shouldBe "API Platform"
-       
-       document.getElementById("status-heading").text() shouldBe "Status"
-       document.getElementById("status-value").text() shouldBe "Live – available to use"
+    Option(document.getElementById("hods-heading")) shouldBe None
+    Option(document.getElementById("hods-value")) shouldBe None
 
-       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
-       document.getElementById("contact-name-value").text() shouldBe "name"
-       
-       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
-       document.getElementById("contact-email-value").text() shouldBe "email"
+    document.getElementById("platform-heading").text() shouldBe "Platform"
+    document.getElementById("platform-value").text() shouldBe "API Platform"
 
-    }
-  
-    "render page with api details that has status BETA" in new Setup {
-      val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.BETA)
-       val page : Html =    apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-       val document: Document = Jsoup.parse(page.body)
+    document.getElementById("status-heading").text() shouldBe "Status"
+    document.getElementById("status-value").text() shouldBe "Live – available to use"
 
-       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
-       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
+    document.getElementById("contact-heading").text() shouldBe "Contact"
+    document.getElementById("contact-link").html().nonEmpty shouldBe true
+  }
 
-       document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
-       
-       document.getElementById("api-summary-heading").text() shouldBe "API summary"
+  "render page with api details that has status BETA" in new Setup {
+    val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.BETA)
+    val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+    val document: Document = Jsoup.parse(page.body)
 
-       Option(document.getElementById("hods-heading"))shouldBe None
-       Option(document.getElementById("hods-value")) shouldBe None
+    document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
+    document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
 
-       document.getElementById("platform-heading").text() shouldBe "Platform"
-       document.getElementById("platform-value").text() shouldBe "API Platform"
-       
-       document.getElementById("status-heading").text() shouldBe "Status"
-       document.getElementById("status-value").text() shouldBe "Beta – early stage of development and may be available (expect breaking changes)"
+    document.getElementById("page-reviewed-date").text() shouldBe "Page reviewed 4 December 2020"
 
-       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
-       document.getElementById("contact-name-value").text() shouldBe "name"
-       document.getElementById("contact-name-value").tag.toString shouldBe "p"
-       
-       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
-       document.getElementById("contact-email-value").text() shouldBe "email"
-       document.getElementById("contact-email-value").tag.toString shouldBe "a"
-       document.getElementById("contact-email-value").attr("href") shouldBe "mailto:email"
+    document.getElementById("api-summary-heading").text() shouldBe "API summary"
 
-    }
+    Option(document.getElementById("hods-heading")) shouldBe None
+    Option(document.getElementById("hods-value")) shouldBe None
 
-    
+    document.getElementById("platform-heading").text() shouldBe "Platform"
+    document.getElementById("platform-value").text() shouldBe "API Platform"
 
+    document.getElementById("status-heading").text() shouldBe "Status"
+    document.getElementById("status-value").text() shouldBe "Beta – early stage of development and may be available (expect breaking changes)"
+
+    document.getElementById("contact-heading").text() shouldBe "Contact"
+    document.getElementById("contact-link").html().nonEmpty shouldBe true
+  }
 }
