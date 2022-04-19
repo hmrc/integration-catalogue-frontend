@@ -61,4 +61,6 @@ object JsonFormatters {
 
   implicit val formatFileTransferTransportsForPlatform : Format[FileTransferTransportsForPlatform] = Json.format[FileTransferTransportsForPlatform]
 
+  implicit val formatContactApiTeamRequest: Format[ContactApiTeamRequest] = Json.format[ContactApiTeamRequest]
+
 }
