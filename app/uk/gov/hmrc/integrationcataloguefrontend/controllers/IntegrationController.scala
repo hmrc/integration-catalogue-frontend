@@ -51,8 +51,7 @@ class IntegrationController @Inject() (
     apiTechnicalDetailsViewRedoc: ApiTechnicalDetailsViewRedoc,
     errorTemplate: ErrorTemplate,
     apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate,
-    contactApiTeamView: ContactApiTeamView,
-    playBodyParsers: PlayBodyParsers
+    contactApiTeamView: ContactApiTeamView
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with Logging
@@ -141,14 +140,23 @@ class IntegrationController @Inject() (
 
     }
 
-  def contactApiTeam(): Action[JsValue] = Action(parse.json) {
-    implicit request =>
-      {
-        request.body.validate[ContactApiTeamRequest].asOpt match {
-          case Some(car: ContactApiTeamRequest) => Ok(contactApiTeamView(car.apiTitle, car.apiTeamEmail))
-          case _                                => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-        }
-      }
+  def contactApiTeam(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
+    integrationService.findByIntegrationId(id).map {
+      case Right(detail: ApiDetail)          => Ok(contactApiTeamView(detail))
+      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+    }
   }
+
+//  def contactApiTeam(): Action[JsValue] = Action(parse.json) {
+//    implicit request =>
+//      {
+//        request.body.validate[ContactApiTeamRequest].asOpt match {
+//          case Some(car: ContactApiTeamRequest) => Ok(contactApiTeamView(car.apiTitle, car.apiTeamEmail))
+//          case _                                => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+//        }
+//      }
+//  }
 
 }
