@@ -8,3 +8,7 @@ footer.links.privacy         = Privacy policy
 footer.links.termsConditions = Terms and conditions
 footer.links.govukHelp       = Help using GOV.UK
 
+fullName.error.required = Full name required
+reason.error.required = Select at least one option please
+question.error.required = Select at least one option please
+

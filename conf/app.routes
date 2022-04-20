@@ -12,11 +12,11 @@ GET        /file-transfer-patterns                    uk.gov.hmrc.integrationcat
 
 #dynamic pages
 GET        /search                                    uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.listIntegrations(keywords: Option[String], platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], backendsFilter: List[String], itemsPerPage: Option[Int], currentPage: Option[Int])
+GET        /integrations/:id/contact                  uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.contactApiTeam(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId)
 GET        /integrations/:id/files/oas                uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationOas(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId)
 GET        /integrations/:id/:title                   uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetail(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
 GET        /integrations/:id/:title/technical         uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetailTechnical(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
 GET        /integrations/:id/:title/redoc             uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetailTechnicalRedoc(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
-GET        /integrations/:id/contact                  uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.contactApiTeam(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId)
 
 GET        /filetransfer/wizard/start                 uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.wizardStart
 GET        /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceView

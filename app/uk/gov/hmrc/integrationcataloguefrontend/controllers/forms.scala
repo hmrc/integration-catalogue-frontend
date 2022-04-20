@@ -49,3 +49,16 @@ object SelectedDataTargetForm {
   (SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
 
 }
+
+final case class ContactApiTeamForm(fullName: String, emailAddress: String, reason: Seq[String], question: String)
+
+object ContactApiTeamForm {
+  def form: Form[ContactApiTeamForm] = Form(
+    mapping(
+      "fullName" -> text.verifying("fullName.error.required", x => x.trim.nonEmpty),
+      "emailAddress" -> email,
+      "reason" -> seq(text),
+      "question" -> text
+    )(ContactApiTeamForm.apply)(ContactApiTeamForm.unapply)
+  )
+}

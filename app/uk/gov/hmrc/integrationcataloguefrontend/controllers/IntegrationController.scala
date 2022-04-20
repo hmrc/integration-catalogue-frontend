@@ -142,7 +142,7 @@ class IntegrationController @Inject() (
 
   def contactApiTeam(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)          => Ok(contactApiTeamView(detail))
+      case Right(detail: ApiDetail)          => Ok(contactApiTeamView(ContactApiTeamForm.form, detail))
       case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
       case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
       case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
