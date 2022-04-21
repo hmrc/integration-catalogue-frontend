@@ -17,10 +17,11 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import play.api.Logging
+import play.api.data.Form
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import uk.gov.hmrc.http.{BadRequestException, NotFoundException}
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, ContactApiTeamRequest, FileTransferDetail, IntegrationDetail, IntegrationFilter}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail, IntegrationFilter}
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
@@ -34,7 +35,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiT
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamView
 
 import scala.concurrent.Future.successful
@@ -140,23 +141,39 @@ class IntegrationController @Inject() (
 
     }
 
-  def contactApiTeam(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
+  def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)          => Ok(contactApiTeamView(ContactApiTeamForm.form, detail))
-      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Right(detail: ApiDetail)     => Ok(contactApiTeamView(ContactApiTeamForm.form, detail))
+      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
   }
 
-//  def contactApiTeam(): Action[JsValue] = Action(parse.json) {
-//    implicit request =>
-//      {
-//        request.body.validate[ContactApiTeamRequest].asOpt match {
-//          case Some(car: ContactApiTeamRequest) => Ok(contactApiTeamView(car.apiTitle, car.apiTeamEmail))
-//          case _                                => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-//        }
-//      }
-//  }
+  def contactApiTeamAction(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
+    def validateForm(apiDetail: ApiDetail, form: Form[ContactApiTeamForm]) = {
+      form.bindFromRequest.fold(
+        formWithErrors => {
+          println(s"FORM WITH ERRORS: ${formWithErrors.toString}")
+          BadRequest(contactApiTeamView(formWithErrors, apiDetail))
+        },
+        formData => {
+          println(s"FORM: ${formData.toString}")
+          sendEmailToApiTeam(formData.fullName, formData.emailAddress, formData.reasons.get.mkString(","), formData.specificQuestion.get)
+        }
+      )
+    }
+
+    integrationService.findByIntegrationId(id).map {
+      case Right(detail: ApiDetail)     => validateForm(detail, ContactApiTeamForm.form)
+      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
+      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+    }
+  }
+
+  private def sendEmailToApiTeam(fullName: String, emailAddress: String, reason: String, question: String) = {
+    Ok(s"Full name: $fullName, email: $emailAddress, reasons: $reason, questions: $question")
+  }
 
 }

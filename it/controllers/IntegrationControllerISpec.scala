@@ -14,6 +14,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+import uk.gov.hmrc.integrationcataloguefrontend.controllers.ContactApiTeamForm
 
 class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
   with IntegrationCatalogueConnectorStub with ApiTestData with FileTransferTestData {
@@ -37,6 +38,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
   val wsClient: WSClient = app.injector.instanceOf[WSClient]
 
   val validHeaders = List(CONTENT_TYPE -> "application/json")
+  val validPostHeaders = List(CONTENT_TYPE -> "application/x-www-form-urlencoded")
+  val formData = s"fullName=testFullName;emailAddress=test@example.com;reasons=For test purposes;specificQuestion=How long is a piece of string?;"
 
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
@@ -44,6 +47,14 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       .withHttpHeaders(headers: _*)
       .withFollowRedirects(false)
       .get()
+      .futureValue
+
+  def callPostEndpoint(url: String, headers: List[(String, String)], body: String): WSResponse =
+    wsClient
+      .url(url)
+      .withHttpHeaders(headers: _*)
+      .withFollowRedirects(false)
+      .post(body)
       .futureValue
 
 
@@ -291,6 +302,74 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       }
 
+    }
+
+    "GET /integrations/:id/contact" should {
+
+      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
+        result.status mustBe OK
+
+      }
+
+      "respond with 400 and when backend returns Bad Request" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
+        result.status mustBe BAD_REQUEST
+
+      }
+
+      "respond with 404 and when backend returns Not Found" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
+        result.status mustBe NOT_FOUND
+      }
+
+      "respond with 500 and when backend returns Internal Server Error" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, INTERNAL_SERVER_ERROR)
+
+        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
+        result.status mustBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "POST /integrations/:id/contact" should {
+
+      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
+        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
+
+        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
+        result.status mustBe OK
+
+      }
+
+      "respond with 400 and when backend returns Bad Request" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
+
+        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
+        result.status mustBe BAD_REQUEST
+
+      }
+
+      "respond with 404 and when backend returns Not Found" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
+
+        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
+        result.status mustBe NOT_FOUND
+      }
+
+      "respond with 500 and when backend returns Internal Server Error" in {
+        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, INTERNAL_SERVER_ERROR)
+
+        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
+        result.status mustBe INTERNAL_SERVER_ERROR
+      }
     }
   }
 }

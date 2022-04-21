@@ -45,5 +45,3 @@ case class IntegrationFilter(searchText: List[String] = List.empty,
                              currentPage: Option[Int] = None)
 
 case class FileTransferTransportsForPlatform(platform: PlatformType, transports: List[String])
-
-case class ContactApiTeamRequest(apiTitle: String, apiTeamEmail: String)
