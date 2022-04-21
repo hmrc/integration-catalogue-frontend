@@ -19,18 +19,16 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import akka.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.mvc.EssentialAction
-import play.api.test.CSRFTokenHelper.CSRFFRequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.cookiebanner.Action
 import uk.gov.hmrc.integrationcatalogue.models.IntegrationResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
+import uk.gov.hmrc.integrationcataloguefrontend.views.helper.WithCSRFAddToken
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
@@ -44,18 +42,17 @@ import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData with FileTransferTestData {
+class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData with FileTransferTestData with WithCSRFAddToken {
 
   private val fakeRequest = FakeRequest()
 
   private val fakeRequestWithCsrf = FakeRequest("POST", "/")
+    .withCSRFToken
     .withFormUrlEncodedBody(
       "fullName" -> "testFullName",
       "emailAddress" -> "test@example.com",
-      "reasons" -> "For test purposes",
-      "specificQuestion" -> "How long is a piece of string?"
-    )
-    .withCSRFToken
+    "reasons" -> "For test purposes",
+    "specificQuestion" -> "How long is a piece of string?")
 
   private val env = Environment.simple()
   private val configuration = Configuration.load(env)
@@ -341,17 +338,16 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = call(controller.contactApiTeamAction(apiDetail0.id), fakeRequestWithCsrf)
+      val result = controller.contactApiTeamAction(apiDetail0.id) (fakeRequest
+        .withCSRFToken.withFormUrlEncodedBody("fullName" -> "testFullName",
+        "emailAddress" -> "test@example.com",
+        "reasons" -> "For test purposes",
+        "specificQuestion" -> "How long is a piece of string?"))
 
-      val action: EssentialAction = Action { request =>
-        val value = request
-
-      }
-
-//      status(result) shouldBe Status.OK
+      status(result) shouldBe Status.OK
     }
 
-    /*"return 500 when api details throw error" in {
+    "return 500 when api details throw error" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
         .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
@@ -359,13 +355,13 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
     }
 
-    "return HTML" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }*/
+//    "return HTML" in {
+//      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+//
+//      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
+//      contentType(result) shouldBe Some("text/html")
+//      charset(result) shouldBe Some("utf-8")
+//    }
   }
 
 }
