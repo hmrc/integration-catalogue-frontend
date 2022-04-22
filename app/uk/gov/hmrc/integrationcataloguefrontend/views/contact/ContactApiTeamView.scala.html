@@ -30,13 +30,15 @@
         @ErrorSummary(form)
 
         <h1 id="page-heading" class="govuk-heading-l">
-            Contact the @{apiDetail.title} team
+            Contact the @{
+            apiDetail.title
+        } team
         </h1>
-        <p class="govuk-body">You can find more information about the service by reading:</p>
+        <p id="paragraph1" class="govuk-body">You can find more information about the service by reading:</p>
         <ul class="govuk-list govuk-list--bullet">
-            <li><a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.aboutPage" class="govuk-link--no-visited-state">
+            <li><a id="about-page-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.aboutPage" class="govuk-link--no-visited-state">
                 about the API catalogue</a></li>
-            <li><a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.getStartedPage" class="govuk-link--no-visited-state">
+            <li><a id="get-started-page-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.getStartedPage" class="govuk-link--no-visited-state">
                 how to get started</a></li>
         </ul>
 
@@ -61,35 +63,34 @@
                         Email address
                     </label>
                     <div id="email-address-hint" class="govuk-hint">
-                        We need your email address so the team can reply to your message.
-                    </div>
+                        We need your email address so the team can reply to your message.</div>
 
                     @FieldError(form.errors, "emailAddress")
                     <input class="govuk-input govuk-input--width-30" id="emailAddress" name="emailAddress" type="text">
                 </div>
 
                 <div class="govuk-form-group govuk-!-margin-top-7">
-                    <label id="questions-label" class="govuk-label" for="">
+                    <label id="question-label" class="govuk-label" for="">
                         Why do you need to contact the development team?
                     </label>
-                    <div id="options-hint" class="govuk-hint">
+                    <div id="question-hint" class="govuk-hint">
                         Select all that apply.
                     </div>
                     <div class="govuk-checkboxes">
-                        @for(reason <- List(
-                            "I want to know if I can reuse this API",
-                            "I am trying to decide if this API is suitable for me",
-                            "I need more information, like schemas or examples").zipWithIndex) {
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="reason-@reason._2" type="checkbox" name="reasons[]" value="@reason._1">
-                                <label class="govuk-label govuk-checkboxes__label govuk-!-padding-top-0" for="reason-@reason._2">@reason._1</label>
-                            </div>
-                        }
+                    @for(reason <- List(
+                        "I want to know if I can reuse this API",
+                        "I am trying to decide if this API is suitable for me",
+                        "I need more information, like schemas or examples").zipWithIndex) {
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="reason-@reason._2" type="checkbox" name="reasons[]" value="@reason._1">
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-padding-top-0" id="reason-label-@reason._2" for="reason-@reason._2">@reason._1</label>
+                        </div>
+                    }
                     </div>
                 </div>
 
                 <div class="govuk-form-group">
-                    <label class="govuk-label govuk-!-margin-top-7" for="specificQuestion">
+                    <label id="specific-question-label" class="govuk-label govuk-!-margin-top-7" for="specificQuestion">
                         Do you have a specific question?
                     </label>
                     <textarea class="govuk-textarea" id="specificQuestion" name="specificQuestion" rows="5"></textarea>
