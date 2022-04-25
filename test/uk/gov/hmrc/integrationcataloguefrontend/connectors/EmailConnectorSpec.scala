@@ -17,6 +17,8 @@
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import org.mockito.captor.{ArgCaptor, Captor}
+import org.mockito.stubbing.ScalaOngoingStubbing
+import play.api.http.Status.{ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Writes
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{HttpClient, _}
@@ -25,7 +27,8 @@ import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
-import scala.concurrent.{ExecutionContext, Future}
+import java.net.ConnectException
+import scala.concurrent.{ExecutionContext, Future, TimeoutException}
 
 class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
@@ -40,61 +43,76 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
   }
 
   trait SetUp {
-    val headerCarrierCaptor: Captor[HeaderCarrier] = ArgCaptor[HeaderCarrier]
 
-    val connector = new EmailConnector(
-      mockHttpClient,
-      mockAppConfig
-    )
+    val headerCarrierCaptor: Captor[HeaderCarrier] = ArgCaptor[HeaderCarrier]
+    val connector = new EmailConnector(mockHttpClient, mockAppConfig)
     val sendEmailUrl = s"/hmrc/email"
 
-    val contactReasons = List(
-      "I want to know if I can reuse this API",
-      "I am trying to decide if this API is suitable for me",
-      "I need more information, like schemas or examples"
-    ).mkString("|")
-
-    val emailParams = Map(
-      "senderName" -> "Joe Bloggs",
-      "senderEmail" -> "joe.bloggs@testuser.com",
-      "contactReasons" -> contactReasons,
-      "specificQuestion" -> "How do I publish my API to the catalogue?",
-      "apiTitle" -> "Self Assessment"
-    )
-
-    val emailRequest = EmailRequest(
-      to = Seq("apiteam@platform.com"),
-      templateId = "platformContact",
-      parameters = emailParams
-      )
-
-   /* def httpCallToSendEmailWillSucceedWithAccepted(): ScalaOngoingStubbing[Future[HttpResponse]] = {
-      when(mockHttpClient.POST[EmailRequest, HttpResponse](eqTo(sendEmailUrl), eqTo(emailRequest))
-        (any[HttpReads[EmailRequest]], any[HeaderCarrier], any[ExecutionContext])
-      )
-        .thenReturn(Future.successful(HttpResponse(ACCEPTED))
-      )
+    def httpCallToSendEmailWillFailWithStatus(status: Int): ScalaOngoingStubbing[Future[HttpResponse]] = {
+      when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
+        wts = any[Writes[EmailRequest]],
+        rds = any[HttpReads[HttpResponse]],
+        hc = any[HeaderCarrier],
+        ec = any[ExecutionContext]
+      ))
+        .thenReturn(Future.successful(HttpResponse(status, "")))
     }
 
-    def httpCallToSendEmailWillFailWithNotFound(): ScalaOngoingStubbing[Future[HttpResponse]] = {
-      when(mockHttpClient.POST[EmailRequest, HttpResponse](eqTo(sendEmailUrl), eqTo(emailRequest)))
-        .thenReturn(Future.successful(HttpResponse(NOT_FOUND))
-        )
-    }*/
-
-    /*def httpCallToSendEmailWillFailWithException(exception: Throwable): ScalaOngoingStubbing[Future[HttpResponse]] = {
-      when(mockHttpClient.POST[EmailRequest, HttpResponse](eqTo(sendEmailUrl), eqTo(emailRequest)))
-        .thenThrow(exception)
-    }*/
-
+    def httpCallToSendEmailWillThrowException(throwable: Throwable): ScalaOngoingStubbing[Future[HttpResponse]] = {
+      when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
+        wts = any[Writes[EmailRequest]],
+        rds = any[HttpReads[HttpResponse]],
+        hc = any[HeaderCarrier],
+        ec = any[ExecutionContext]
+      ))
+        .thenReturn(Future.failed(throwable))
+    }
   }
 
   "send" should {
 
-    "handle exceptions" in new SetUp {
-      when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)
-        (wts = any[Writes[EmailRequest]], rds = any[HttpReads[HttpResponse]], hc = any[HeaderCarrier], ec = any[ExecutionContext]))
-        .thenReturn(Future.failed(new InternalServerException("some error")))
+    "succeed with accepted and return true" in new SetUp {
+      httpCallToSendEmailWillFailWithStatus(ACCEPTED)
+
+      val result: Boolean = await(connector.send(emailRequest))
+
+      result shouldBe true
+    }
+
+    "fail with bad request and return false" in new SetUp {
+      httpCallToSendEmailWillFailWithStatus(BAD_REQUEST)
+
+      val result: Boolean = await(connector.send(emailRequest))
+
+      result shouldBe false
+    }
+
+    "fail with internal server error and return false" in new SetUp {
+      httpCallToSendEmailWillFailWithStatus(INTERNAL_SERVER_ERROR)
+
+      val result: Boolean = await(connector.send(emailRequest))
+
+      result shouldBe false
+    }
+
+    "handle internal server error exception" in new SetUp {
+      httpCallToSendEmailWillThrowException(new InternalServerException("some error"))
+
+      val result: Boolean = await(connector.send(emailRequest))
+
+      result shouldBe false
+    }
+
+    "handle timeout exception" in new SetUp {
+      httpCallToSendEmailWillThrowException(new TimeoutException())
+
+      val result: Boolean = await(connector.send(emailRequest))
+
+      result shouldBe false
+    }
+
+    "handle connect exception" in new SetUp {
+      httpCallToSendEmailWillThrowException(new ConnectException())
 
       val result: Boolean = await(connector.send(emailRequest))
 

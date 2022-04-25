@@ -292,4 +292,23 @@ trait ApiTestData {
 
   val apiList = List(apiDetail0, apiDetail1, apiDetail2, apiDetail3)
 
+  val contactReasons = List(
+    "I want to know if I can reuse this API",
+    "I am trying to decide if this API is suitable for me",
+    "I need more information, like schemas or examples"
+  ).mkString("|")
+
+  val emailParams = Map(
+    "senderName" -> "Joe Bloggs",
+    "senderEmail" -> "joe.bloggs@testuser.com",
+    "contactReasons" -> contactReasons,
+    "specificQuestion" -> "How do I publish my API to the catalogue?",
+    "apiTitle" -> "Self Assessment"
+  )
+
+  val emailRequest = EmailRequest(
+    to = Seq("apiteam@platform.com"),
+    templateId = "platformContact",
+    parameters = emailParams
+  )
 }
