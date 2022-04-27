@@ -25,7 +25,7 @@ import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, I
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
+import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
@@ -52,7 +52,8 @@ class IntegrationController @Inject() (
     apiTechnicalDetailsViewRedoc: ApiTechnicalDetailsViewRedoc,
     errorTemplate: ErrorTemplate,
     apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate,
-    contactApiTeamView: ContactApiTeamView
+    contactApiTeamView: ContactApiTeamView,
+    emailService: EmailService
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with Logging
@@ -151,29 +152,37 @@ class IntegrationController @Inject() (
   }
 
   def contactApiTeamAction(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
-    def validateForm(apiDetail: ApiDetail, form: Form[ContactApiTeamForm]) = {
+    def validateForm(apiDetail: ApiDetail, form: Form[ContactApiTeamForm]): Future[Result] = {
       form.bindFromRequest.fold(
         formWithErrors => {
-          println(s"FORM WITH ERRORS: ${formWithErrors.toString}")
-          BadRequest(contactApiTeamView(formWithErrors, apiDetail))
+          Future.successful(BadRequest(contactApiTeamView(formWithErrors, apiDetail)))
         },
         formData => {
-          println(s"FORM: ${formData.toString}")
-          sendEmailToApiTeam(formData.fullName, formData.emailAddress, formData.reasons.get.mkString(","), formData.specificQuestion.get)
+          emailService.send(
+            apiDetail.title,
+            collectEmailAddresses(apiDetail),
+            formData.fullName,
+            formData.emailAddress,
+            formData.reasons.mkString("|"),
+            formData.specificQuestion.getOrElse("")
+          ).map {
+            case true => Ok(contactApiTeamView(form, apiDetail))
+            case _    => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+          }
         }
       )
     }
 
-    integrationService.findByIntegrationId(id).map {
+    integrationService.findByIntegrationId(id).flatMap {
       case Right(detail: ApiDetail)     => validateForm(detail, ContactApiTeamForm.form)
-      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Left(_: NotFoundException)   => Future.successful(NotFound(apiNotFoundErrorTemplate()))
+      case Left(_: BadRequestException) => Future.successful(BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request")))
+      case Left(_)                      => Future.successful(InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error")))
     }
   }
 
-  private def sendEmailToApiTeam(fullName: String, emailAddress: String, reason: String, question: String) = {
-    Ok(s"Full name: $fullName, email: $emailAddress, reasons: $reason, questions: $question")
+  private def collectEmailAddresses(apiDetail: ApiDetail) = {
+    apiDetail.maintainer.contactInfo.flatMap(_.emailAddress)
   }
 
 }

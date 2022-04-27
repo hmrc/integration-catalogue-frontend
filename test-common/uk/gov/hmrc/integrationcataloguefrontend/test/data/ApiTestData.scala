@@ -298,17 +298,30 @@ trait ApiTestData {
     "I need more information, like schemas or examples"
   ).mkString("|")
 
+  val apiEmails = Seq("api.platform.email1@example.com", "api.platform.email2@example.com")
+  val senderName= "Joe Bloggs"
+  val senderEmail= "joe.bloggs@example.com"
+  val specificQuestion = "How do I publish my API to the catalogue?"
+  val apiTitle = "Self Assessment"
+
   val emailParams = Map(
-    "senderName" -> "Joe Bloggs",
-    "senderEmail" -> "joe.bloggs@testuser.com",
+    "senderName" -> senderName,
+    "senderEmail" -> senderEmail,
     "contactReasons" -> contactReasons,
-    "specificQuestion" -> "How do I publish my API to the catalogue?",
-    "apiTitle" -> "Self Assessment"
+    "specificQuestion" -> specificQuestion,
+    "apiTitle" -> apiTitle,
+    "apiEmail" -> apiEmails.mkString(";")
   )
 
-  val emailRequest = EmailRequest(
-    to = Seq("apiteam@platform.com"),
+  val emailApiPlatformRequest = EmailRequest(
+    to = apiEmails,
     templateId = "platformContact",
+    parameters = emailParams
+  )
+
+  val emailConfirmationToSenderRequest = EmailRequest(
+    to = apiEmails,
+    templateId = "platformContactConfirmation",
     parameters = emailParams
   )
 }

@@ -32,12 +32,22 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
 
   private lazy val url = s"${appConfig.emailServiceUrl}"
 
-  def send(emailRequest: EmailRequest)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  def sendEmailToPlatform(apiEmails: Seq[String], emailParams: Map[String, String])(implicit hc: HeaderCarrier): Future[Boolean] = {
+    sendEmail(apiEmails, emailTemplate = "platformContact", emailParams)
+  }
+
+  def sendConfirmationEmailToSender(senderEmail: String, emailParams: Map[String, String])(implicit hc: HeaderCarrier): Future[Boolean] = {
+    sendEmail(Seq(senderEmail), emailTemplate = "platformContactConfirmation", emailParams)
+  }
+
+  private def sendEmail(recipients: Seq[String], emailTemplate: String, emailParams: Map[String, String])(implicit hc: HeaderCarrier): Future[Boolean] = {
+    val emailRequest: EmailRequest = EmailRequest(recipients, emailTemplate, emailParams)
+
     http.POST[EmailRequest, HttpResponse](url = s"$url/hmrc/email", body = emailRequest)
       .map(_.status match {
         case ACCEPTED => true
-        case _        => logger.error("Sending email is failed and it not queued for sending.")
-                         false
+        case _        => logger.error("Sending email has failed and it not queued for sending.")
+          false
       }).recover {
         case NonFatal(e) => {
           logger.error(e.getMessage)

@@ -64,14 +64,10 @@ object EmailRequest {
     case JsBoolean(b) => JsSuccess(b)
     case jsValue => JsError(s"Unknown type: $jsValue")
   }
-//  implicit val reads: Reads[Any] = Json.reads
 
   private implicit val writesAny: Writes[Any] = Writes {
     case n: Int => JsNumber(n)
     case s: String => JsString(s)
     case l: List[String] => Json.toJson(l)
   }
-//  implicit val writes: Writes[Any] = Json.writes
-
-
 }

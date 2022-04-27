@@ -42,13 +42,16 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
     reset(mockHttpClient)
   }
 
-  trait SetUp {
+  override def afterEach(): Unit = {
+    super.afterEach()
+    reset(mockHttpClient)
+  }
 
-    val headerCarrierCaptor: Captor[HeaderCarrier] = ArgCaptor[HeaderCarrier]
+  trait SetUp {
     val connector = new EmailConnector(mockHttpClient, mockAppConfig)
     val sendEmailUrl = s"/hmrc/email"
 
-    def httpCallToSendEmailWillFailWithStatus(status: Int): ScalaOngoingStubbing[Future[HttpResponse]] = {
+    def httpCallToSendEmailWithStatus(emailRequest: EmailRequest, status: Int): ScalaOngoingStubbing[Future[HttpResponse]] = {
       when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
         wts = any[Writes[EmailRequest]],
         rds = any[HttpReads[HttpResponse]],
@@ -58,7 +61,7 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
         .thenReturn(Future.successful(HttpResponse(status, "")))
     }
 
-    def httpCallToSendEmailWillThrowException(throwable: Throwable): ScalaOngoingStubbing[Future[HttpResponse]] = {
+    def httpCallToSendEmailWillThrowException(emailRequest: EmailRequest, throwable: Throwable): ScalaOngoingStubbing[Future[HttpResponse]] = {
       when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
         wts = any[Writes[EmailRequest]],
         rds = any[HttpReads[HttpResponse]],
@@ -69,52 +72,52 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
     }
   }
 
-  "send" should {
+  "sendEmailToPlatform" should {
 
     "succeed with accepted and return true" in new SetUp {
-      httpCallToSendEmailWillFailWithStatus(ACCEPTED)
+      httpCallToSendEmailWithStatus(emailApiPlatformRequest, ACCEPTED)
 
-      val result: Boolean = await(connector.send(emailRequest))
+      val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
       result shouldBe true
     }
 
     "fail with bad request and return false" in new SetUp {
-      httpCallToSendEmailWillFailWithStatus(BAD_REQUEST)
+      httpCallToSendEmailWithStatus(emailApiPlatformRequest, BAD_REQUEST)
 
-      val result: Boolean = await(connector.send(emailRequest))
+      val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
       result shouldBe false
     }
 
     "fail with internal server error and return false" in new SetUp {
-      httpCallToSendEmailWillFailWithStatus(INTERNAL_SERVER_ERROR)
+      httpCallToSendEmailWithStatus(emailApiPlatformRequest, INTERNAL_SERVER_ERROR)
 
-      val result: Boolean = await(connector.send(emailRequest))
+      val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
       result shouldBe false
     }
 
     "handle internal server error exception" in new SetUp {
-      httpCallToSendEmailWillThrowException(new InternalServerException("some error"))
+      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, new InternalServerException("some error"))
 
-      val result: Boolean = await(connector.send(emailRequest))
+      val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
       result shouldBe false
     }
 
     "handle timeout exception" in new SetUp {
-      httpCallToSendEmailWillThrowException(new TimeoutException())
+      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, new TimeoutException())
 
-      val result: Boolean = await(connector.send(emailRequest))
+      val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
       result shouldBe false
     }
 
     "handle connect exception" in new SetUp {
-      httpCallToSendEmailWillThrowException(new ConnectException())
+      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, new ConnectException())
 
-      val result: Boolean = await(connector.send(emailRequest))
+      val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
       result shouldBe false
     }
