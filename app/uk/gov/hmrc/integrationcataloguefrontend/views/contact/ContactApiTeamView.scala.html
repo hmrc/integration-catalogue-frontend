@@ -77,15 +77,18 @@
                         Select all that apply.
                     </div>
                     <div class="govuk-checkboxes">
-                    @for(reason <- List(
-                        "I want to know if I can reuse this API",
-                        "I am trying to decide if this API is suitable for me",
-                        "I need more information, like schemas or examples").zipWithIndex) {
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="reason-@reason._2" type="checkbox" name="reasons[]" value="@reason._1">
-                            <label class="govuk-label govuk-checkboxes__label govuk-!-padding-top-0" id="reason-label-@reason._2" for="reason-@reason._2">@reason._1</label>
+                            <input class="govuk-checkboxes__input" id="reason-1" type="checkbox" name="reasonOne" value="I want to know if I can reuse this API">
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-padding-top-0" id="reason-label-1" for="reason-1">I want to know if I can reuse this API</label>
                         </div>
-                    }
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="reason-2" type="checkbox" name="reasonTwo" value="I am trying to decide if this API is suitable for me">
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-padding-top-0" id="reason-label-2" for="reason-2">I am trying to decide if this API is suitable for me</label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="reason-3" type="checkbox" name="reasonThree" value="I need more information, like schemas or examples">
+                            <label class="govuk-label govuk-checkboxes__label govuk-!-padding-top-0" id="reason-label-3" for="reason-3">I need more information, like schemas or examples</label>
+                        </div>
                     </div>
                 </div>
 

@@ -1,6 +1,6 @@
-package support
+package uk.gov.hmrc.integrationcataloguefrontend.support
 
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.test.Helpers.BAD_REQUEST
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
@@ -12,18 +12,15 @@ trait IntegrationCatalogueConnectorStub {
   def getIntegrationByIdUrl(id: String) = s"/integration-catalogue/integrations/$id"
   def findWithFiltersUrl(searchTerm: String) = s"/integration-catalogue/integrations$searchTerm"
 
-
   def primeIntegrationCatalogueServiceFindWithFilterWithBadRequest(searchTerm: String) = {
 
     stubFor(get(urlEqualTo(findWithFiltersUrl(searchTerm)))
       .willReturn(
         aResponse()
           .withStatus(BAD_REQUEST)
-          .withHeader("Content-Type","application/json")
-      )
-    )
+          .withHeader("Content-Type", "application/json")
+      ))
   }
-
 
   def primeIntegrationCatalogueServiceFindWithFilterReturnsError(searchTerm: String, exceptionCode: Int): StubMapping = {
 
@@ -31,82 +28,72 @@ trait IntegrationCatalogueConnectorStub {
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
-          .withHeader("Content-Type","application/json")
-      )
-    )
+          .withHeader("Content-Type", "application/json")
+      ))
   }
 
-  def primeIntegrationCatalogueServiceFindWithFilterWithBody(status : Int, responseBody : String, searchTerm: String): StubMapping = {
+  def primeIntegrationCatalogueServiceFindWithFilterWithBody(status: Int, responseBody: String, searchTerm: String): StubMapping = {
 
     stubFor(get(urlEqualTo(findWithFiltersUrl(searchTerm)))
       .willReturn(
         aResponse()
           .withStatus(status)
-          .withHeader("Content-Type","application/json")
+          .withHeader("Content-Type", "application/json")
           .withBody(responseBody)
-      )
-    )
+      ))
   }
 
-  def primeIntegrationCatalogueServiceGetByIdReturnsBadRequest( id: IntegrationId) = {
+  def primeIntegrationCatalogueServiceGetByIdReturnsBadRequest(id: IntegrationId) = {
 
     stubFor(get(urlEqualTo(getIntegrationByIdUrl(id.value.toString)))
       .willReturn(
         aResponse()
           .withStatus(BAD_REQUEST)
-          .withHeader("Content-Type","application/json")
-
-      )
-    )
+          .withHeader("Content-Type", "application/json")
+      ))
   }
 
-  def primeIntegrationCatalogueServiceGetByIdWithBody(status : Int, responseBody : String, id: IntegrationId): StubMapping = {
+  def primeIntegrationCatalogueServiceGetByIdWithBody(status: Int, responseBody: String, id: IntegrationId): StubMapping = {
 
     stubFor(get(urlEqualTo(getIntegrationByIdUrl(id.value.toString)))
       .willReturn(
         aResponse()
           .withStatus(status)
-          .withHeader("Content-Type","application/json")
+          .withHeader("Content-Type", "application/json")
           .withBody(responseBody)
-      )
-    )
+      ))
   }
 
-
-  def primeIntegrationCatalogueServiceGetByIdReturnsError( id: IntegrationId, exceptionCode: Int): StubMapping = {
+  def primeIntegrationCatalogueServiceGetByIdReturnsError(id: IntegrationId, exceptionCode: Int): StubMapping = {
 
     stubFor(get(urlEqualTo(getIntegrationByIdUrl(id.value.toString)))
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
-          .withHeader("Content-Type","application/json")
-
-      )
-    )
+          .withHeader("Content-Type", "application/json")
+      ))
   }
 
-  def primeIntegrationCatalogueServiceGetWithBody(status : Int, responseBody : String): StubMapping = {
+  def primeIntegrationCatalogueServiceGetWithBody(status: Int, responseBody: String): StubMapping = {
 
     stubFor(get(urlEqualTo(getApisUrl))
       .willReturn(
         aResponse()
           .withStatus(status)
-          .withHeader("Content-Type","application/json")
+          .withHeader("Content-Type", "application/json")
           .withBody(responseBody)
-      )
-    )
+      ))
   }
 
-  def primeIntegrationCatalogueServiceGetPlatformContactsWithBody(status : Int, responseBody : String): StubMapping = {
+  def primeIntegrationCatalogueServiceGetPlatformContactsWithBody(status: Int, responseBody: String): StubMapping = {
 
     stubFor(get(urlEqualTo(getPlatformContactsUrl))
       .willReturn(
         aResponse()
           .withStatus(status)
-          .withHeader("Content-Type","application/json")
+          .withHeader("Content-Type", "application/json")
           .withBody(responseBody)
-      )
-    )
+      ))
   }
 
   def primeIntegrationCatalogueServiceGetPlatformContactsReturnsError(exceptionCode: Int): StubMapping = {
@@ -115,21 +102,19 @@ trait IntegrationCatalogueConnectorStub {
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
-          .withHeader("Content-Type","application/json")
-      )
-    )
+          .withHeader("Content-Type", "application/json")
+      ))
   }
 
-  def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody(params: String, status : Int, responseBody : String): StubMapping = {
+  def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody(params: String, status: Int, responseBody: String): StubMapping = {
 
     stubFor(get(urlEqualTo(getFileTransferTransportsByPlatformUrl(params)))
       .willReturn(
         aResponse()
           .withStatus(status)
-          .withHeader("Content-Type","application/json")
+          .withHeader("Content-Type", "application/json")
           .withBody(responseBody)
-      )
-    )
+      ))
   }
 
   def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(params: String, exceptionCode: Int): StubMapping = {
@@ -138,8 +123,7 @@ trait IntegrationCatalogueConnectorStub {
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
-          .withHeader("Content-Type","application/json")
-      )
-    )
+          .withHeader("Content-Type", "application/json")
+      ))
   }
 }

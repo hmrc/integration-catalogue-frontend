@@ -36,7 +36,8 @@ trait ApiTestData {
   val coreIfPlatform: PlatformType = PlatformType.CORE_IF
   val apiPlatform: PlatformType = PlatformType.API_PLATFORM
 
-  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), Some("email"))))
+  val apiMaintainerContactInfo: ContactInformation = ContactInformation(Some("APT Maintainer"), Some("api.platform.team@example.com"))
+  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(apiMaintainerContactInfo))
   val apiPlatformMaintainerWithNoContacts: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
   val apiPlatformMaintainerWithOnlyEmail: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(None, Some("email"))))
   val apiPlatformMaintainerWithOnlyName: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), None)))
@@ -292,17 +293,19 @@ trait ApiTestData {
 
   val apiList = List(apiDetail0, apiDetail1, apiDetail2, apiDetail3)
 
-  val contactReasons = List(
+  val contactReasonList = List(
     "I want to know if I can reuse this API",
     "I am trying to decide if this API is suitable for me",
     "I need more information, like schemas or examples"
-  ).mkString("|")
+  )
 
-  val apiEmails = Seq("api.platform.email1@example.com", "api.platform.email2@example.com")
+  val contactReasons = contactReasonList.mkString("|")
+
+  val apiEmails = Seq("api.platform.team@example.com")
   val senderName= "Joe Bloggs"
   val senderEmail= "joe.bloggs@example.com"
   val specificQuestion = "How do I publish my API to the catalogue?"
-  val apiTitle = "Self Assessment"
+  val apiTitle = "Marriage Allowance"
 
   val emailParams = Map(
     "senderName" -> senderName,

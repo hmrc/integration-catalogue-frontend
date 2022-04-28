@@ -1,23 +1,21 @@
-package controllers
+package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.BeforeAndAfterEach
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.test.Helpers._
-import support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
-import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse}
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcataloguefrontend.controllers.ContactApiTeamForm
+import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse, PlatformContactResponse}
+import uk.gov.hmrc.integrationcataloguefrontend.support.{EmailConnectorStub, IntegrationCatalogueConnectorStub, ServerBaseISpec}
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 
 class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
-  with IntegrationCatalogueConnectorStub with ApiTestData with FileTransferTestData {
+  with IntegrationCatalogueConnectorStub with EmailConnectorStub with ApiTestData with FileTransferTestData {
 
 
   protected override def appBuilder: GuiceApplicationBuilder =
@@ -30,6 +28,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         "auditing.consumer.baseUri.port" -> wireMockPort,
         "microservice.services.integration-catalogue.host" -> wireMockHost,
         "microservice.services.integration-catalogue.port" -> wireMockPort,
+        "microservice.services.email.host" -> wireMockHost,
+        "microservice.services.email.port" -> wireMockPort,
         "search.fileTransferTerms" -> Seq("File Transfer", "filetransfer")
       )
 
@@ -39,7 +39,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
   val validHeaders = List(CONTENT_TYPE -> "application/json")
   val validPostHeaders = List(CONTENT_TYPE -> "application/x-www-form-urlencoded")
-  val formData = s"fullName=testFullName;emailAddress=test@example.com;reasons=For test purposes;specificQuestion=How long is a piece of string?;"
+  val formData = s"fullName=testFullName;emailAddress=test@example.com;reasonOne=For test purposes;specificQuestion=How long is a piece of string?;"
 
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
@@ -60,13 +60,13 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
   "ApiController" when {
 
-    "GET /integrations" should {
+    "GET /search" should {
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
           Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
         val result = callGetEndpoint(s"$url/search", List.empty)
-        result.status mustBe OK
 
+        result.status mustBe OK
       }
 
       "respond with 200 and render fileTransferInterruptBox when keyword matches fileTransferSearchTerm" in {
@@ -156,7 +156,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe NOT_FOUND
 
       }
-
     }
 
 
@@ -176,7 +175,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
-      
+
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/incorrect-title", validHeaders)
         result.status mustBe 303
@@ -280,9 +279,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe NOT_FOUND
 
       }
-
     }
-
 
     "GET /integrations/{filetransferId}" should {
       "respond with 200 and render correctly" in {
@@ -343,6 +340,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
+        primeEmailServiceWithStatus(ACCEPTED)
 
         val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
         result.status mustBe OK

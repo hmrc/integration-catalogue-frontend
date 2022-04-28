@@ -19,13 +19,16 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import akka.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.libs.json.Json
+import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.integrationcatalogue.models.IntegrationResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
+import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.WithCSRFAddToken
@@ -46,13 +49,15 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
   private val fakeRequest = FakeRequest()
 
-  private val fakeRequestWithCsrf = FakeRequest("POST", "/")
-    .withCSRFToken
-    .withFormUrlEncodedBody(
-      "fullName" -> "testFullName",
-      "emailAddress" -> "test@example.com",
-    "reasons" -> "For test purposes",
-    "specificQuestion" -> "How long is a piece of string?")
+  private val fakeRequestWithCsrf = fakeRequest
+    .withCSRFToken.withFormUrlEncodedBody(
+      "fullName" -> senderName,
+      "emailAddress" -> senderEmail,
+      "reasonOne" -> contactReasonList.head,
+      "reasonTwo" -> contactReasonList(1),
+      "reasonThree" -> contactReasonList(2),
+      "specificQuestion" -> specificQuestion
+    )
 
   private val env = Environment.simple()
   private val configuration = Configuration.load(env)
@@ -69,12 +74,15 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   private val apiNotFoundErrorTemplate = app.injector.instanceOf[ApiNotFoundErrorTemplate]
   private val contactApiTeamView = app.injector.instanceOf[ContactApiTeamView]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
+  val mockEmailService: EmailService = mock[EmailService]
 
   implicit def materializer: Materializer = app.materializer
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockIntegrationService)
+    reset(mockEmailService)
   }
 
   private val controller = new IntegrationController(
@@ -88,7 +96,8 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     apiTechnicalDetailsViewRedoc,
     errorTemplate,
     apiNotFoundErrorTemplate,
-    contactApiTeamView
+    contactApiTeamView,
+    mockEmailService
   )
 
   "GET /" should {
@@ -325,7 +334,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     }
 
     "return HTML" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
       val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
       contentType(result) shouldBe Some("text/html")
@@ -336,32 +345,51 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   "contactApiTeamAction" should {
 
     "return 200 when api details are found" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail1)))
+      when(mockEmailService
+        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*))
+        .thenReturn(Future.successful(true))
 
-      val result = controller.contactApiTeamAction(apiDetail0.id) (fakeRequest
-        .withCSRFToken.withFormUrlEncodedBody("fullName" -> "testFullName",
-        "emailAddress" -> "test@example.com",
-        "reasons" -> "For test purposes",
-        "specificQuestion" -> "How long is a piece of string?"))
+      val result = controller.contactApiTeamAction(apiDetail1.id)(fakeRequestWithCsrf)
 
       status(result) shouldBe Status.OK
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      verify(mockEmailService)
+        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*)
     }
 
-    "return 500 when api details throw error" in {
+    "return 404 when api details throw not found exception" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
+        .thenReturn(Future.successful(Left(new NotFoundException("Some error"))))
+
+      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
+
+      status(result) shouldBe Status.NOT_FOUND
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      verifyZeroInteractions(mockEmailService)
+    }
+
+    "return 400 when api details throw bad request exception" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
+        .thenReturn(Future.successful(Left(new BadRequestException("Some error"))))
+
+      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
+
+      status(result) shouldBe Status.BAD_REQUEST
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      verifyZeroInteractions(mockEmailService)
+    }
+
+    "return 500 when api details throw internal server exception" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
         .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
 
       val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
 
-//    "return HTML" in {
-//      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-//
-//      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-//      contentType(result) shouldBe Some("text/html")
-//      charset(result) shouldBe Some("utf-8")
-//    }
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      verifyZeroInteractions(mockEmailService)
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-package support
+package uk.gov.hmrc.integrationcataloguefrontend.support
 
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}

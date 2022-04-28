@@ -49,6 +49,6 @@ class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: Execu
       case true => emailConnector.sendConfirmationEmailToSender(senderEmail, emailParams)
       case _ => Future.successful(false)
     }
-
   }
+
 }

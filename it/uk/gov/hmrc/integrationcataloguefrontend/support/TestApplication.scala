@@ -1,5 +1,4 @@
-package support
-
+package uk.gov.hmrc.integrationcataloguefrontend.support
 
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -13,11 +12,10 @@ trait TestApplication {
     new GuiceApplicationBuilder()
       .configure(
         "microservice.services.auth.port" -> wireMockPort,
-        "metrics.enabled"                 -> true,
-        "auditing.enabled"                -> true,
-        "auditing.consumer.baseUri.host"  -> wireMockHost,
-        "auditing.consumer.baseUri.port"  -> wireMockPort
+        "metrics.enabled" -> true,
+        "auditing.enabled" -> true,
+        "auditing.consumer.baseUri.host" -> wireMockHost,
+        "auditing.consumer.baseUri.port" -> wireMockPort
       )
 
 }
-

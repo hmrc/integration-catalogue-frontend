@@ -39,7 +39,6 @@ class ContactApiTeamViewSpec extends CommonViewSpec with ApiTestData {
   "ContactApiTeamPage" should {
 
     "render contact page as expected" in new Setup {
-      val apiParsed: ApiDetail = apiDetail0
       val page: Html = contactApiTeamView.render(ContactApiTeamForm.form, apiDetail0, fakeRequest, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
@@ -54,9 +53,9 @@ class ContactApiTeamViewSpec extends CommonViewSpec with ApiTestData {
       document.getElementById("email-address-hint").text() shouldBe "We need your email address so the team can reply to your message."
       document.getElementById("question-label").text() shouldBe "Why do you need to contact the development team?"
       document.getElementById("question-hint").text() shouldBe "Select all that apply."
-      document.getElementById("reason-label-0").text() shouldBe "I want to know if I can reuse this API"
-      document.getElementById("reason-label-1").text() shouldBe "I am trying to decide if this API is suitable for me"
-      document.getElementById("reason-label-2").text() shouldBe "I need more information, like schemas or examples"
+      document.getElementById("reason-label-1").text() shouldBe "I want to know if I can reuse this API"
+      document.getElementById("reason-label-2").text() shouldBe "I am trying to decide if this API is suitable for me"
+      document.getElementById("reason-label-3").text() shouldBe "I need more information, like schemas or examples"
       document.getElementById("specific-question-label").text() shouldBe "Do you have a specific question?"
       document.getElementById("send-message-button").text() shouldBe "Send message"
     }

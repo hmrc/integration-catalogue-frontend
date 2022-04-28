@@ -50,14 +50,16 @@ object SelectedDataTargetForm {
 
 }
 
-final case class ContactApiTeamForm(fullName: String, emailAddress: String, reasons: Option[Seq[String]], specificQuestion: Option[String])
+final case class ContactApiTeamForm(fullName: String, emailAddress: String, reasonOne: Option[String], reasonTwo: Option[String], reasonThree: Option[String], specificQuestion: Option[String])
 
 object ContactApiTeamForm {
   def form: Form[ContactApiTeamForm] = Form(
     mapping(
       "fullName" -> text.verifying("fullName.error.required", x => x.trim.nonEmpty),
       "emailAddress" -> email,
-      "reasons" -> optional(seq(text)),
+      "reasonOne" -> optional(text),
+      "reasonTwo" -> optional(text),
+      "reasonThree" -> optional(text),
       "specificQuestion" -> optional(text)
     )(ContactApiTeamForm.apply)(ContactApiTeamForm.unapply)
   )

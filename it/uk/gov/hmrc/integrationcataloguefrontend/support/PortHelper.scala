@@ -1,12 +1,9 @@
-package support
-
-import java.net.ServerSocket
+package uk.gov.hmrc.integrationcataloguefrontend.support
 
 import play.api.Logger
 
-
+import java.net.ServerSocket
 import scala.annotation.tailrec
-
 
 object PortHelper {
   val rnd = new scala.util.Random
@@ -19,15 +16,15 @@ object PortHelper {
   @tailrec
   def randomAvailable: Int = {
     range(rnd.nextInt(range length)) match {
-      case 8080 => randomAvailable
-      case 8090 => randomAvailable
+      case 8080   => randomAvailable
+      case 8090   => randomAvailable
       case p: Int => {
         available(p) match {
           case false => {
             logger.debug(s"Port $p is in use, trying another")
             randomAvailable
           }
-          case true => {
+          case true  => {
             logger.debug("Taking port : " + p)
             usedPorts :+ p
             p

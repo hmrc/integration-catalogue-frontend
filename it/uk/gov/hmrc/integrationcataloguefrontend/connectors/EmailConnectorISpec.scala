@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package connectors
+package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, post, stubFor, urlEqualTo}
 import org.scalatest.BeforeAndAfterEach
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
-import support.ServerBaseISpec
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
+import uk.gov.hmrc.integrationcataloguefrontend.support.ServerBaseISpec
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
 class EmailConnectorISpec extends ServerBaseISpec with ApiTestData with BeforeAndAfterEach {

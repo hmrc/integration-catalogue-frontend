@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package connectors
+package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -23,13 +23,13 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.test.Helpers._
-import support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
+import uk.gov.hmrc.integrationcataloguefrontend.support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
 import java.util.UUID

@@ -160,10 +160,10 @@ class IntegrationController @Inject() (
         formData => {
           emailService.send(
             apiDetail.title,
-            collectEmailAddresses(apiDetail),
+            extractEmailAddresses(apiDetail),
             formData.fullName,
             formData.emailAddress,
-            formData.reasons.mkString("|"),
+            extractReasons(formData),
             formData.specificQuestion.getOrElse("")
           ).map {
             case true => Ok(contactApiTeamView(form, apiDetail))
@@ -181,8 +181,13 @@ class IntegrationController @Inject() (
     }
   }
 
-  private def collectEmailAddresses(apiDetail: ApiDetail) = {
+  private def extractEmailAddresses(apiDetail: ApiDetail) = {
     apiDetail.maintainer.contactInfo.flatMap(_.emailAddress)
+  }
+
+  private def extractReasons(formData: ContactApiTeamForm): String = {
+    val reasons: Seq[Option[String]] = List(formData.reasonOne, formData.reasonTwo, formData.reasonThree)
+    reasons.filter(_.nonEmpty).flatten.mkString("|")
   }
 
 }
