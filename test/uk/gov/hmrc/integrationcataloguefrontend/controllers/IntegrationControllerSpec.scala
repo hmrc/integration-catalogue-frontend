@@ -19,8 +19,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import akka.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
@@ -33,7 +31,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.WithCSRFAddToken
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTeamSuccessView, ContactApiTeamView}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
@@ -73,6 +71,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   private val errorTemplate = app.injector.instanceOf[ErrorTemplate]
   private val apiNotFoundErrorTemplate = app.injector.instanceOf[ApiNotFoundErrorTemplate]
   private val contactApiTeamView = app.injector.instanceOf[ContactApiTeamView]
+  private val contactApiTeamSuccessView = app.injector.instanceOf[ContactApiTeamSuccessView]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
   val mockEmailService: EmailService = mock[EmailService]
 
@@ -97,6 +96,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     errorTemplate,
     apiNotFoundErrorTemplate,
     contactApiTeamView,
+    contactApiTeamSuccessView,
     mockEmailService
   )
 

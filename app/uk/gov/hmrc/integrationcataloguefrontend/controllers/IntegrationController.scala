@@ -18,27 +18,22 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import play.api.Logging
 import play.api.data.Form
-import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import uk.gov.hmrc.http.{BadRequestException, NotFoundException}
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail, IntegrationFilter}
 import uk.gov.hmrc.integrationcatalogue.models.common._
-import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail, IntegrationFilter}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTeamSuccessView, ContactApiTeamView}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiTechnicalDetailsView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiTechnicalDetailsViewRedoc
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamView
-
-import scala.concurrent.Future.successful
 
 @Singleton
 class IntegrationController @Inject() (
@@ -53,6 +48,7 @@ class IntegrationController @Inject() (
     errorTemplate: ErrorTemplate,
     apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate,
     contactApiTeamView: ContactApiTeamView,
+    contactApiTeamSuccessView: ContactApiTeamSuccessView,
     emailService: EmailService
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
@@ -166,7 +162,7 @@ class IntegrationController @Inject() (
             extractReasons(formData),
             formData.specificQuestion.getOrElse("")
           ).map {
-            case true => Ok(contactApiTeamView(form, apiDetail))
+            case true => Ok(contactApiTeamSuccessView(apiDetail))
             case _    => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
           }
         }

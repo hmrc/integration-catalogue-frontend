@@ -64,14 +64,15 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and render correctly when backend returns IntegrationResponse" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
           Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
-        val result = callGetEndpoint(s"$url/search", List.empty)
 
+        val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe OK
       }
 
       "respond with 200 and render fileTransferInterruptBox when keyword matches fileTransferSearchTerm" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
                           Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=filetransfer&itemsPerPage=30&integrationType=API")
+
         val result = callGetEndpoint(s"$url/search?keywords=filetransfer", List.empty)
         result.status mustBe OK
 
@@ -82,6 +83,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and do not render fileTransferInterruptBox when keyword does not match any fileTransferSearchTerms" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
                           Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=api&itemsPerPage=30&integrationType=API")
+
         val result = callGetEndpoint(s"$url/search?keywords=api", List.empty)
         result.status mustBe OK
 
@@ -92,6 +94,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       "respond with 500 and render correctly when Not Found returned from backend" in {
         primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_FOUND)
+
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
@@ -99,6 +102,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       "respond with 400 and render correctly when Bad Request returned from backend" in {
         primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", BAD_REQUEST)
+
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe BAD_REQUEST
 
@@ -106,6 +110,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       "respond with 400  when unexpected error from backend" in {
         primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_ACCEPTABLE)
+
         val result = callGetEndpoint(s"$url/search", List.empty)
         result.status mustBe INTERNAL_SERVER_ERROR
 
@@ -118,13 +123,13 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         val result = callGetEndpoint(s"$url/search?keywords=marriage", List.empty)
         result.status mustBe OK
 
-
       }
 
       "respond with 200 and render correctly when platform & search query params provided" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
           Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString,
           "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
+
         val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF&backendsFilter=ETMP", List.empty)
         result.status mustBe OK
 
@@ -133,6 +138,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       "respond with 200 and render correctly when search query params provided but another invalid query paramkey" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
           Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
+
         val result = callGetEndpoint(s"$url/search?keywords=marriage&someUnKnownKey=CORE_IF", List.empty)
         result.status mustBe OK
 
@@ -151,7 +157,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
       "respond with 404 and render errorTemplate Correctly when path invalid" in {
-
         val result = callGetEndpoint(s"$url/unknown-path", List.empty)
         result.status mustBe NOT_FOUND
 
@@ -161,7 +166,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
     "GET /integrations/{apiId}/{encodedTitle}" should {
       "respond with 200 and render correctly when title in url matches integration title when encoded" in {
-
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
@@ -171,11 +175,8 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
       "respond with 303 and render correctly when title in url does not match encoded title from integration" in {
-
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
-
-
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/incorrect-title", validHeaders)
         result.status mustBe 303
@@ -192,7 +193,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
       }
 
       "respond with 400 and non UUID provided in path" in {
-
         val result = callGetEndpoint(s"$url/integrations/NOTAUUID/title-3", List.empty)
         result.status mustBe BAD_REQUEST
 
@@ -220,7 +220,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe NOT_FOUND
 
       }
-
     }
 
     "GET /integrations/:id/:title/technical" should {
@@ -232,7 +231,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe OK
 
       }
-
 
       "respond with 400 and when backend returns returns Bad Request" in {
         primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
@@ -249,7 +247,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe NOT_FOUND
 
       }
-
     }
 
     "GET /integrations/:id/files/oas" should {
@@ -257,12 +254,10 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
-
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
         result.status mustBe OK
 
       }
-
 
       "respond with 400 and when backend returns returns Bad Request" in {
         primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
@@ -286,7 +281,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(fileTransfer1.asInstanceOf[IntegrationDetail]).toString, fileTransfer1.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
-
         val result = callGetEndpoint(s"$url/integrations/${fileTransfer1.id.value.toString}/xx-sas-yyyyydaily-pull", validHeaders)
         result.status mustBe OK
 
@@ -298,7 +292,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe NOT_FOUND
 
       }
-
     }
 
     "GET /integrations/:id/contact" should {
@@ -345,6 +338,11 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
         result.status mustBe OK
 
+        val document: Document = Jsoup.parse(result.body)
+
+        document.getElementById("page-heading").text() mustBe "Contact API catalogue"
+        document.getElementById("message-sent-panel").text() mustBe "Message sent"
+        document.getElementById("paragraph1").text() mustBe s"Message sent to the ${exampleApiDetail.title} team."
       }
 
       "respond with 400 and when backend returns Bad Request" in {

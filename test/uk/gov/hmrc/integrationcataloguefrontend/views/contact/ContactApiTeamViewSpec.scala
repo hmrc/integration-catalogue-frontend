@@ -38,7 +38,7 @@ class ContactApiTeamViewSpec extends CommonViewSpec with ApiTestData {
 
   "ContactApiTeamPage" should {
 
-    "render contact page as expected" in new Setup {
+    "render as expected" in new Setup {
       val page: Html = contactApiTeamView.render(ContactApiTeamForm.form, apiDetail0, fakeRequest, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
