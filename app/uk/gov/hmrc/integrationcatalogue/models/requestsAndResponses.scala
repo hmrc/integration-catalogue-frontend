@@ -55,19 +55,3 @@ case class EmailRequest(
     force: Boolean = false,
     eventUrl: Option[String] = None,
     onSendUrl: Option[String] = None)
-
-object EmailRequest {
-  private implicit val readsAny: Reads[Any] = Reads {
-    case JsArray(a) =>  JsSuccess(a)
-    case JsString(s) => JsSuccess(s)
-    case JsNumber(n) => JsSuccess(n)
-    case JsBoolean(b) => JsSuccess(b)
-    case jsValue => JsError(s"Unknown type: $jsValue")
-  }
-
-  private implicit val writesAny: Writes[Any] = Writes {
-    case n: Int => JsNumber(n)
-    case s: String => JsString(s)
-    case l: List[String] => Json.toJson(l)
-  }
-}

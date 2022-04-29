@@ -46,16 +46,20 @@ import scala.concurrent.Future
 class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData with FileTransferTestData with WithCSRFAddToken {
 
   private val fakeRequest = FakeRequest()
+  val validContactFormData: Map[String, String] = Map(
+    "fullName" -> senderName,
+    "emailAddress" -> senderEmail,
+    "reasonOne" -> contactReasonList.head,
+    "reasonTwo" -> contactReasonList(1),
+    "reasonThree" -> contactReasonList(2),
+    "specificQuestion" -> specificQuestion
+  )
 
   private val fakeRequestWithCsrf = fakeRequest
-    .withCSRFToken.withFormUrlEncodedBody(
-      "fullName" -> senderName,
-      "emailAddress" -> senderEmail,
-      "reasonOne" -> contactReasonList.head,
-      "reasonTwo" -> contactReasonList(1),
-      "reasonThree" -> contactReasonList(2),
-      "specificQuestion" -> specificQuestion
-    )
+    .withCSRFToken.withFormUrlEncodedBody(validContactFormData.toSeq:_*)
+
+  private val fakeRequestWithInvalidForm = fakeRequest
+    .withCSRFToken.withFormUrlEncodedBody("fullName" -> "")
 
   private val env = Environment.simple()
   private val configuration = Configuration.load(env)
@@ -389,6 +393,30 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
       verifyZeroInteractions(mockEmailService)
+    }
+
+    "return 400 and error template when form data is invalid" in {
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail1)))
+
+      val result = controller.contactApiTeamAction(apiDetail1.id)(fakeRequestWithInvalidForm)
+
+      status(result) shouldBe Status.BAD_REQUEST
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      verifyZeroInteractions(mockEmailService)
+    }
+
+    "return 500 when email service returns false" in {
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail1)))
+      when(mockEmailService
+        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*))
+        .thenReturn(Future.successful(false))
+
+      val result = controller.contactApiTeamAction(apiDetail1.id)(fakeRequestWithCsrf)
+
+      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      verify(mockEmailService)
+        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*)
     }
   }
 
