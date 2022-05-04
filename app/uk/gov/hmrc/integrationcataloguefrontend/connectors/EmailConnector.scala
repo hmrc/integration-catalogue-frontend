@@ -46,7 +46,7 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
     http.POST[EmailRequest, HttpResponse](url = s"$url/hmrc/email", body = emailRequest)
       .map(_.status match {
         case ACCEPTED => true
-        case _        => logger.error("Sending email has failed and it not queued for sending.")
+        case _        => logger.error("Sending email has failed and it is not queued for sending.")
           false
       }).recover {
         case NonFatal(e) => {
