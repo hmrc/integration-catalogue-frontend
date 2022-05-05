@@ -54,4 +54,5 @@ case class EmailRequest(
     parameters: Map[String, String],
     force: Boolean = false,
     eventUrl: Option[String] = None,
-    onSendUrl: Option[String] = None)
+    onSendUrl: Option[String] = None,
+    tags: Map[String, String])

@@ -41,7 +41,15 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
   }
 
   private def sendEmail(recipients: Seq[String], emailTemplate: String, emailParams: Map[String, String])(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val emailRequest: EmailRequest = EmailRequest(recipients, emailTemplate, emailParams)
+
+    val tags: Map[String, String] = Map("regime" -> "API Platform", "template" -> emailTemplate, "service" -> "integration-catalogue-frontend")
+
+    val emailRequest: EmailRequest = EmailRequest(
+      to = recipients,
+      templateId = emailTemplate,
+      parameters = emailParams,
+      tags = tags
+    )
 
     http.POST[EmailRequest, HttpResponse](url = s"$url/hmrc/email", body = emailRequest)
       .map(_.status match {

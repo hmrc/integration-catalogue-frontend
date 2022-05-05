@@ -306,6 +306,12 @@ trait ApiTestData {
   val senderEmail= "joe.bloggs@example.com"
   val specificQuestion = "How do I publish my API to the catalogue?"
   val apiTitle = "Marriage Allowance"
+  val platformContactTemplate = "platformContact"
+  val platformContactConfirmationTemplate = "platformContactConfirmation"
+
+  def getTags(templateId: String): Map[String, String] = {
+    Map("regime" -> "API Platform", "template" -> templateId, "service" -> "integration-catalogue-frontend")
+  }
 
   val emailParams = Map(
     "senderName" -> senderName,
@@ -316,15 +322,15 @@ trait ApiTestData {
     "apiEmail" -> apiEmails.mkString(";")
   )
 
-  val emailApiPlatformRequest = EmailRequest(
-    to = apiEmails,
-    templateId = "platformContact",
-    parameters = emailParams
-  )
+  def getEmailRequestForTemplate(templateId: String) = {
+    EmailRequest(
+      to = apiEmails,
+      templateId = templateId,
+      parameters = emailParams,
+      tags = getTags(templateId)
+    )
+  }
 
-  val emailConfirmationToSenderRequest = EmailRequest(
-    to = apiEmails,
-    templateId = "platformContactConfirmation",
-    parameters = emailParams
-  )
+  val emailApiPlatformRequest = getEmailRequestForTemplate(platformContactTemplate)
+  val emailConfirmationToSenderRequest = getEmailRequestForTemplate(platformContactConfirmationTemplate)
 }
