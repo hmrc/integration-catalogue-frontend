@@ -61,4 +61,6 @@ object JsonFormatters {
 
   implicit val formatFileTransferTransportsForPlatform : Format[FileTransferTransportsForPlatform] = Json.format[FileTransferTransportsForPlatform]
 
+  implicit val formatEmailRequest : Format[EmailRequest] = Json.format[EmailRequest]
+
 }

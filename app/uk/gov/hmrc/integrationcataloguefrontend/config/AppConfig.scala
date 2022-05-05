@@ -27,6 +27,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val itemsPerPage: Int = config.getOptional[Int]("itemsPerPage.default").getOrElse(0)
 
   val integrationCatalogueUrl = servicesConfig.baseUrl("integration-catalogue")
+  val emailServiceUrl = servicesConfig.baseUrl("email")
 
   val serviceName : String = config.getOptional[String]("service-name").getOrElse("API catalogue")
 

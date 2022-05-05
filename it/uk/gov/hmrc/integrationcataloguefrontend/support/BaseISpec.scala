@@ -1,8 +1,7 @@
-package support
-
+package uk.gov.hmrc.integrationcataloguefrontend.support
 
 import akka.stream.Materializer
-
+import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi}
@@ -11,7 +10,6 @@ import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import org.scalatest.matchers.must.Matchers
 
 
 
