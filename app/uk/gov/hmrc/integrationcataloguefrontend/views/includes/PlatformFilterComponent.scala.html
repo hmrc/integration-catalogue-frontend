@@ -26,7 +26,7 @@
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             <h2 class="govuk-fieldset__heading" id="platform-filter-label">
-                Integration platform
+                Platform
             </h2>
         </legend>
         <div class="govuk-checkboxes govuk-checkboxes--small">
@@ -84,6 +84,13 @@
                 <input class="govuk-checkboxes__input" id="transaction-engine" name="platformFilter" type="checkbox" value="TRANSACTION_ENGINE" @if(platformFilter.contains(TRANSACTION_ENGINE)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="transaction-engine" id="transaction-engine-filter-label">
                     Transaction Engine
+                </label>
+            </div>
+
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="cip" name="platformFilter" type="checkbox" value="CIP" @if(platformFilter.contains(CIP)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cip" id="cip-filter-label">
+                    CIP (Customer Insight Platform)
                 </label>
             </div>
 
