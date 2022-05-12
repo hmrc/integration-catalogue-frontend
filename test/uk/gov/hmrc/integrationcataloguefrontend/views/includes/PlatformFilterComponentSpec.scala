@@ -20,9 +20,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CDS_CLASSIC, CMA, CORE_IF, DES, DIGI, DAPI, TRANSACTION_ENGINE}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PlatformFilterComponent
+
 import scala.collection.JavaConverters._
 
 class PlatformFilterComponentSpec extends CommonViewSpec {
@@ -33,7 +33,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
 
 
   "PlatformFilterComponent" should {
-    val platformFilter: List[PlatformType] = List(API_PLATFORM, CMA, CDS_CLASSIC, DIGI, DAPI, DES, CORE_IF, TRANSACTION_ENGINE)
+    val platformFilter: List[PlatformType] = PlatformType.values.toList
 
     def testPlatformFilterLabels(document : Document)={
       document.getElementById("api-platform-filter-label").text() shouldBe "API Platform"
@@ -44,6 +44,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
       document.getElementById("digi-filter-label").text() shouldBe "DIGI"
       document.getElementById("core-if-filter-label").text() shouldBe "Integration Framework (IF)"
       document.getElementById("transaction-engine-filter-label").text() shouldBe "Transaction Engine"
+      document.getElementById("cip-filter-label").text() shouldBe "CIP (Customer Insight Platform)"
     }
 
     def testPlatformFilter(document: Document, isChecked: Boolean) ={
@@ -60,6 +61,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
         testCheckBox(document, "digi", isChecked )
         testCheckBox(document, "core-if", isChecked)
         testCheckBox(document, "transaction-engine", isChecked )
+        testCheckBox(document, "cip", isChecked )
 
     }
 
@@ -75,7 +77,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
 
        val page : Html = platformFilterComponent.render(List.empty)
        val document: Document = Jsoup.parse(page.body)
-      document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
+      document.getElementById("platform-filter-label").text() shouldBe "Platform"
 
       //test filter labels
       testPlatformFilter(document, isChecked = false)
@@ -87,7 +89,7 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
       val page : Html = platformFilterComponent.render(platformFilter)
       val document: Document = Jsoup.parse(page.body)
 
-      document.getElementById("platform-filter-label").text() shouldBe "Integration platform"
+      document.getElementById("platform-filter-label").text() shouldBe "Platform"
 
       //test filter labels
       testPlatformFilter(document, isChecked = true)
