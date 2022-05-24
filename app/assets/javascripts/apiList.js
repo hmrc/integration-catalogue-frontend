@@ -24,7 +24,7 @@ export class ApiList {
 }
 function  loadData(searchTerm, backends, platforms) {
     console.log("loadData -  searchTerm:" + searchTerm)
-    if(searchTerm.length < 2 && backends.length===0 && platforms.length===0) {
+    if(searchTerm.length < 2  && platforms.length===0) {
         drawNoResults()
     } else {
         getApis(searchTerm, backends, platforms, function () {
