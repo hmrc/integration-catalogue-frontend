@@ -42,7 +42,6 @@ case class IntegrationFilter(
     searchText: List[String] = List.empty,
     platforms: List[PlatformType] = List.empty,
     backendsFilter: List[String] = List.empty,
-    backends: List[String] = List.empty,
     itemsPerPage: Option[Int] = None,
     currentPage: Option[Int] = None)
 

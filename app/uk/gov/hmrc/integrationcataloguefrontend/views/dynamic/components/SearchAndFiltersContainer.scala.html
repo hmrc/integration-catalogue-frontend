@@ -1,0 +1,40 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PlatformFilterComponent
+@import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.BackendsFilterComponent
+
+@this(platformFilterComponent: PlatformFilterComponent, backendsFilterComponent: BackendsFilterComponent)
+
+@()
+
+
+  <div>
+   <div class="govuk-filter-search-container">
+    <label class="govuk-visually-hidden" for="intCatSearch" id="filter-label">Search by typing a API name</label>
+    <input class="govuk-input govuk-int-search-input search-placeholder" id="intCatSearch" name="keywords" type="text" placeholder="Search APIs" spellcheck="false" aria-autocomplete="both" autocomplete="off" aria-describedby="IntCatSearchHint" value="">
+    <div class="govuk-int-search-button-container search-button-height" aria-hidden="true">
+     <button id="intCatSearchButton" class="govuk-int-search-button" type="submit">Search</button>
+    </div>
+    <span class="govuk-visually-hidden" id="IntCatSearchHint">Filter by API name. There is no auto complete.</span>
+   </div>
+   <br />
+    <!-- Filter 2 -->
+   @backendsFilterComponent(List.empty)
+   @platformFilterComponent(List.empty)
+  </div>
+
+

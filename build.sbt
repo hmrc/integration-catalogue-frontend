@@ -1,5 +1,7 @@
+
+import SbtWebpack.autoImport.WebpackKeys
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import bloop.integrations.sbt.BloopDefaults
 
 val appName = "integration-catalogue-frontend"
@@ -7,7 +9,7 @@ val appName = "integration-catalogue-frontend"
 val silencerVersion = "1.7.6"
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtWebpack)
   .settings(
     majorVersion                     := 0,
     scalaVersion                     := "2.12.15",
@@ -30,12 +32,14 @@ lazy val microservice = Project(appName, file("."))
     )
     // ***************
   )
-  .settings(publishingSettings, 
+  .settings(publishingSettings,
    scoverageSettings)
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(inConfig(IntegrationTest)(BloopDefaults.configSettings))
   .settings(
+    WebpackKeys.webpack / WebpackKeys.outputFileName := "javascripts/apiList.min.js",
+    WebpackKeys.webpack / WebpackKeys.entries := Seq("assets:javascripts/apiList.js"),
     Defaults.itSettings,
     IntegrationTest / Keys.fork := false,
     IntegrationTest / parallelExecution := false,
