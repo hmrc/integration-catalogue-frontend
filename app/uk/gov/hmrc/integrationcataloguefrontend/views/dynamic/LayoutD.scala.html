@@ -39,7 +39,7 @@ apiDetail: Option[IntegrationDetail] = None,
 bodyEndBlock: Option[Html] = None
 )(contentBlock: Html)(implicit messages: Messages, appConfig: AppConfig)
 @scripts = {
-    @customJavaScript.map {x => <script src='@controllers.routes.Assets.versioned(s"javascripts/$x")'></script> }
+    @customJavaScript.map {x => <script  type="module"  src='@controllers.routes.Assets.versioned(s"javascripts/$x")'></script> }
     <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
     <script>window.GOVUKFrontend.initAll();</script>
     <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>

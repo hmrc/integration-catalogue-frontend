@@ -34,7 +34,7 @@ class QuickSearchController @Inject()(
     appConfig: AppConfig,
     dynamicListView: DynamicListView,
     integrationService: IntegrationService,
-    mcc: MessagesControllerComponents,
+    mcc: MessagesControllerComponents
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with Logging
@@ -61,11 +61,12 @@ class QuickSearchController @Inject()(
     val filter = IntegrationFilter(List(searchValue), platformFilter, backendsFilter, Some(itemsPerPageCalc), Some(currentPageCalc))
     integrationService.findWithFilters(filter, Some(itemsPerPageCalc), Some(currentPageCalc))
       .map{
-        case Right(integrations) => val mappedSummaries =
-          integrations.results
-          .filter( _.isInstanceOf[ApiDetail])
+        case Right(integrations) => {
+          val mappedSummaries = integrations.results
+            .filter(_.isInstanceOf[ApiDetail])
             .map(x => ApiDetailSummary.fromApiDetail(x.asInstanceOf[ApiDetail]))
           Ok(Json.toJson(mappedSummaries))
+        }
         case _ => InternalServerError("")
 
 

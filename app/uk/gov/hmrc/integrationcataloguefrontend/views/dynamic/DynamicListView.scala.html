@@ -21,11 +21,11 @@
 
 
 
-@layout(pageTitle = Some(s"Search results - ${appConfig.serviceName}"),  customJavaScript = Some("apiList.min.js")) {
+@layout(pageTitle = Some(s"Search results - ${appConfig.serviceName}"),  customJavaScript = Some("apiList.js")) {
 
 
 
-        <div id="api-container"></div>
+        <div id="api-container" aria-live="polite"></div>
 
        
 
