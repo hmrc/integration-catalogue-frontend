@@ -57,6 +57,8 @@ object JsonFormatters {
 
   implicit val formatIntegrationResponse : Format[IntegrationResponse] = Json.format[IntegrationResponse]
 
+  implicit val formatApiDetailSummary: Format[ApiDetailSummary] = Json.format[ApiDetailSummary]
+
   implicit val formatPlatformContactResponse : Format[PlatformContactResponse] = Json.format[PlatformContactResponse]
 
   implicit val formatFileTransferTransportsForPlatform : Format[FileTransferTransportsForPlatform] = Json.format[FileTransferTransportsForPlatform]

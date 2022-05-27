@@ -65,6 +65,7 @@ class IntegrationCatalogueConnector @Inject()(http: HttpClient, appConfig: AppCo
     val searchTerms = integrationFilter.searchText.filter(_.nonEmpty).map(x => ("searchTerm", x))
     val platformsFilters = integrationFilter.platforms.map((x: PlatformType) => ("platformFilter", x.toString))
     val backendsFilters = integrationFilter.backendsFilter.filter(_.nonEmpty).map(x => ("backendsFilter", x))
+    backendsFilters.map(x => logger.error(s"******* ${x.toString()}"))
     val itemsPerPageParam = itemsPerPage.map((x: Int) => List(("itemsPerPage", x.toString))).getOrElse(List.empty)
     val currentPageParam = currentPage.map((x: Int) => List(("currentPage", x.toString))).getOrElse(List.empty)
      val integrationTypeFilter = List(("integrationType", IntegrationType.API.entryName))

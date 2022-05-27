@@ -28,7 +28,7 @@
                 HoD
             </h2>
         </legend>
-        <div class="govuk-checkboxes govuk-checkboxes--small">
+        <div class="govuk-checkboxes govuk-checkboxes--small" id="backend-items">
             @for(item <- Backends.filters) {
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="backend-filter-@item.displayName" name="backendsFilter" type="checkbox" value="@item.name" @if(backendsFilter.contains(item.name)){ checked }>
