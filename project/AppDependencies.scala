@@ -7,8 +7,8 @@ object AppDependencies {
   lazy val scalaCheckVersion = "1.14.0"
   lazy val enumeratumVersion = "1.6.3"
   lazy val jacksonVersion = "2.11.1"
-  lazy val bootstrapVersion = "5.21.0"
-  lazy val playFrontendVersion = "3.7.0-play-28"
+  lazy val bootstrapVersion = "5.24.0"
+  lazy val playFrontendVersion = "3.20.0-play-28"
 
 
   val compile = Seq(
