@@ -32,4 +32,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val serviceName : String = config.getOptional[String]("service-name").getOrElse("API catalogue")
 
   val fileTransferSearchTerms : Seq[String] = config.getOptional[Seq[String]]("search.fileTransferTerms").getOrElse(Seq.empty)
+
+  val disableHodFilter: Boolean = config.getOptional[Boolean]("filter.hods.disabled").getOrElse(false)
 }
