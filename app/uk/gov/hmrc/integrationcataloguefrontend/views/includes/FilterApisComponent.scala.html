@@ -18,7 +18,7 @@
 
 @this(platformFilterComponent: PlatformFilterComponent, backendsFilterComponent: BackendsFilterComponent)
 
-@(apiNameSearch: String,  platformFilter: List[PlatformType], backendsFilter: List[String])
+@(apiNameSearch: String,  platformFilter: List[PlatformType], backendsFilter: List[String])(implicit appConfig: AppConfig)
 
 <form class="govuk-int-search" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" method="get">
     <div>
@@ -32,7 +32,9 @@
         </div>
         <br />
         <!-- Filter 2 -->
-        @backendsFilterComponent(backendsFilter)
+        @if(!appConfig.disableHodFilter) {
+            @backendsFilterComponent(backendsFilter)
+        }
         @platformFilterComponent(platformFilter)
         <button class="govuk-button" name="api-filter-button" role="button" data-module="govuk-button" value="filter">
             Filter

@@ -74,7 +74,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-      val page: Html = filterApisComponent.render("", List.empty, List.empty)
+      val page: Html = filterApisComponent.render("", List.empty, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("intCatSearch").attr("placeholder") shouldBe "Search APIs"
       document.getElementById("intCatSearchButton").text() shouldBe "Search"
@@ -88,7 +88,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty)
+      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("platform-filter-label").text() shouldBe "Platform"
@@ -96,6 +96,26 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
       //test filter labels
       testPlatformFilter(document, isChecked = true)
+    }
+
+    "not render the backend filter when disableHodFilter is true " in new Setup {
+
+      when(appConfig.disableHodFilter).thenReturn(true)
+
+      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+
+      Option(document.getElementById("backend-filter-label")).isDefined shouldBe false
+    }
+
+    "render the backend filter when disableHodFilter is false " in new Setup {
+
+      when(appConfig.disableHodFilter).thenReturn(false)
+
+      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+
+      Option(document.getElementById("backend-filter-label")).isDefined shouldBe true
     }
   }
 }
