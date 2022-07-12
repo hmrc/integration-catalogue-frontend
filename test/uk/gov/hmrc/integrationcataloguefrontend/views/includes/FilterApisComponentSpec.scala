@@ -98,24 +98,24 @@ class FilterApisComponentSpec extends CommonViewSpec {
       testPlatformFilter(document, isChecked = true)
     }
 
-    "not render the backend filter when disableHodFilter is true " in new Setup {
+    "render the backend filter when Hods Filter is enabled " in new Setup {
 
-      when(appConfig.disableHodFilter).thenReturn(true)
-
-      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
-      val document: Document = Jsoup.parse(page.body)
-
-      Option(document.getElementById("backend-filter-label")).isDefined shouldBe false
-    }
-
-    "render the backend filter when disableHodFilter is false " in new Setup {
-
-      when(appConfig.disableHodFilter).thenReturn(false)
+      when(appConfig.enableHodsFilter).thenReturn(true)
 
       val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       Option(document.getElementById("backend-filter-label")).isDefined shouldBe true
+    }
+
+    "not render the backend filter when Hods filter is not enabled " in new Setup {
+
+      when(appConfig.enableHodsFilter).thenReturn(false)
+
+      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+
+      Option(document.getElementById("backend-filter-label")).isDefined shouldBe false
     }
   }
 }
