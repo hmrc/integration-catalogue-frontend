@@ -32,7 +32,7 @@
         </div>
         <br />
         <!-- Filter 2 -->
-        @if(!appConfig.disableHodFilter) {
+        @if(appConfig.enableHodsFilter) {
             @backendsFilterComponent(backendsFilter)
         }
         @platformFilterComponent(platformFilter)
