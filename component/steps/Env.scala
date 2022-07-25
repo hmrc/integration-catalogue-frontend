@@ -163,19 +163,8 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Appl
       GuiceApplicationBuilder()
         .configure(
           Map(
-            "dateOfAdminMfaMandate" -> "2001-01-01",
-            "microservice.services.third-party-developer.port" -> 11111,
-            "microservice.services.third-party-application-production.port" -> 11111,
-            "microservice.services.third-party-application-sandbox.port" -> 11111,
-            "microservice.services.api-definition.port" -> 11111,
-            "microservice.services.api-documentation-frontend.port" -> 11111,
-            "microservice.services.third-party-developer-frontend.port" -> 9685,
-            "microservice.services.hmrc-deskpro.port" -> 11111,
-            "microservice.services.api-subscription-fields-production.port" -> 11111,
-            "microservice.services.api-subscription-fields-sandbox.port" -> 11111,
-            "microservice.services.api-platform-microservice.port" -> 11111,
-            "microservice.services.push-pull-notifications-api-production.port" -> 11111,
-            "microservice.services.push-pull-notifications-api-sandbox.port" -> 11111
+            "enable" -> "2001-01-01",
+            "microservice.services.integration-catalogue.port" -> 11111
           )
         )
         .in(Mode.Prod)

@@ -18,12 +18,11 @@ package stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers
+import play.api.Logging
 import play.api.http.Status._
 import play.api.libs.json.Writes
-import uk.gov.hmrc.apiplatform.modules.common.services.ApplicationLogger
-import uk.gov.hmrc.thirdpartydeveloperfrontend.connectors.EncryptedJson
 
-object Stubs extends ApplicationLogger {
+object Stubs extends Logging {
 
   def setupRequest(path: String, status: Int, response: String) = {
     logger.info(s"Stubbing $path with $response")
@@ -59,28 +58,6 @@ object Stubs extends ApplicationLogger {
         .willReturn(aResponse().withStatus(status))
     )
 
-  def setupEncryptedPostRequest[T](path: String, data: T, status: Int, response: String)(
-      implicit writes: Writes[T],
-      encryptedJson: EncryptedJson
-  ) =
-    stubFor(
-      post(urlPathEqualTo(path))
-        .withRequestBody(equalToJson(encryptedJson.toSecretRequestJson(data).toString()))
-        .willReturn(aResponse().withStatus(status).withBody(response))
-    )
-}
-
-object DeskproStub extends Matchers {
-  val deskproPath: String = "/deskpro/ticket"
-  val deskproFeedbackPath: String = "/deskpro/feedback"
-
-  def setupTicketCreation(status: Int = OK) = {
-    Stubs.setupPostRequest(deskproPath, status)
-  }
-
-  def verifyTicketCreationWithSubject(subject: String) = {
-    verify(1, postRequestedFor(urlPathEqualTo(deskproPath)).withRequestBody(containing(s""""subject":"$subject"""")))
-  }
 }
 
 object AuditStub extends Matchers {

@@ -46,35 +46,7 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
   implicit val webDriver: WebDriver = Env.driver
 
   val pages: Map[String, WebPage] = Map(
-    "Registration" -> RegistrationPage,
-    "View all applications" -> ManageApplicationPage,
-    "Add an application to the sandbox empty nest" -> AddApplicationEmptyPage,
-    "Enter Access Code" -> Login2svEnterAccessCodePage,
-    "No Applications" -> NoApplicationsPage,
-    "Add application success" -> AddApplicationSuccessPage,
-    "Sign in" -> SignInPage.default,
-    "Email confirmation" -> EmailConfirmationPage,
-    "Email preferences" -> EmailPreferencesSummaryPage,
-    "Resend confirmation" -> ResendConfirmationPage,
-    "Manage profile" -> ManageProfilePage,
-    "Change profile details" -> ChangeProfileDetailsPage,
-    "Edit password success" -> ChangePasswordSuccessPage,
-    "Logout survey" -> SignOutSurveyPage,
-    "Account deletion confirmation" -> AccountDeletionConfirmationPage,
-    "Account deletion request submitted" -> AccountDeletionRequestSubmittedPage,
-    "Recommend Mfa" -> RecommendMfaPage,
-    "Recommend Mfa Skip Acknowledge" -> RecommendMfaSkipAcknowledgePage,
-    "Protect Account" -> ProtectAccountPage,
-    "Setup 2SV QR" -> Setup2svQrPage,
-    "Setup 2SV Enter Access Code" -> Setup2svEnterAccessCodePage,
-    "Protect Account Complete" -> ProtectAccountCompletePage,
-    "Account protection" -> AccountProtectionPage,
-    "Confirm 2SV removal"-> MfaConfirmRemovalPage,
-    "2SV remove"-> MfaRemovePage,
-    "2SV removal complete" -> MfaRemovalCompletePage,
-    "Password reset confirmation" -> PasswordResetConfirmationPage,
-    "You have reset your password" -> YouHaveResetYourPasswordPage,
-    "Reset password link no longer valid" -> ResetPasswordLinkNoLongerValidPage
+    "Dynamic Search" -> DynamicSearchPage
   )
 
   Given( """^I navigate to the '(.*)' page$""") { (pageName: String) =>

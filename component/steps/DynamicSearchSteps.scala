@@ -23,6 +23,7 @@ import matchers.CustomMatchers
 import org.openqa.selenium.{WebDriver, Cookie => SCookie}
 import org.scalatest.matchers.should.Matchers
 import pages._
+import pages.CurrentPage
 import play.api.http.Status._
 import play.api.libs.json.Json
 import stubs.{DeveloperStub, DeviceSessionStub, MfaStub, Stubs}
@@ -40,100 +41,14 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   implicit val webDriver: WebDriver = Env.driver
 
   When("""^I enter a search keyword then click the search button$""") {
+
     IntegrationCatalogueStub.findWithFilter()
-    Login2svEnterAccessCodePage.enterAccessCode(accessCode)
-    Login2svEnterAccessCodePage.clickContinue()
   }
 
-  Then("""My device session is set$""") { () =>
-    val deviceSessionCookie = webDriver.manage().getCookieNamed(deviceCookieName)
-    deviceSessionCookie should not be null
-  }
-  Then("""My device session is not set$""") { () =>
-    val authCookie = webDriver.manage().getCookieNamed(deviceCookieName)
-    authCookie shouldBe null
+  Then("""No API results are shown""") { () =>
+    val bodyText = CurrentPage.bodyText
+    val document : Document = ???
   }
 
-  Given("""^I am mfaEnabled without a DeviceSession and registered with$"""){  data: DataTable =>
-    val result: Map[String,String] = data.asScalaRawMaps[String, String].head
-  
-    val password = result("Password")
-
-      val developer = buildDeveloper(emailAddress = result("Email address"),
-        firstName = result("First name"),
-        lastName = result("Last name"),
-        mfaDetails = List(authenticatorAppMfaDetails))
-
-   setUpDeveloperStub(developer, password, None, false)
-
-  }
-
-  Given("""^I am mfaEnabled and with a DeviceSession registered with$""") {  data: DataTable =>
-    val result: Map[String,String] = data.asScalaRawMaps[String, String].head
-  
-    val password = result("Password")
-
-      val developer = buildDeveloper(emailAddress = result("Email address"),
-          firstName = result("First name"),
-          lastName = result("Last name"),
-          mfaDetails = List(authenticatorAppMfaDetails))
-
-   setUpDeveloperStub(developer, password, Some(DeviceSessionStub.staticDeviceSessionId), true)
-
-  }
-
-  def setUpDeveloperStub(developer: Developer, password: String, deviceSessionId: Option[UUID], deviceSessionFound: Boolean) ={
-    webDriver.manage().deleteAllCookies()
-    val mfaEnabled = MfaDetailHelper.isAuthAppMfaVerified(developer.mfaDetails)
-    val accessCodeRequired = deviceSessionId.isEmpty && mfaEnabled
-
-    TestContext.sessionIdForloggedInDeveloper =
-      setupLoggedOrPartLoggedInDeveloper(developer, password, LoggedInState.LOGGED_IN, deviceSessionId , accessCodeRequired, mfaEnabled)
-
-    deviceSessionId match {
-      case Some(_) => deviceSessionId.map(_ =>
-        if(deviceSessionFound) DeviceSessionStub.getDeviceSessionForSessionIdAndUserId(staticUserId)
-        else DeviceSessionStub.getDeviceSessionNotFound(staticUserId))
-      case None => ()
-    }
-
-    MfaStub.stubRemoveMfa(developer)
-    MfaStub.setupVerificationOfAccessCode(developer)
-    DeveloperStub.findUserIdByEmailAddress(developer.email)
-    Stubs.setupPostRequest("/check-password", NO_CONTENT)
-
-    TestContext.developer = developer
-
-    DeveloperStub.setupGettingDeveloperByEmail(developer)
-
-    DeveloperStub.setUpGetCombinedApis()
-  }
-
-  Given("""^I already have a device cookie$""") {
-    val cookie = new SCookie(deviceCookieName, deviceCookieValue)
-    webDriver.manage().addCookie(cookie)
-  }
-
-  def setupLoggedOrPartLoggedInDeveloper(developer: Developer, password: String, loggedInState: LoggedInState, deviceSessionId: Option[UUID], accessCodeRequired: Boolean, mfaEnabled : Boolean): String = {
-    val sessionId = "sessionId_" + loggedInState.toString
-
-    val session = Session(sessionId, developer, loggedInState)
-
-    val actualSession = if(accessCodeRequired) None else Some(session)
-
-    val nonce = if(accessCodeRequired) Some(MfaStub.nonce) else None
-
-    val userAuthenticationResponse = UserAuthenticationResponse(accessCodeRequired, mfaEnabled, session = actualSession, nonce = nonce)
-
-    val mfaMandatedForUser = loggedInState == LoggedInState.PART_LOGGED_IN_ENABLING_MFA
-
-    Stubs.setupEncryptedPostRequest("/authenticate", LoginRequest(developer.email, password, mfaMandatedForUser, deviceSessionId),
-      OK, Json.toJson(userAuthenticationResponse).toString())
-
-    Stubs.setupRequest(s"/session/$sessionId", OK, Json.toJson(session).toString())
-    Stubs.setupDeleteRequest(s"/session/$sessionId", OK)
-
-    sessionId
-  }
 
 }

@@ -45,9 +45,12 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
     (managedClasspath in IntegrationTest) += (packageBin in Assets).value
   )
+  .configs(ComponentTest)
+  .settings(inConfig(ComponentTest)(Defaults.testSettings): _*)
+  .settings(inConfig(ComponentTest)(BloopDefaults.configSettings))
   .settings(
     ComponentTest / testOptions := Seq(Tests.Argument(TestFrameworks.ScalaTest, "-eT")),
-    ComponentTest / unmanagedSourceDirectories ++= Seq(baseDirectory.value / "component", baseDirectory.value / "test-utils"),
+    ComponentTest / unmanagedSourceDirectories ++= Seq(baseDirectory.value / "component", baseDirectory.value / "test-common"),
     ComponentTest / unmanagedResourceDirectories += baseDirectory.value / "test",
     ComponentTest / unmanagedResourceDirectories += baseDirectory.value / "target" / "web" / "public" / "test",
     ComponentTest / testOptions += Tests.Setup(() => System.setProperty("javascript.enabled", "true")),
