@@ -75,6 +75,7 @@ function drawNoResults(){
 
     let secondPara =  document.createElement("p")
     secondPara.classList.add("govuk-body", "govuk-apis-list-description")
+    secondPara.setAttribute("id", "check-all-words")
     secondPara.innerHTML= "Check all words are spelt correctly or try a different keyword."
 
     let lastPara = document.createElement("p")
@@ -127,6 +128,7 @@ function drawApiRow(listNode, api, rowNumber) {
     apiLink.setAttribute("href", "/api-catalogue/integrations/"+api.id+"/"+api.encodedTitle)
     apiLink.classList.add("govuk-link", "link-nounderline")
     apiLink.innerHTML = api.title
+
 
     apiH2.appendChild(apiLink)
 

@@ -46,17 +46,14 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
   implicit val webDriver: WebDriver = Env.driver
 
   val pages: Map[String, WebPage] = Map(
-    "Dynamic Search" -> DynamicSearchPage
+    "Dynamic Search with no results" -> DynamicSearchPageNoSearchResults,
+    "Dynamic Search with results" -> DynamicSearchPageWithSearchResults
   )
 
   Given( """^I navigate to the '(.*)' page$""") { (pageName: String) =>
     withClue(s"Fail to load page: $pageName")(goOn(pages(pageName)))
   }
 
-  Given( """^I enter all the fields:$""") { (data: DataTable) =>
-    val form: Map[String,String] = data.asScalaRawMaps[String,String].head
-    Form.populate(form)
-  }
 
   Then( """^I am on the '(.*)' page$""") { (pageName: String) =>
     eventually {

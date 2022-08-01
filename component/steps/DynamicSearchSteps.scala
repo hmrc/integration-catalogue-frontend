@@ -16,39 +16,68 @@
 
 package steps
 
-import io.cucumber.datatable.DataTable
-import io.cucumber.scala.Implicits._
+import component.stubs.IntegrationCatalogueStub
 import io.cucumber.scala.{EN, ScalaDsl}
 import matchers.CustomMatchers
-import org.openqa.selenium.{WebDriver, Cookie => SCookie}
+import org.openqa.selenium.interactions.Actions
+import org.openqa.selenium.{By, WebDriver}
 import org.scalatest.matchers.should.Matchers
+import pages.DynamicSearchPageWithSearchResults.{integrationResponse, noResultsIntegrationResponse}
 import pages._
-import pages.CurrentPage
-import play.api.http.Status._
-import play.api.libs.json.Json
-import stubs.{DeveloperStub, DeviceSessionStub, MfaStub, Stubs}
-import uk.gov.hmrc.apiplatform.modules.mfa.utils.MfaDetailHelper
-import uk.gov.hmrc.thirdpartydeveloperfrontend.domain.models.connectors.{LoginRequest, UserAuthenticationResponse}
-import uk.gov.hmrc.thirdpartydeveloperfrontend.domain.models.developers.{Developer, LoggedInState, Session}
-import utils.ComponentTestDeveloperBuilder
+import play.api.http.Status.OK
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
-import java.util.UUID
+import java.lang.Thread.sleep
 
 
 class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationSugar with PageSugar
-  with CustomMatchers {
+  with CustomMatchers with ApiTestData{
 
   implicit val webDriver: WebDriver = Env.driver
 
-  When("""^I enter a search keyword then click the search button$""") {
-
-    IntegrationCatalogueStub.findWithFilter()
+  Then("""^Element with id '(.*)' exists with text '(.*)'"""){ (id: String, text: String) =>
+    val element = webDriver.findElement(By.id(id))
+      element.isDisplayed shouldBe true
+    element.getText shouldBe text
   }
 
-  Then("""No API results are shown""") { () =>
-    val bodyText = CurrentPage.bodyText
-    val document : Document = ???
+  When("""^I enter no search keyword then click the search button$""") { () =>
+    IntegrationCatalogueStub.findWithFilter("", noResultsIntegrationResponse, OK)
   }
 
+  Then("""^No Search results are shown"""){ () =>
+    val pageHeading = webDriver.findElement(By.id("page-heading"))
+    pageHeading.getText shouldBe DynamicSearchPageNoSearchResults.pageTitle
+  }
+
+  When("""^I enter the search keyword '(.*)' then click the search button$""") { keyword: String =>
+
+    IntegrationCatalogueStub.findWithFilter(keyword, integrationResponse, OK)
+
+    val inputBox = webDriver.findElement(By.id("intCatSearch"))
+    inputBox.sendKeys(keyword)
+
+    val link = webDriver.findElement(By.id("intCatSearchButton"))
+    val actions = new Actions(webDriver)
+    actions.moveToElement(link)
+    actions.click()
+    actions.perform()
+  }
+
+  Then("""^All Api results are shown"""){ () =>
+
+    //get api list and do whatever check we need to do
+    // probably get id api-name-0 & check against api name
+    sleep(1000)
+    webDriver.findElement(By.id("details-href-0")).getText shouldBe apiDetail2.title
+    webDriver.findElement(By.id("details-href-1")).getText shouldBe apiDetail3.title
+    webDriver.findElement(By.id("details-href-2")).getText shouldBe exampleApiDetail.title
+    webDriver.findElement(By.id("details-href-3")).getText shouldBe exampleApiDetail2.title
+
+    webDriver.findElement(By.id("api-description-0")).getText shouldBe apiDetail2.description
+    webDriver.findElement(By.id("api-description-1")).getText shouldBe apiDetail3.description
+    webDriver.findElement(By.id("api-description-2")).getText shouldBe exampleApiDetail.description
+    webDriver.findElement(By.id("api-description-3")).getText shouldBe exampleApiDetail2.description
+  }
 
 }

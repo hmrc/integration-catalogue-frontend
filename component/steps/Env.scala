@@ -20,30 +20,28 @@ package steps
 import java.io.{File, IOException}
 import java.net.URL
 import java.util.Calendar
-
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
 import io.cucumber.scala.{EN, ScalaDsl, Scenario}
 import org.apache.commons.io.FileUtils
 import org.openqa.selenium.{Dimension, OutputType, TakesScreenshot, WebDriver}
-import org.openqa.selenium.chrome.{ChromeOptions, ChromeDriver}
+import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
 import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
-import play.api.Mode
+import play.api.{Logging, Mode}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.TestServer
 import play.core.server.ServerConfig
 import stubs.AuditStub
-import uk.gov.hmrc.thirdpartydeveloperfrontend.utils.BrowserStackCaps
+import component.utils.BrowserStackCaps
 
 import scala.util.{Properties, Try}
-import uk.gov.hmrc.apiplatform.modules.common.services.ApplicationLogger
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.scalatest.matchers.should.Matchers
 
 
-trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with ApplicationLogger {
+trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logging {
   var passedTestCount: Int = 0
   var failedTestCount: Int = 0
   // please do not change this port as it is used for acceptance tests
@@ -66,6 +64,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Appl
     }
   }
   val driver: WebDriver = createWebDriver
+
 
   lazy val createWebDriver: WebDriver = {
     Properties.propOrElse("test_driver", "chrome") match {
@@ -92,8 +91,10 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Appl
     options.addArguments("--headless")
     options.addArguments("--proxy-server='direct://'")
     options.addArguments("--proxy-bypass-list=*")
+    options.addArguments("--enable-javascript")
 
     val driver = new ChromeDriver(options)
+
     driver.manage().window().setSize(windowSize)
     driver
   }
@@ -163,8 +164,9 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Appl
       GuiceApplicationBuilder()
         .configure(
           Map(
-            "enable" -> "2001-01-01",
-            "microservice.services.integration-catalogue.port" -> 11111
+            "filter.hods.enable" -> false,
+            "microservice.services.integration-catalogue.port" -> 11111,
+            "microservice.services.integration-catalogue-frontend.port" -> 11112
           )
         )
         .in(Mode.Prod)

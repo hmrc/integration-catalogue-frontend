@@ -17,20 +17,25 @@
 package pages
 
 import org.openqa.selenium.By
-import uk.gov.hmrc.apiplatform.modules.common.services.ApplicationLogger
-import steps.{Env, Form}
+import play.api.Logging
+import steps.Env
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
-trait CommonPage extends WebPage with ApplicationLogger with ApiTestData {
+trait CommonPage extends WebPage with Logging with ApiTestData {
   val pageTitle: String
 
-  override def isCurrentPage: Boolean = find(tagName("title")).fold(false)({
+  override def isCurrentPage: Boolean = find(tagName("h1")).fold(false)({
     e =>
       logger.info(s"Page Title: ${e.text}")
       e.text == pageTitle
   })
 
-
   def hasElementWithId(id: String) = webDriver.findElements(By.id(id)).size() == 1
+
+  def clickSearchButton() = {
+    click on id("intCatSearchButton")
+  }
 }
 
 object CurrentPage extends CommonPage {
@@ -38,25 +43,40 @@ object CurrentPage extends CommonPage {
   override val pageTitle = ""
 }
 
-case object DynamicSearchPage extends CommonPage {
-  def clickSearchButton() = {
-    click on id("intCatSearchButton")
-  }
+case object DynamicSearchPageNoSearchResults extends CommonPage {
 
-  override val pageTitle: String = "Search results - API catalogue"
+  override val pageTitle: String = "Your search did not match any APIs."
   override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
 
-  def getThreeApis = IntegrationResponse(
-    count = 3,
-    results = List(
-      apiDetail0,
-      apiDetail1,
-      apiDetail2
-    )
+}
 
+case object DynamicSearchPageWithSearchResults extends CommonPage {
+
+  override val pageTitle: String = "Your search did not match any APIs."
+  override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
+
+  val publisherRefAndApiMap = Map(
+    "API1001" -> apiDetail2,
+    "API1002" -> apiDetail3,
+    "API1003" -> exampleApiDetail,
+    "API1004" -> exampleApiDetail2,
   )
 
+  val apis = List(apiDetail2, apiDetail3, exampleApiDetail, exampleApiDetail2)
+  val integrationResponse = IntegrationResponse(
+    count = apis.size,
+    results = apis
+  )
 
+  val noResultsIntegrationResponse = IntegrationResponse(count = 0, results = List.empty[ApiDetail])
+
+  def getIntegrationResponseByPublisherRef(publisherReference: String) = {
+    val apis: List[ApiDetail] = publisherRefAndApiMap.get(publisherReference).fold(List.empty[ApiDetail])(List(_))
+    IntegrationResponse(
+      count = apis.size,
+      results = apis
+    )
+  }
 
 }
 

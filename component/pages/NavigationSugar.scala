@@ -16,8 +16,6 @@
 
 package pages
 
-import uk.gov.hmrc.thirdpartydeveloperfrontend.config.ApplicationConfig
-import uk.gov.hmrc.thirdpartydeveloperfrontend.connectors.{EncryptedJson, LocalCrypto, PayloadEncryption}
 import org.openqa.selenium.WebDriver
 import org.scalatest.concurrent.Eventually
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -25,6 +23,7 @@ import org.scalatestplus.selenium.WebBrowser
 import org.scalatest.Assertions
 import org.mockito.MockitoSugar
 import org.scalatest.matchers.should.Matchers
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
 trait NavigationSugar extends WebBrowser with Eventually with Assertions with Matchers with MockitoSugar {
   private val mockAppConfig = mock[AppConfig]
