@@ -35,23 +35,24 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   implicit val webDriver: WebDriver = Env.driver
 
+  When("""^I enter no search keyword then click the search button$""") { () =>
+    IntegrationCatalogueStub.findWithFilter("", noResultsIntegrationResponse, OK)
+
+    val link = webDriver.findElement(By.id("intCatSearchButton"))
+    val actions = new Actions(webDriver)
+    actions.moveToElement(link)
+    actions.click()
+    actions.perform()
+  }
+
   Then("""^Element with id '(.*)' exists with text '(.*)'"""){ (id: String, text: String) =>
+
     val element = webDriver.findElement(By.id(id))
-      element.isDisplayed shouldBe true
+    element.isDisplayed shouldBe true
     element.getText shouldBe text
   }
 
-  When("""^I enter no search keyword then click the search button$""") { () =>
-    IntegrationCatalogueStub.findWithFilter("", noResultsIntegrationResponse, OK)
-  }
-
-  Then("""^No Search results are shown"""){ () =>
-    val pageHeading = webDriver.findElement(By.id("page-heading"))
-    pageHeading.getText shouldBe DynamicSearchPageNoSearchResults.pageTitle
-  }
-
   When("""^I enter the search keyword '(.*)' then click the search button$""") { keyword: String =>
-
     IntegrationCatalogueStub.findWithFilter(keyword, integrationResponse, OK)
 
     val inputBox = webDriver.findElement(By.id("intCatSearch"))
@@ -66,9 +67,6 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   Then("""^All Api results are shown"""){ () =>
 
-    //get api list and do whatever check we need to do
-    // probably get id api-name-0 & check against api name
-    sleep(1000)
     webDriver.findElement(By.id("details-href-0")).getText shouldBe apiDetail2.title
     webDriver.findElement(By.id("details-href-1")).getText shouldBe apiDetail3.title
     webDriver.findElement(By.id("details-href-2")).getText shouldBe exampleApiDetail.title
@@ -79,5 +77,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     webDriver.findElement(By.id("api-description-2")).getText shouldBe exampleApiDetail.description
     webDriver.findElement(By.id("api-description-3")).getText shouldBe exampleApiDetail2.description
   }
+
+
 
 }

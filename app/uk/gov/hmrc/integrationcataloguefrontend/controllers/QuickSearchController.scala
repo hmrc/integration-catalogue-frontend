@@ -52,13 +52,12 @@ class QuickSearchController @Inject()(
     }
 
   def quickSearch(searchValue: String,
-                  backendsFilter: List[String] = List.empty,
                   platformFilter: List[PlatformType] = List.empty,
                   itemsPerPage: Option[Int] = None,
                   currentPage: Option[Int] = None) = Action.async{ implicit request =>
     val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
     val currentPageCalc = currentPage.getOrElse(1)
-    val filter = IntegrationFilter(List(searchValue), platformFilter, backendsFilter, Some(itemsPerPageCalc), Some(currentPageCalc))
+    val filter = IntegrationFilter(List(searchValue), platformFilter, List.empty, Some(itemsPerPageCalc), Some(currentPageCalc))
     integrationService.findWithFilters(filter, Some(itemsPerPageCalc), Some(currentPageCalc))
       .map{
         case Right(integrations) => {

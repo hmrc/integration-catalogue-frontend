@@ -40,6 +40,8 @@ import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.scalatest.matchers.should.Matchers
 
+import java.util.concurrent.TimeUnit
+
 
 trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logging {
   var passedTestCount: Int = 0
@@ -67,13 +69,15 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
 
 
   lazy val createWebDriver: WebDriver = {
-    Properties.propOrElse("test_driver", "chrome") match {
+  val driver =  Properties.propOrElse("test_driver", "chrome") match {
       case "chrome" => createChromeDriver()
       case "firefox" => createFirefoxDriver()
       case "remote-chrome" => createRemoteChromeDriver()
       case "remote-firefox" => createRemoteFirefoxDriver()
       case other => throw new IllegalArgumentException(s"target browser $other not recognised")
     }
+    driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
+    driver
   }
 
   def createRemoteChromeDriver() = {

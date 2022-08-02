@@ -52,7 +52,8 @@ case object DynamicSearchPageNoSearchResults extends CommonPage {
 
 case object DynamicSearchPageWithSearchResults extends CommonPage {
 
-  override val pageTitle: String = "Your search did not match any APIs."
+  // pageTitle is populated dynamically
+  override val pageTitle: String = ""
   override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
 
   val publisherRefAndApiMap = Map(
