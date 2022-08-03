@@ -19,8 +19,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
+import uk.gov.hmrc.integrationcatalogue.models.ApiDetailSummary.fromIntegrationDetail
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, ApiDetailSummary, IntegrationFilter, JsonFormatters}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, ApiDetailSummary, DynamicPageResponse, IntegrationFilter, JsonFormatters}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.dynamic.DynamicListView
@@ -30,7 +31,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class QuickSearchController @Inject()(
+class QuickSearchController @Inject() (
     appConfig: AppConfig,
     dynamicListView: DynamicListView,
     integrationService: IntegrationService,
@@ -42,31 +43,48 @@ class QuickSearchController @Inject()(
 
   implicit val config: AppConfig = appConfig
 
-
   implicit val apisummaryFormat = JsonFormatters.formatApiDetailSummary
   implicit val responseFormat = JsonFormatters.formatIntegrationResponse
 
-
   def dynamicList() = Action.async { implicit request =>
-      Future.successful(Ok(dynamicListView()))
-    }
-
-  def quickSearch(searchValue: String,
-                  backendsFilter: List[String] = List.empty,
-                  platformFilter: List[PlatformType] = List.empty,
-                  maybeCurrentPage: Option[Int] = None) = Action.async{ implicit request =>
-    val itemsPerPageCalc = appConfig.itemsPerPage
-    val currentPage = maybeCurrentPage.getOrElse(1)
-    val filter = IntegrationFilter(List(searchValue), platformFilter, backendsFilter, Option(itemsPerPageCalc), Option(currentPage))
-    integrationService.findWithFilters(filter, Option(itemsPerPageCalc), Option(currentPage))
-      .map{
-        case Right(integrations) => Ok(Json.toJson(integrations))
-        case _ => InternalServerError("")
-
-
-      }
-
+    Future.successful(Ok(dynamicListView()))
   }
 
+  //itemsPerPage: Int,
+  //                               currentPage: Int,
+  //                               numberOfPages: Int,
+  //                               fromResults: Int,
+  //                               toResults: Int,
+  //                               totalCount: Int,
+  //                               firstPageLink: Int,
+  //                               lastPageLink: Int,
+  //                               results: List[IntegrationDetail])
+  def quickSearch(searchValue: String,
+                  platformFilter: List[PlatformType] = List.empty,
+                  currentPage: Option[Int] = None) =
+    Action.async { implicit request =>
+      val itemsPerPage = appConfig.itemsPerPage
+      val currentPageCalc = currentPage.getOrElse(1)
+      val filter = IntegrationFilter(List(searchValue), platformFilter, List.empty, Option(itemsPerPage), Option(currentPageCalc))
+      integrationService.findWithFilters(filter, Option(itemsPerPage), Option(currentPageCalc))
+        .map {
+          case Right(response) =>
+            Ok(Json.toJson(DynamicPageResponse(
+              itemsPerPage,
+              currentPageCalc,
+              calculateNumberOfPages(response.count, itemsPerPage),
+              calculateFromResults(currentPageCalc, itemsPerPage),
+              calculateToResults(currentPageCalc, itemsPerPage),
+              response.count,
+              calculateFirstPageLink(currentPageCalc),
+              calculateLastPageLink(currentPageCalc, calculateNumberOfPages(response.count, itemsPerPage)),
+              response.results.flatMap(fromIntegrationDetail)
+            )))
+
+          case _               => InternalServerError("")
+
+        }
+
+    }
 
 }

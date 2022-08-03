@@ -20,6 +20,7 @@ import org.joda.time.DateTime
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper
+import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper
 
 sealed trait IntegrationDetail {
   def id: IntegrationId
@@ -194,19 +195,24 @@ case class ApiDetailSummary(
                       title: String,
                       description: String,
                       platform: PlatformType,
-                      shortDescription: Option[String],
                       apiStatus: ApiStatus){
 }
 
 object ApiDetailSummary {
+
+  def fromIntegrationDetail(detail: IntegrationDetail) = {
+    detail match {
+      case apiDetail: ApiDetail => Option(fromApiDetail(apiDetail))
+      case _ => None
+    }
+  }
   def fromApiDetail(apiDetail: ApiDetail) = {
     ApiDetailSummary(apiDetail.id,
       apiDetail.publisherReference,
       UrlEncodingHelper.encodeTitle(apiDetail.title),
       apiDetail.title,
-      apiDetail.description,
+      ViewHelper.handleDescription(apiDetail),
       apiDetail.platform,
-      apiDetail.shortDescription,
       apiDetail.apiStatus)
   }
 }

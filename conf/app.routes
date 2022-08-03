@@ -28,4 +28,4 @@ GET        /filetransfer/wizard/connections           uk.gov.hmrc.integrationcat
 
 
 GET        /dynamic-search                            uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.dynamicList()
-GET        /quicksearch                               uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.quickSearch(searchValue: String, backendsFilter: List[String], platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType])
+GET        /quicksearch                               uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.quickSearch(searchValue: String, platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], currentPage: Option[Int])

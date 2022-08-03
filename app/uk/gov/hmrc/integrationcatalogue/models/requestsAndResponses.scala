@@ -22,7 +22,20 @@ import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, Platf
 
 case class IntegrationResponse(count: Int, pagedCount: Option[Int] = None, results: List[IntegrationDetail])
 
+case class DynamicPageResponse(itemsPerPage: Int,
+                               currentPage: Int,
+                               numberOfPages: Int,
+                               fromResults: Int,
+                               toResults: Int,
+                               totalCount: Int,
+                               firstPageLink: Int,
+                               lastPageLink: Int,
+                               results: List[ApiDetailSummary])
 
+object DynamicPageResponse {
+  implicit  val detailFormat = Json.format[ApiDetailSummary]
+  implicit val format = Json.format[DynamicPageResponse]
+}
 // Integration Catalogue File Transfer Sepcification
 // Json look like this :point_down:
 case class FileTransferPublishRequest(
