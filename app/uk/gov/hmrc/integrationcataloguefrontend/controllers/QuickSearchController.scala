@@ -52,20 +52,15 @@ class QuickSearchController @Inject()(
     }
 
   def quickSearch(searchValue: String,
+                  backendsFilter: List[String] = List.empty,
                   platformFilter: List[PlatformType] = List.empty,
-                  itemsPerPage: Option[Int] = None,
-                  currentPage: Option[Int] = None) = Action.async{ implicit request =>
-    val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
-    val currentPageCalc = currentPage.getOrElse(1)
-    val filter = IntegrationFilter(List(searchValue), platformFilter, List.empty, Some(itemsPerPageCalc), Some(currentPageCalc))
-    integrationService.findWithFilters(filter, Some(itemsPerPageCalc), Some(currentPageCalc))
+                  maybeCurrentPage: Option[Int] = None) = Action.async{ implicit request =>
+    val itemsPerPageCalc = appConfig.itemsPerPage
+    val currentPage = maybeCurrentPage.getOrElse(1)
+    val filter = IntegrationFilter(List(searchValue), platformFilter, backendsFilter, Option(itemsPerPageCalc), Option(currentPage))
+    integrationService.findWithFilters(filter, Option(itemsPerPageCalc), Option(currentPage))
       .map{
-        case Right(integrations) => {
-          val mappedSummaries = integrations.results
-            .filter(_.isInstanceOf[ApiDetail])
-            .map(x => ApiDetailSummary.fromApiDetail(x.asInstanceOf[ApiDetail]))
-          Ok(Json.toJson(mappedSummaries))
-        }
+        case Right(integrations) => Ok(Json.toJson(integrations))
         case _ => InternalServerError("")
 
 

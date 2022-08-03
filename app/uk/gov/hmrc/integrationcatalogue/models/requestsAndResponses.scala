@@ -22,7 +22,8 @@ import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, Platf
 
 case class IntegrationResponse(count: Int, pagedCount: Option[Int] = None, results: List[IntegrationDetail])
 
-// Integration Catalogule File Transfer Sepcification
+
+// Integration Catalogue File Transfer Sepcification
 // Json look like this :point_down:
 case class FileTransferPublishRequest(
     fileTransferSpecificationVersion: String, // Set to 0.1?

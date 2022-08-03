@@ -16,13 +16,13 @@ export class ApiList {
 
     init() {
         setUpOnClicks()
-        loadData("", [], []);
+        loadData("", [], [], 1);
     }
 
 
 
 }
-function  loadData(searchTerm, backends, platforms) {
+function  loadData(searchTerm, backends, platforms, page) {
     console.log("loadData -  searchTerm:" + searchTerm)
     if(searchTerm.length < 2  && platforms.length===0) {
         drawNoResults()
@@ -31,20 +31,10 @@ function  loadData(searchTerm, backends, platforms) {
             drawResults(this.responseText);
         });
     }
-    //
-    // URL = "/quicksearch?searchValue=api"
-    //
-    // var xmlhttp = new XMLHttpRequest();
-    // xmlhttp.onreadystatechange = this.callbackFunction(xmlhttp);
-    // xmlhttp.open("GET", URL, false);
-    //
-    //
-    // alert(xmlhttp.responseText);
-    // document.getElementById("api-list").innerHTML = xmlhttp.statusText + ":" + xmlhttp.status + "<BR><textarea rows='100' cols='100'>" + xmlhttp.responseText + "</textarea>";
 }
 
 
-function getApis(searchTerm, backEnds, platforms, callback) {
+function getApis(searchTerm, backEnds, platforms, page, callback) {
 
     console.log("getApis - searchTerm:"+searchTerm)
     var url = "/api-catalogue/quicksearch?searchValue="+searchTerm+backEnds+platforms;
@@ -89,14 +79,22 @@ function drawNoResults(){
 }
 
 
-function drawResults(response) {
+function drawResults(response, pageNumber) {
     clearApiList()
-    let apis = JSON.parse(response);
+    let parsedResponse = JSON.parse(response);
+    //count: Int, pagedCount: Option[Int] = None, results
+    console.log("number of pages " + calculateNumberOfPages(parsedResponse.count, 30))
+    console.log("page from value " + calculateFromResults(1,30))
+
+    let apis = parsedResponse.results
+    console.log("count = "+parsedResponse.count)
+    console.log("pageCount = "+parsedResponse.pagedCount)
+    console.log("results size = "+ apis.length)
     if(apis.length>0) {
         const rootNode = document.getElementById('api-container');
 
 
-        buildApiCount(rootNode, apis.length)
+        buildApiCount(rootNode, parsedResponse.count)
 
 
         var apiList = document.createElement("ul")
@@ -147,9 +145,22 @@ function buildApiCount(rootNode, apiCountVal) {
     apiCount.setAttribute("id", "page-heading");
     apiCount.classList.add("govuk-body")
     apiCount.innerHTML = apiCountVal+ " APIs"
-   rootNode.appendChild(apiCount)
+    let apiCount2 = buildElement("h1", "page-heading", "govuk-body", apiCountVal+ " APIs")
+   rootNode.appendChild(apiCount2)
 }
 
+function drawPagingNavigation(itemsPerPage) {
+    let navigationHolder = document.createElement("nav")
+    navigationHolder.setAttribute("id", "pagination-label")
+}
+
+function buildElement(tag, idValue, classes, innerHtml) {
+    let element =  document.createElement(tag)
+    element.setAttribute("id", idValue);
+    element.classList.add(classes)
+    element.innerHTML = innerHtml
+   return element
+}
 
 function buildParams(key, hods){
     let params = ""
@@ -179,7 +190,6 @@ function handleSearchBoxClick(){
         }
     }
 
-
         loadData(searchBox.value, buildParams("backendsFilter", selectedHodRadios), buildParams("platformFilter", selectedPlatformRadios));
         console.log(searchBox.value)
 
@@ -198,6 +208,20 @@ function addOnClickToElement(element){
     }else if(element.attachEvent){
         element.attachEvent('onclick', handleSearchBoxClick());
     }
+}
+
+function calculateNumberOfPages(totalCount, itemsPerPage)  {
+           let x =  (totalCount + itemsPerPage - 1) / itemsPerPage
+    return Math.round(x)
+}
+
+function calculateFromResults(currentPage, itemsPerPage) {
+   if (currentPage > 1) {
+        let x = (itemsPerPage * (currentPage - 1)) + 1
+       return Math.round(x);
+    } else {
+      return 1;
+   }
 }
 
 function setUpOnClicks() {

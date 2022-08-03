@@ -18,8 +18,13 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 trait ListIntegrationsHelper {
 
-  def calculateNumberOfPages(totalCount: Int, itemsPerPage: Int) =
-    (totalCount + itemsPerPage - 1) / itemsPerPage
+  def calculateNumberOfPages(totalCount: Int, itemsPerPage: Int) = {
+    println(s"**** totalCounts : $totalCount")
+    println(s"**** itemsPerPage : $itemsPerPage")
+    var x = (totalCount + itemsPerPage - 1) / itemsPerPage
+    println(s"**** number of pages : "+x)
+    x
+  }
 
   def calculateFromResults(currentPage: Int, itemsPerPage: Int) =
     if (currentPage > 1) (itemsPerPage * (currentPage - 1)) + 1 else 1
