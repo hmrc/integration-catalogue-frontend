@@ -7,31 +7,26 @@ export class ApiList {
 
     }
 
-
-    callbackFunction(xmlhttp) {
-        //alert(xmlhttp.responseXML);
-    }
-
     init() {
         setUpOnClicks()
-        loadData("", [], 1, true);
+        loadData("", "", 1, true);
     }
 
 
 }
 
-function loadData(searchTerm, platforms, page, isInitialLoad) {
+function loadData(searchTerm, platformFilter, page, isInitialLoad) {
     console.log("loadData -  searchTerm:" + searchTerm)
-    if (searchTerm.length < 2 && platforms.length === 0) {
+    if (searchTerm.length < 2 && platformFilter.length === 0) {
         if (isInitialLoad) {
-            getApis("", "", 1, function () {
+            getApis("", "", page, function () {
                 drawResults(this.responseText);
             });
         } else {
             drawNoResults()
         }
     } else {
-        getApis(searchTerm, platforms, page, function () {
+        getApis(searchTerm, platformFilter, page, function () {
             drawResults(this.responseText);
         });
     }
@@ -41,6 +36,7 @@ function loadData(searchTerm, platforms, page, isInitialLoad) {
 function getApis(searchTerm, platforms, page, callback) {
 
     console.log("getApis - searchTerm:" + searchTerm)
+    console.log("getApis - platforms:" + platforms)
     var pageFilter = "&currentPage=" + page
     var url = "/api-catalogue/quicksearch?searchValue=" + searchTerm + platforms + pageFilter;
     console.log(url)
@@ -240,8 +236,9 @@ function handleSearchBoxClick() {
             console.log(platformBoxes[x].value)
         }
     }
-
-    loadData(searchBox.value, buildParams("platformFilter", selectedPlatformRadios), 1);
+    console.log(selectedPlatformRadios)
+    let platformFilter = buildParams("platformFilter", selectedPlatformRadios)
+    loadData(searchBox.value, platformFilter, 1, false);
 
 
 }
@@ -283,20 +280,21 @@ function clearApiList() {
 
 function addOnClickToElement(element) {
     if (element.addEventListener) {
-        element.addEventListener('click', handleSearchBoxClick());
+        element.addEventListener('click', handleSearchBoxClick);
     } else if (element.attachEvent) {
-        element.attachEvent('onclick', handleSearchBoxClick());
+        element.attachEvent('onclick', handleSearchBoxClick);
     }
 }
 
 
 function setUpOnClicks() {
 
-
+console.log("setUpClicks")
     addOnClickToElement(document.getElementById("intCatSearch"))
 
     const platformRadios = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
     for(let i=0;i<platformRadios.length;i++) {
+        console.log("platformItem"+i)
         addOnClickToElement(platformRadios[i])
     }
     addOnClickToElement(document.getElementById("intCatSearchButton"))
