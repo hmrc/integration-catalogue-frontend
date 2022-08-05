@@ -52,6 +52,10 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     element.getText shouldBe text
   }
 
+  When("""^All available apis are available"""){ () =>
+    IntegrationCatalogueStub.findNoFilters(integrationResponse, OK)
+  }
+
   When("""^I enter the search keyword '(.*)' then click the search button$""") { keyword: String =>
     IntegrationCatalogueStub.findWithFilter(keyword, integrationResponse, OK)
 
@@ -72,11 +76,12 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     webDriver.findElement(By.id("details-href-2")).getText shouldBe exampleApiDetail.title
     webDriver.findElement(By.id("details-href-3")).getText shouldBe exampleApiDetail2.title
 
-    webDriver.findElement(By.id("api-description-0")).getText shouldBe apiDetail2.description
-    webDriver.findElement(By.id("api-description-1")).getText shouldBe apiDetail3.description
-    webDriver.findElement(By.id("api-description-2")).getText shouldBe exampleApiDetail.description
-    webDriver.findElement(By.id("api-description-3")).getText shouldBe exampleApiDetail2.description
+    webDriver.findElement(By.id("api-description-0")).getText shouldBe apiDetail2.shortDescription.getOrElse(apiDetail2.description)
+    webDriver.findElement(By.id("api-description-1")).getText shouldBe apiDetail3.shortDescription.getOrElse(apiDetail3.description)
+    webDriver.findElement(By.id("api-description-2")).getText shouldBe exampleApiDetail.shortDescription.getOrElse(exampleApiDetail.description)
+    webDriver.findElement(By.id("api-description-3")).getText shouldBe exampleApiDetail2.shortDescription.getOrElse(exampleApiDetail2.description)
   }
+
 
 
 

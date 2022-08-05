@@ -34,6 +34,7 @@ import play.api.test.TestServer
 import play.core.server.ServerConfig
 import stubs.AuditStub
 import component.utils.BrowserStackCaps
+import io.cucumber.core.backend.Status
 
 import scala.util.{Properties, Try}
 import org.openqa.selenium.firefox.FirefoxOptions
@@ -142,7 +143,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
   After(order = 2) { scenario =>
     if (scenario.isFailed) {
       val srcFile: Array[Byte] = Env.driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.BYTES)
-      val screenShot: String = "./target/screenshots/" + Calendar.getInstance().getTime + ".png"
+      val screenShot: String = s"./target/screenshots/${Calendar.getInstance().getTime}.png"
       try {
         FileUtils.copyFile(Env.driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE), new File(screenShot))
       } catch {
@@ -150,16 +151,16 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
       }
       scenario.attach(srcFile, "image/png", "attachment")
     }
-    if (scenario.getStatus.equals("passed")) {
+    if (scenario.getStatus == Status.PASSED) {
       passedTestCount = passedTestCount + 1
     }
-    else if (scenario.getStatus.equals("failed")) {
+    else if (scenario.getStatus == Status.FAILED) {
       failedTestCount = failedTestCount + 1
     }
     logger.info("\n*******************************************************************************************************")
-    logger.info("Test -->" + scenario.getName + " is ---> " + scenario.getStatus)
-    logger.info("Passed Test Count ------------>" + passedTestCount)
-    logger.info("Failed Test Count ------------>" + failedTestCount)
+    logger.info(s"Test -->${scenario.getName} is ---> ${scenario.getStatus}")
+    logger.info(s"Passed Test Count ------------>$passedTestCount")
+    logger.info(s"Failed Test Count ------------>$failedTestCount")
     logger.info("*******************************************************************************************************\n")
   }
 
@@ -169,6 +170,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
         .configure(
           Map(
             "filter.hods.enable" -> false,
+            "auditing.enabled" -> false,
             "microservice.services.integration-catalogue.port" -> 11111,
             "microservice.services.integration-catalogue-frontend.port" -> 11112
           )
@@ -176,7 +178,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
         .in(Mode.Prod)
         .build()
 
-    val serverConfig = ServerConfig(port = Some(port))
+    val serverConfig = ServerConfig(port = Option(port))
     server = new TestServer(serverConfig, application, None)
     server.start()
   }

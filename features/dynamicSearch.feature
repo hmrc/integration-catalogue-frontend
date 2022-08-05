@@ -2,7 +2,8 @@
 Feature: Dynamic Search Setup
 
   Background:
-    Given I navigate to the 'Dynamic Search with no results' page
+    Given All available apis are available
+    And I navigate to the 'Dynamic Search' page
 
 #   No APIs setup
 #  Scenario: No APIs setup in the backend and click search button with no search keyword

@@ -43,9 +43,9 @@ object CurrentPage extends CommonPage {
   override val pageTitle = ""
 }
 
-case object DynamicSearchPageNoSearchResults extends CommonPage {
+case object DynamicSearchPage extends CommonPage {
 
-  override val pageTitle: String = "Your search did not match any APIs."
+  override val pageTitle: String = "4 APIs"
   override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
 
 }

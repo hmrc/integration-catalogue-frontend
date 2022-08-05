@@ -24,5 +24,21 @@ object IntegrationCatalogueStub {
           )
       )
     }
+
+  def findNoFilters(integrationResponse: IntegrationResponse, status: Int = OK) = {
+
+
+    stubFor(
+      get(urlPathEqualTo("/integration-catalogue/integrations"))
+        .withQueryParam("itemsPerPage", equalTo("30"))
+        .withQueryParam("currentPage", equalTo("1"))
+        .withQueryParam("integrationType", equalTo("API"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(Json.toJson(integrationResponse).toString())
+        )
+    )
+  }
 }
 

@@ -46,7 +46,7 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
   implicit val webDriver: WebDriver = Env.driver
 
   val pages: Map[String, WebPage] = Map(
-    "Dynamic Search with no results" -> DynamicSearchPageNoSearchResults,
+    "Dynamic Search" -> DynamicSearchPage,
     "Dynamic Search with results" -> DynamicSearchPageWithSearchResults
   )
 
