@@ -2,16 +2,13 @@
 
 export class ApiList {
 
-
     constructor() {
-
     }
 
     init() {
         setUpOnClicks()
        initialLoad()
     }
-
 
 }
 function initialLoad(){
@@ -73,7 +70,6 @@ function drawNoResults() {
     rootNode.appendChild(header)
     rootNode.appendChild(secondPara)
     rootNode.appendChild(lastPara)
-
 }
 
 
@@ -86,10 +82,7 @@ function drawResults(response) {
     if (apis.length > 0) {
         const rootNode = document.getElementById('api-container');
 
-
-
         buildApiCount(rootNode, parsedResponse.totalCount)
-
 
         var apiList = document.createElement("ul")
         apiList.classList.add("govuk-apis-list")
@@ -152,9 +145,7 @@ function drawPagingNavigation(itemsPerPage,
                 item.appendChild(pageItemLink)
                 navButtons.appendChild(item)
             }
-
         }
-
 
         if (currentPage < numberOfPages) {
             var pageVal = currentPage +1
@@ -166,24 +157,15 @@ function drawPagingNavigation(itemsPerPage,
         }
 
     }
-    let pageResultsText = ' Showing  <b>' + fromResults + '</b> to <b>' + foobar(toResults, totalCount) + '</b> of <b>' + totalCount + '</b> results';
+    let toResultsVal = toResults > totalCount ? totalCount : toResults
+    let pageResultsText = '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Showing  <b>' + fromResults + '</b> to <b>' + toResultsVal + '</b> of <b>' + totalCount + '</b> results';
     let pageResults = buildDomElement("p", "page-results", ["moj-pagination__results"], pageResultsText)
-
 
     nav.appendChild(navLabel)
     nav.appendChild(navButtons)
     nav.appendChild(pageResults)
 
     return nav
-
-}
-
-function foobar(toResults, totalCount) {
-    if (toResults > totalCount) {
-        return totalCount
-    } else {
-        return toResults
-    }
 }
 
 function drawApiRow(listNode, api, rowNumber) {
@@ -229,9 +211,7 @@ function buildParams(key, items) {
 
 function handleSearchBoxClick(ignoreFilterChecks) {
     const searchBox = document.getElementById("intCatSearch")
-
     const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
-
 
     let selectedPlatformRadios = []
 
@@ -244,8 +224,6 @@ function handleSearchBoxClick(ignoreFilterChecks) {
 
     let platformFilter = buildParams("platformFilter", selectedPlatformRadios)
     loadData(searchBox.value, platformFilter, 1, ignoreFilterChecks);
-
-
 }
 
 function clearApiList() {
@@ -257,9 +235,7 @@ function clearApiList() {
 
 function handlePageLinkClick(page, event){
     const searchBox = document.getElementById("intCatSearch")
-
     const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
-
 
     let selectedPlatformRadios = []
 
@@ -271,8 +247,6 @@ function handlePageLinkClick(page, event){
     }
 
     loadData(searchBox.value, buildParams("platformFilter", selectedPlatformRadios), page, true);
-
-
 }
 
 function addOnClickToPageElement(element, page) {
@@ -293,13 +267,10 @@ function addOnClickToElement(element) {
 
 
 function setUpOnClicks() {
-
-console.log("setUpClicks")
     addOnClickToElement(document.getElementById("intCatSearch"))
 
     const platformRadios = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
     for(let i=0;i<platformRadios.length;i++) {
-        console.log("platformItem"+i)
         addOnClickToElement(platformRadios[i])
     }
     addOnClickToElement(document.getElementById("intCatSearchButton"))
