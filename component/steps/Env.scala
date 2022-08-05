@@ -172,7 +172,8 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
             "filter.hods.enable" -> false,
             "auditing.enabled" -> false,
             "microservice.services.integration-catalogue.port" -> 11111,
-            "microservice.services.integration-catalogue-frontend.port" -> 11112
+            "microservice.services.integration-catalogue-frontend.port" -> 11112,
+            "itemsPerPage.default" -> 2
           )
         )
         .in(Mode.Prod)

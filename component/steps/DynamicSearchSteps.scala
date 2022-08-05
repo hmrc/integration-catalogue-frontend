@@ -71,15 +71,17 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   Then("""^All Api results are shown"""){ () =>
 
-    webDriver.findElement(By.id("details-href-0")).getText shouldBe apiDetail2.title
-    webDriver.findElement(By.id("details-href-1")).getText shouldBe apiDetail3.title
-    webDriver.findElement(By.id("details-href-2")).getText shouldBe exampleApiDetail.title
-    webDriver.findElement(By.id("details-href-3")).getText shouldBe exampleApiDetail2.title
+    webDriver.findElement(By.id("details-href-0")).getText shouldBe apiDetail1.title
+    webDriver.findElement(By.id("details-href-1")).getText shouldBe apiDetail2.title
+    webDriver.findElement(By.id("details-href-2")).getText shouldBe apiDetail3.title
+    webDriver.findElement(By.id("details-href-3")).getText shouldBe exampleApiDetail.title
+    webDriver.findElement(By.id("details-href-4")).getText shouldBe exampleApiDetail2.title
 
-    webDriver.findElement(By.id("api-description-0")).getText shouldBe apiDetail2.shortDescription.getOrElse(apiDetail2.description)
-    webDriver.findElement(By.id("api-description-1")).getText shouldBe apiDetail3.shortDescription.getOrElse(apiDetail3.description)
-    webDriver.findElement(By.id("api-description-2")).getText shouldBe exampleApiDetail.shortDescription.getOrElse(exampleApiDetail.description)
-    webDriver.findElement(By.id("api-description-3")).getText shouldBe exampleApiDetail2.shortDescription.getOrElse(exampleApiDetail2.description)
+    webDriver.findElement(By.id("api-description-0")).getText shouldBe apiDetail1.shortDescription.getOrElse(apiDetail1.description)
+    webDriver.findElement(By.id("api-description-1")).getText shouldBe apiDetail2.shortDescription.getOrElse(apiDetail2.description)
+    webDriver.findElement(By.id("api-description-2")).getText shouldBe apiDetail3.shortDescription.getOrElse(apiDetail3.description)
+    webDriver.findElement(By.id("api-description-3")).getText shouldBe exampleApiDetail.shortDescription.getOrElse(exampleApiDetail.description)
+    webDriver.findElement(By.id("api-description-4")).getText shouldBe exampleApiDetail2.shortDescription.getOrElse(exampleApiDetail2.description)
   }
 
 

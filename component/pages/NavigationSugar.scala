@@ -44,7 +44,7 @@ trait NavigationSugar extends WebBrowser with Eventually with Assertions with Ma
     eventually {
       find(tagName("body"))  //.filter(_ => page.isCurrentPage)
     }
-    withClue(s"Currently in page: $currentUrl " + find(tagName("h1")).map(_.text).fold(" - ")(h1 => s", with title '$h1' - ")) {
+    withClue(s"Currently in page: $currentUrl ") {
       assert(page.isCurrentPage, s"Page was not loaded: ${page.url}")
     }
   }

@@ -50,15 +50,7 @@ class QuickSearchController @Inject() (
     Future.successful(Ok(dynamicListView()))
   }
 
-  //itemsPerPage: Int,
-  //                               currentPage: Int,
-  //                               numberOfPages: Int,
-  //                               fromResults: Int,
-  //                               toResults: Int,
-  //                               totalCount: Int,
-  //                               firstPageLink: Int,
-  //                               lastPageLink: Int,
-  //                               results: List[IntegrationDetail])
+
   def quickSearch(searchValue: String,
                   platformFilter: List[PlatformType] = List.empty,
                   currentPage: Option[Int] = None) =

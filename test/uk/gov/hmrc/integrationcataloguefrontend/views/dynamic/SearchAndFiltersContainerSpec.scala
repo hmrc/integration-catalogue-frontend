@@ -86,14 +86,5 @@ class SearchAndFiltersContainerSpec extends CommonViewSpec {
 
     }
 
-
-    "render the backend filter correctly when page renders" in new Setup {
-
-      val page: Html = searchAndFiltersContainer.render
-      val document: Document = Jsoup.parse(page.body)
-
-      Option(document.getElementById("backend-filter-label")).isDefined shouldBe true
-    }
-
   }
 }

@@ -30,7 +30,7 @@ object IntegrationCatalogueStub {
 
     stubFor(
       get(urlPathEqualTo("/integration-catalogue/integrations"))
-        .withQueryParam("itemsPerPage", equalTo("30"))
+        .withQueryParam("itemsPerPage", equalTo("2"))
         .withQueryParam("currentPage", equalTo("1"))
         .withQueryParam("integrationType", equalTo("API"))
         .willReturn(

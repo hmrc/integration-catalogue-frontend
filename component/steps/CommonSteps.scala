@@ -51,6 +51,7 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
   )
 
   Given( """^I navigate to the '(.*)' page$""") { (pageName: String) =>
+    println(s"++++++++++++++ ${webDriver.getPageSource}")
     withClue(s"Fail to load page: $pageName")(goOn(pages(pageName)))
   }
 

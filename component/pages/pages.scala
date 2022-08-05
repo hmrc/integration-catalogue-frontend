@@ -38,14 +38,28 @@ trait CommonPage extends WebPage with Logging with ApiTestData {
   }
 }
 
+trait CommonJsPage extends CommonPage {
+  override def isCurrentPage: Boolean = if(webDriver.getTitle != pageTitle) {
+    logger.error(s"Page Title: ${webDriver.getTitle}, expected $pageTitle")
+    false
+  }else{
+    true
+  }
+  //  find(tagName("page-heading")).fold(false)({
+//    e =>
+//      logger.info(s"Page Title: ${e.text}, expected $pageTitle")
+//      e.text == pageTitle
+//  })
+}
+
 object CurrentPage extends CommonPage {
   override val url: String = ""
   override val pageTitle = ""
 }
 
-case object DynamicSearchPage extends CommonPage {
+case object DynamicSearchPage extends CommonJsPage {
 
-  override val pageTitle: String = "4 APIs"
+  override val pageTitle: String = "Search results - API catalogue"
   override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
 
 }
@@ -57,16 +71,23 @@ case object DynamicSearchPageWithSearchResults extends CommonPage {
   override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
 
   val publisherRefAndApiMap = Map(
+    "marraige-allowance" -> apiDetail1,
     "API1001" -> apiDetail2,
     "API1002" -> apiDetail3,
     "API1003" -> exampleApiDetail,
     "API1004" -> exampleApiDetail2,
+    "API1005" -> apiDetail5,
+    "API1006" -> apiDetail6,
+    "API1007" -> apiDetail7,
+    "API1008" -> apiDetail8,
+    "API1009" -> apiDetail9,
   )
 
-  val apis = List(apiDetail2, apiDetail3, exampleApiDetail, exampleApiDetail2)
+  val allApis = publisherRefAndApiMap.values.toList
+
   val integrationResponse = IntegrationResponse(
-    count = apis.size,
-    results = apis
+    count = allApis.size,
+    results = allApis
   )
 
   val noResultsIntegrationResponse = IntegrationResponse(count = 0, results = List.empty[ApiDetail])
