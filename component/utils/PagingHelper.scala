@@ -14,7 +14,7 @@ trait PagingHelper extends ListIntegrationsHelper {
         .zipWithIndex.toList
         .map(page => (page._2, page._1))
         .toMap
-        .getOrElse(page, List.empty)
+        .getOrElse(page-1, List.empty)
     }
 
 

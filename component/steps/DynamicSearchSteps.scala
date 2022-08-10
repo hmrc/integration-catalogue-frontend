@@ -109,6 +109,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     val results = getPageOfResults(allApis, pageVal.toInt)
 
     for(i <- results.indices){
+      if(pageVal == 5) {println(s"+++++++ results")}
       assertApiRow(i, results(i))
     }
 
@@ -140,14 +141,17 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
         navigationLink("page-next", shouldBeVisible = true)
       }
 
-    }else{
+      navigationPageLinksAreVisible(page, numberOfPages)
+
+    } else {
       navigationLink("page-prev", shouldBeVisible = false)
       navigationLink("page-next", shouldBeVisible = false)
+      elementShouldNotBeDisplayed(s"pagenumber-$page")
     }
 
   }
 
-  def navigationLink(id:String, shouldBeVisible: Boolean)={
+  def navigationLink(id:String, shouldBeVisible: Boolean) = {
     if(shouldBeVisible) {
       elementShouldBeDisplayed(id)
       elementShouldBeDisplayed(s"$id-link")
@@ -157,7 +161,20 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     }
   }
 
-  //"showing x of y Results of z"
+  def navigationPageLinksAreVisible(currentPage: Int = 0, numberOfPages: Int  = 0) = {
+    val lastPage =   calculateLastPageLink(currentPage, numberOfPages)
+    val firstPage = calculateFirstPageLink(currentPage)
+    for (i <- firstPage to lastPage)  {
+
+      if(currentPage === i) {
+        elementShouldBeDisplayed(s"pagenumber-$i")
+        elementShouldNotBeDisplayed(s"pageLink-$i")
+      } else {
+        elementShouldBeDisplayed(s"pagenumber-$i")
+        elementShouldBeDisplayed(s"pageLink-$i")
+      }
+    }
+  }
 
   Then("""^The 'No Results' Content is shown$""") { () =>
     webDriver.findElement(By.id("no-results")).getText shouldBe ""
