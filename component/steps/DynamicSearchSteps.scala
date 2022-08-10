@@ -109,16 +109,29 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     val results = getPageOfResults(allApis, pageVal.toInt)
 
     for(i <- results.indices){
-      println( results(i))
       assertApiRow(i, results(i))
     }
 
   }
 
+  Then("""^Navigation should display Showing '(.*)' to '(.*)' of '(.*)' results$""") { (from:String, to:String, total: String) =>
+    webDriver.findElement(By.id("page-results")).getText.trim shouldBe s"Showing $from to $to of $total results"
+  }
+
+  //"showing x of y Results of z"
+
   Then("""^The 'No Results' Content is shown$""") { () =>
     webDriver.findElement(By.id("no-results")).getText shouldBe ""
     webDriver.findElement(By.id("govuk-body")).getText shouldBe "Your search did not match any APIs."
     webDriver.findElement(By.id("check-all-words")).getText shouldBe "Check all words are spelt correctly or try a different keyword."
+    // no navigation is drawn
+
+    elementShouldNotBeDisplayed("page-heading")
+    elementShouldNotBeDisplayed("pagination-label")
+    elementShouldNotBeDisplayed("page-next")
+    elementShouldNotBeDisplayed("details-href-0")
+    elementShouldNotBeDisplayed("api-description-0")
+
   }
 
   Then("""^I wait '(.*)' milliSeconds for the api list to be redrawn""") { (timeToWait: String) =>
@@ -136,11 +149,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   }
 
   private def assertApiRow(rowNumber: Int, apiDetail: ApiDetail) ={
-    val titleLink = s"details-href-$rowNumber"
-
-    webDriver.findElement(By.id(titleLink)).isDisplayed shouldBe true
-    webDriver.findElement(By.id(titleLink)).getText shouldBe apiDetail.title
-    webDriver.findElement(By.id(s"api-description-$rowNumber")).isDisplayed shouldBe true
+    webDriver.findElement(By.id(s"details-href-$rowNumber")).getText shouldBe apiDetail.title
     webDriver.findElement(By.id(s"api-description-$rowNumber")).getText shouldBe apiDetail.shortDescription.getOrElse(apiDetail.description)
   }
  private def elementShouldNotBeDisplayed(elementId: String)={

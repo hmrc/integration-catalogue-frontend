@@ -40,23 +40,26 @@ Feature: Dynamic Search Setup
     And I wait '500' milliSeconds for the api list to be redrawn
     Then One Api result is shown
     And Element with id 'page-heading' exists with text '1 APIs'
+    And Navigation should display Showing '1' to '1' of '1' results
 
   Scenario: Ten Apis setup in the backend and search returns all
     When All 10 test apis are matched, items per page is '2' and requested page should be '1' and search keyword is 'API1'
     And I enter the search keyword 'API1' then click the search button
     And I wait '500' milliSeconds for the api list to be redrawn
     Then page '1' of all api results are shown
-
+    And Navigation should display Showing '1' to '2' of '10' results
 
   Scenario: Ten Apis setup in the backend and search returns all then we click on next
   When All 10 test apis are matched, with no search filters, items per page is '2' and requested page should be '2'
   And I click on the element with id 'page-next-link'
   And I wait '500' milliSeconds for the api list to be redrawn
   Then page '2' of all api results are shown
+  And Navigation should display Showing '3' to '4' of '10' results
   And I wait '500' milliSeconds for the api list to be redrawn
   When I click on the element with id 'page-prev-link'
   And I wait '500' milliSeconds for the api list to be redrawn
   Then page '1' of all api results are shown
+  And Navigation should display Showing '1' to '2' of '10' results
 
 #2). no results text is shown when search returns no results
 #3). Apis are shown when results are returned -> probably tests returning different amount of apis than test 1
