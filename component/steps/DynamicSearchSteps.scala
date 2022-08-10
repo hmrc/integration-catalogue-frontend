@@ -57,13 +57,11 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     element.getText shouldBe text
   }
 
-  When("""^All available apis are available with no search filters, items per page is '(.*)' and current page is '(.*)'""") { (itemsPerPage: String, page: String) =>
-    Thread.sleep(500)
+  When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") { (itemsPerPage: String, page: String) =>
     IntegrationCatalogueStub.findNoFiltersPaged(allApis, page, itemsPerPage, OK)
   }
 
-  When("""^All available apis are available items per page is '(.*)' and current page is '(.*)' and search keyword is '(.*)'""") { (itemsPerPage: String, page: String, keyword: String) =>
-
+  When("""^All 10 test apis are matched, items per page is '(.*)' and requested page should be '(.*)' and search keyword is '(.*)'""") { (itemsPerPage: String, page: String, keyword: String) =>
     IntegrationCatalogueStub.findWithFilterPaged(keyword, allApis, page, itemsPerPage,  OK)
   }
 
@@ -111,6 +109,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     val results = getPageOfResults(allApis, pageVal.toInt)
 
     for(i <- results.indices){
+      println( results(i))
       assertApiRow(i, results(i))
     }
 

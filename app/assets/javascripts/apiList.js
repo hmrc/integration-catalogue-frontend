@@ -124,7 +124,7 @@ function drawPagingNavigation(itemsPerPage,
     if (numberOfPages > 1) {
         if (currentPage !== 1) {
             let prevButton = buildDomElement("li", "page-prev", ["moj-pagination__item", "moj-pagination__item--prev"], "")
-            let prevLink = buildDomElement("a", "", ["moj-pagination__link"], 'Previous<span class="govuk-visually-hidden"> set of pages</span>')
+            let prevLink = buildDomElement("a", "page-prev-link", ["moj-pagination__link"], 'Previous<span class="govuk-visually-hidden"> set of pages</span>')
             addOnClickToPageElement(prevLink, currentPage-1)
             prevButton.appendChild(prevLink)
             navButtons.appendChild(prevButton)
@@ -149,7 +149,7 @@ function drawPagingNavigation(itemsPerPage,
         if (currentPage < numberOfPages) {
             var pageVal = currentPage +1
             let nextButton = buildDomElement("li", "page-next", ["moj-pagination__item", "moj-pagination__item--next"], "")
-            let nextLink = buildDomElement("a", "", ["moj-pagination__link"], 'Next<span class="govuk-visually-hidden"> set of pages</span>')
+            let nextLink = buildDomElement("a", "page-next-link", ["moj-pagination__link"], 'Next<span class="govuk-visually-hidden"> set of pages</span>')
             addOnClickToPageElement(nextButton, pageVal)
             nextButton.appendChild(nextLink)
             navButtons.appendChild(nextButton)
