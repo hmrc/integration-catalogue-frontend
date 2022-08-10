@@ -72,7 +72,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     IntegrationCatalogueStub.findNoFilters(integrationResponse, OK)
   }
 
-  When("""^no apis are exist that match search keyword '(.*)'$""") { keyword: String =>
+  When("""^no apis exist that match search keyword '(.*)'$""") { keyword: String =>
     IntegrationCatalogueStub.findWithFilter(keyword, generateIntegrationResponse(List.empty), OK)
   }
 
@@ -122,18 +122,12 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     webDriver.findElement(By.id("check-all-words")).getText shouldBe "Check all words are spelt correctly or try a different keyword."
   }
 
-  Then("""^I wait '(.*)' seconds for the api list to be redrawn""") { (timeToWait: String) =>
-    try {
-      webDriver.wait(timeToWait.toLong)
-    }catch {
-      case e: Throwable => println(e.getMessage)
-    }
-    waitForApiListRedraw(timeToWait.toInt)
-
+  Then("""^I wait '(.*)' milliSeconds for the api list to be redrawn""") { (timeToWait: String) =>
+    Thread.sleep(timeToWait.toLong)
   }
 
   def waitForApiListRedraw(timeToWaitInSeconds: Int)={
-    val pageSource = webDriver.getPageSource
+
     import org.openqa.selenium.By
     import org.openqa.selenium.support.ui.ExpectedConditions
     import org.openqa.selenium.support.ui.WebDriverWait

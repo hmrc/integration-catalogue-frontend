@@ -92,9 +92,13 @@ case object DynamicSearchPageWithSearchResults extends CommonPage with PagingHel
   )
 
   def generateIntegrationResponse(apiList: List[ApiDetail], page: Int = 1, itemsPerPage: Int = 2) ={
-    val pagedResults = getPageOfResults(apiList, page, itemsPerPage)
+    if (apiList.isEmpty) {
+      IntegrationResponse(0, None, List.empty)
+    } else {
+      val pagedResults = getPageOfResults(apiList, page, itemsPerPage)
 
-    IntegrationResponse(count = apiList.size, pagedCount = Option(pagedResults.size), results = pagedResults)
+      IntegrationResponse(count = apiList.size, pagedCount = Option(pagedResults.size), results = pagedResults)
+    }
   }
 
   def getIntegrationResponseByPublisherRef(publisherReference: String) = {

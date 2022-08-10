@@ -7,11 +7,17 @@ import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelp
 trait PagingHelper extends ListIntegrationsHelper {
 
   def getPageOfResults(results: List[ApiDetail], page: Int = 1, itemsPerPage: Int = 2): List[ApiDetail] = {
-    results.grouped(itemsPerPage)
-      .zipWithIndex.toList
-      .map(page => (page._2, page._1))
-      .toMap
-      .getOrElse(page, List.empty)
+    if(results.size<2){
+       results
+    }else{
+      results.grouped(itemsPerPage)
+        .zipWithIndex.toList
+        .map(page => (page._2, page._1))
+        .toMap
+        .getOrElse(page, List.empty)
+    }
+
+
 
   }
 
