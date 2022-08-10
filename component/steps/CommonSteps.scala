@@ -50,13 +50,12 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
     "Dynamic Search with results" -> DynamicSearchPageWithSearchResults
   )
 
-  Given( """^I navigate to the '(.*)' page$""") { (pageName: String) =>
-    println(s"++++++++++++++ ${webDriver.getPageSource}")
+  When( """^I navigate to the '(.*)' page$""") { (pageName: String) =>
     withClue(s"Fail to load page: $pageName")(goOn(pages(pageName)))
   }
 
 
-  Then( """^I am on the '(.*)' page$""") { (pageName: String) =>
+  Given( """^I am on the '(.*)' page$""") { (pageName: String) =>
     eventually {
     withClue(s"Fail to be on page: $pageName")(on(pages(pageName))) }
   }

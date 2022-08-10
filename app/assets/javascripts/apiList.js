@@ -84,8 +84,7 @@ function drawResults(response) {
 
         buildApiCount(rootNode, parsedResponse.totalCount)
 
-        var apiList = document.createElement("ul")
-        apiList.classList.add("govuk-apis-list")
+        var apiList =buildDomElement("ul", "api-list", ["govuk-apis-list"] , "")
 
         for (let i = 0; i < apis.length; i++) {
             drawApiRow(apiList, apis[i], i)
@@ -185,7 +184,8 @@ function drawApiRow(listNode, api, rowNumber) {
 }
 
 function buildApiCount(rootNode, apiCountVal) {
-    rootNode.appendChild(buildDomElement("h1", "page-heading", ["govuk-body"], apiCountVal + " APIs"))
+    var countText = apiCountVal>0? " APIs" : " API"
+    rootNode.appendChild(buildDomElement("h1", "page-heading", ["govuk-body"], apiCountVal + countText))
 }
 
 function buildDomElement(tag, idValue, classes, innerHtml) {

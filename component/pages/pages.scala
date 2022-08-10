@@ -21,6 +21,7 @@ import play.api.Logging
 import steps.Env
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
+import utils.PagingHelper
 
 trait CommonPage extends WebPage with Logging with ApiTestData {
   val pageTitle: String
@@ -64,7 +65,7 @@ case object DynamicSearchPage extends CommonJsPage {
 
 }
 
-case object DynamicSearchPageWithSearchResults extends CommonPage {
+case object DynamicSearchPageWithSearchResults extends CommonPage with PagingHelper {
 
   // pageTitle is populated dynamically
   override val pageTitle: String = ""
@@ -83,14 +84,18 @@ case object DynamicSearchPageWithSearchResults extends CommonPage {
     "API1009" -> apiDetail9,
   )
 
-  val allApis = publisherRefAndApiMap.values.toList
+  val allApis = publisherRefAndApiMap.values.toList.sortBy(_.title)
 
   val integrationResponse = IntegrationResponse(
     count = allApis.size,
-    results = allApis
+    results = allApis.sortBy(_.title)
   )
 
-  val noResultsIntegrationResponse = IntegrationResponse(count = 0, results = List.empty[ApiDetail])
+  def generateIntegrationResponse(apiList: List[ApiDetail], page: Int = 1, itemsPerPage: Int = 2) ={
+    val pagedResults = getPageOfResults(apiList, page, itemsPerPage)
+
+    IntegrationResponse(count = apiList.size, pagedCount = Option(pagedResults.size), results = pagedResults)
+  }
 
   def getIntegrationResponseByPublisherRef(publisherReference: String) = {
     val apis: List[ApiDetail] = publisherRefAndApiMap.get(publisherReference).fold(List.empty[ApiDetail])(List(_))

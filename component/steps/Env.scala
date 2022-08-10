@@ -77,7 +77,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
       case "remote-firefox" => createRemoteFirefoxDriver()
       case other => throw new IllegalArgumentException(s"target browser $other not recognised")
     }
-    driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS)
     driver
   }
 
