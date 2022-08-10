@@ -118,20 +118,56 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     webDriver.findElement(By.id("page-results")).getText.trim shouldBe s"Showing $from to $to of $total results"
   }
 
+  Then("""^Navigation controls should be visible on page '(.*)' of '(.*)' pages$"""){ (page: String, numberOfPages: String) =>
+    navigationControlsCheck(shouldBeVisible = true, page.toInt, numberOfPages.toInt)
+
+  }
+  Then("""^Navigation controls should not be visible$""") { () =>
+    navigationControlsCheck(shouldBeVisible = false)
+  }
+
+  def navigationControlsCheck(shouldBeVisible: Boolean, page: Int=0, numberOfPages: Int=0) ={
+    if(shouldBeVisible){
+      if(page==1){
+        navigationLink("page-prev", shouldBeVisible = false)
+      }else{
+        navigationLink("page-prev", shouldBeVisible = true)
+      }
+
+      if(page==numberOfPages){
+        navigationLink("page-next", shouldBeVisible = false)
+      }else{
+        navigationLink("page-next", shouldBeVisible = true)
+      }
+
+    }else{
+      navigationLink("page-prev", shouldBeVisible = false)
+      navigationLink("page-next", shouldBeVisible = false)
+    }
+
+  }
+
+  def navigationLink(id:String, shouldBeVisible: Boolean)={
+    if(shouldBeVisible) {
+      elementShouldBeDisplayed(id)
+      elementShouldBeDisplayed(s"$id-link")
+    }else{
+      elementShouldNotBeDisplayed(id)
+      elementShouldNotBeDisplayed(s"$id-link")
+    }
+  }
+
   //"showing x of y Results of z"
 
   Then("""^The 'No Results' Content is shown$""") { () =>
     webDriver.findElement(By.id("no-results")).getText shouldBe ""
     webDriver.findElement(By.id("govuk-body")).getText shouldBe "Your search did not match any APIs."
     webDriver.findElement(By.id("check-all-words")).getText shouldBe "Check all words are spelt correctly or try a different keyword."
-    // no navigation is drawn
 
-    elementShouldNotBeDisplayed("page-heading")
     elementShouldNotBeDisplayed("pagination-label")
-    elementShouldNotBeDisplayed("page-next")
+    elementShouldNotBeDisplayed("page-heading")
     elementShouldNotBeDisplayed("details-href-0")
     elementShouldNotBeDisplayed("api-description-0")
-
   }
 
   Then("""^I wait '(.*)' milliSeconds for the api list to be redrawn""") { (timeToWait: String) =>
@@ -152,7 +188,17 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     webDriver.findElement(By.id(s"details-href-$rowNumber")).getText shouldBe apiDetail.title
     webDriver.findElement(By.id(s"api-description-$rowNumber")).getText shouldBe apiDetail.shortDescription.getOrElse(apiDetail.description)
   }
- private def elementShouldNotBeDisplayed(elementId: String)={
+
+  private def elementShouldBeDisplayed(elementId: String) = {
+    try {
+      webDriver.findElement(By.id(elementId)).isDisplayed shouldBe true
+    } catch {
+      case e: org.openqa.selenium.NoSuchElementException => fail(s"Element $elementId should be displayed")
+      case _: Throwable => fail(s"unexpected exception thrown trying to assert if $elementId is displayed")
+    }
+  }
+
+  private def elementShouldNotBeDisplayed(elementId: String)={
    try {
      webDriver.findElement(By.id(elementId)).isDisplayed
      fail(s"Element $elementId should not be displayed")
@@ -161,6 +207,5 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
      case _: Throwable => fail(s"unexpected exception thrown trying to assert if $elementId is displayed")
    }
  }
-
 
 }
