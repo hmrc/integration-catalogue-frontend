@@ -249,11 +249,21 @@ function handlePageLinkClick(page, event){
     loadData(searchBox.value, buildParams("platformFilter", selectedPlatformRadios), page, true);
 }
 
+
+
 function addOnClickToPageElement(element, page) {
     if (element.addEventListener) {
         element.addEventListener('click', (evt) => handlePageLinkClick(page, evt));
     } else if (element.attachEvent) {
         element.attachEvent('onclick', (evt) => handlePageLinkClick(page, evt));
+    }
+}
+
+function addOnBlurElement(element) {
+    if (element.addEventListener) {
+        element.addEventListener('blur', (evt) => handleSearchBoxClick(false));
+    } else if (element.attachEvent) {
+        element.attachEvent('onblur', (evt) => handleSearchBoxClick(false));
     }
 }
 
@@ -267,6 +277,7 @@ function addOnClickToElement(element) {
 
 
 function setUpOnClicks() {
+    addOnBlurElement(document.getElementById("intCatSearch"))
     addOnClickToElement(document.getElementById("intCatSearch"))
 
     const platformRadios = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
