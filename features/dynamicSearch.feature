@@ -5,21 +5,6 @@ Feature: Dynamic Search Setup
     Given All 10 test apis are matched, with no search filters, items per page is '2' and requested page should be '1'
     When I navigate to the 'Dynamic Search' page
 
-#  Scenario: initial page load returns all APIS, filters are reset and empty
-#    Then page '1' of all api results are shown
-#    And All filters and search box are empty
-
-#   No APIs setup
-#  Scenario: No APIs setup in the backend and click search button with no search keyword
-#    When no apis exist that match search keyword 'NOMATCH'
-#    And I enter the search keyword 'NOMATCH' then click the search button
-#    When I click on the element with id 'intCatSearchButton'
-#    And I wait '1000' milliSeconds for the api list to be redrawn
-#    Then Element with id 'page-heading' exists with text 'Your search did not match any APIs.'
-#    And Element with id 'check-all-words' exists with text 'Check all words are spelt correctly or try a different keyword.'
-
-#   APIs setup and are shown in search results
-
 # TESTS
 #
   Scenario: no results text is shown when no results are returned from search
@@ -96,12 +81,3 @@ Feature: Dynamic Search Setup
     Then page '5' of all api results are shown
     And Navigation should display Showing '9' to '10' of '10' results
     And Navigation controls should be visible on page '5' of '5' pages
-
-#2). no results text is shown when search returns no results
-#3). Apis are shown when results are returned -> probably tests returning different amount of apis than test 1
-#4). test paging Next
-#5). test Paging previous
-#6). test paging page numbers
-#7). test Paging component is drawn correctly i.e. current page is not a link, next is not shown on 1st page, previous on last.
-#8). test the navigation section "showing x of y Results of z" is correct
-#9). test paging component when only 1 page i.e. no navigation but still has "showing x of y Results of z"
