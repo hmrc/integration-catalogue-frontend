@@ -21,6 +21,7 @@ import io.cucumber.scala.{EN, ScalaDsl}
 import matchers.CustomMatchers
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{By, WebDriver}
+import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import pages.DynamicSearchPageWithSearchResults.{allApis, generateIntegrationResponse, integrationResponse}
 import pages._
@@ -28,8 +29,6 @@ import play.api.http.Status.OK
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import utils.PagingHelper
-
-
 
 class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationSugar with PageSugar
   with CustomMatchers with ApiTestData with PagingHelper{
@@ -57,11 +56,13 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     element.getText shouldBe text
   }
 
-  When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") { (itemsPerPage: String, page: String) =>
+  When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") {
+    (itemsPerPage: String, page: String) =>
     IntegrationCatalogueStub.findNoFiltersPaged(allApis, page, itemsPerPage, OK)
   }
 
-  When("""^All 10 test apis are matched, items per page is '(.*)' and requested page should be '(.*)' and search keyword is '(.*)'""") { (itemsPerPage: String, page: String, keyword: String) =>
+  When("""^All 10 test apis are matched, items per page is '(.*)' and requested page should be '(.*)' and search keyword is '(.*)'""") {
+    (itemsPerPage: String, page: String, keyword: String) =>
     IntegrationCatalogueStub.findWithFilterPaged(keyword, allApis, page, itemsPerPage,  OK)
   }
 
@@ -95,24 +96,18 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   }
 
   Then("""^One Api result is shown$""") { () =>
-
     assertApiRow(0, apiDetail1)
 
     elementShouldNotBeDisplayed("details-href-1")
     elementShouldNotBeDisplayed("api-description-1")
-
   }
 
-
   Then("""^page '(.*)' of all api results are shown$"""){ (pageVal: String) =>
-
     val results = getPageOfResults(allApis, pageVal.toInt)
 
     for(i <- results.indices){
-      if(pageVal == 5) {println(s"+++++++ results")}
       assertApiRow(i, results(i))
     }
-
   }
 
   Then("""^Navigation should display Showing '(.*)' to '(.*)' of '(.*)' results$""") { (from:String, to:String, total: String) =>
@@ -127,7 +122,22 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     navigationControlsCheck(shouldBeVisible = false)
   }
 
-  def navigationControlsCheck(shouldBeVisible: Boolean, page: Int=0, numberOfPages: Int=0) ={
+  Then("""^The 'No Results' Content is shown$""") { () =>
+    webDriver.findElement(By.id("no-results")).getText shouldBe ""
+    webDriver.findElement(By.id("govuk-body")).getText shouldBe "Your search did not match any APIs."
+    webDriver.findElement(By.id("check-all-words")).getText shouldBe "Check all words are spelt correctly or try a different keyword."
+
+    elementShouldNotBeDisplayed("pagination-label")
+    elementShouldNotBeDisplayed("page-heading")
+    elementShouldNotBeDisplayed("details-href-0")
+    elementShouldNotBeDisplayed("api-description-0")
+  }
+
+  Then("""^I wait '(.*)' milliSeconds for the api list to be redrawn""") { (timeToWait: String) =>
+    Thread.sleep(timeToWait.toLong)
+  }
+
+  def navigationControlsCheck(shouldBeVisible: Boolean, page: Int=0, numberOfPages: Int=0): Any ={
     if(shouldBeVisible){
       if(page==1){
         navigationLink("page-prev", shouldBeVisible = false)
@@ -151,7 +161,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   }
 
-  def navigationLink(id:String, shouldBeVisible: Boolean) = {
+  def navigationLink(id:String, shouldBeVisible: Boolean): Assertion = {
     if(shouldBeVisible) {
       elementShouldBeDisplayed(id)
       elementShouldBeDisplayed(s"$id-link")
@@ -161,7 +171,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     }
   }
 
-  def navigationPageLinksAreVisible(currentPage: Int = 0, numberOfPages: Int  = 0) = {
+  def navigationPageLinksAreVisible(currentPage: Int = 0, numberOfPages: Int  = 0): Unit = {
     val lastPage =   calculateLastPageLink(currentPage, numberOfPages)
     val firstPage = calculateFirstPageLink(currentPage)
     for (i <- firstPage to lastPage)  {
@@ -176,23 +186,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     }
   }
 
-  Then("""^The 'No Results' Content is shown$""") { () =>
-    webDriver.findElement(By.id("no-results")).getText shouldBe ""
-    webDriver.findElement(By.id("govuk-body")).getText shouldBe "Your search did not match any APIs."
-    webDriver.findElement(By.id("check-all-words")).getText shouldBe "Check all words are spelt correctly or try a different keyword."
-
-    elementShouldNotBeDisplayed("pagination-label")
-    elementShouldNotBeDisplayed("page-heading")
-    elementShouldNotBeDisplayed("details-href-0")
-    elementShouldNotBeDisplayed("api-description-0")
-  }
-
-  Then("""^I wait '(.*)' milliSeconds for the api list to be redrawn""") { (timeToWait: String) =>
-    Thread.sleep(timeToWait.toLong)
-  }
-
   def waitForApiListRedraw(timeToWaitInSeconds: Int)={
-
     import org.openqa.selenium.By
     import org.openqa.selenium.support.ui.ExpectedConditions
     import org.openqa.selenium.support.ui.WebDriverWait
