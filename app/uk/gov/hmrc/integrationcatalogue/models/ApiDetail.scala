@@ -19,6 +19,8 @@ package uk.gov.hmrc.integrationcatalogue.models
 import org.joda.time.DateTime
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper
+import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper
 
 sealed trait IntegrationDetail {
   def id: IntegrationId
@@ -184,6 +186,35 @@ case class ApiDetail(
     apiStatus: ApiStatus)
     extends IntegrationDetail {
   override val integrationType: IntegrationType = IntegrationType.API
+}
+
+case class ApiDetailSummary(
+                      id: IntegrationId,
+                      publisherReference: String,
+                      encodedTitle: String,
+                      title: String,
+                      description: String,
+                      platform: PlatformType,
+                      apiStatus: ApiStatus){
+}
+
+object ApiDetailSummary {
+
+  def fromIntegrationDetail(detail: IntegrationDetail) = {
+    detail match {
+      case apiDetail: ApiDetail => Option(fromApiDetail(apiDetail))
+      case _ => None
+    }
+  }
+  def fromApiDetail(apiDetail: ApiDetail) = {
+    ApiDetailSummary(apiDetail.id,
+      apiDetail.publisherReference,
+      UrlEncodingHelper.encodeTitle(apiDetail.title),
+      apiDetail.title,
+      ViewHelper.handleDescription(apiDetail),
+      apiDetail.platform,
+      apiDetail.apiStatus)
+  }
 }
 
 case class FileTransferDetail(

@@ -18,8 +18,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 trait ListIntegrationsHelper {
 
-  def calculateNumberOfPages(totalCount: Int, itemsPerPage: Int) =
-    (totalCount + itemsPerPage - 1) / itemsPerPage
+  def calculateNumberOfPages(totalCount: Int, itemsPerPage: Int) = (totalCount + itemsPerPage - 1) / itemsPerPage
 
   def calculateFromResults(currentPage: Int, itemsPerPage: Int) =
     if (currentPage > 1) (itemsPerPage * (currentPage - 1)) + 1 else 1
@@ -40,7 +39,7 @@ trait ListIntegrationsHelper {
 
   def showFileTransferInterrupt(fileTransferSearchTerms: List[String], keywords: Option[String]): Boolean = {
       val searchTerms = fileTransferSearchTerms.map(_.toUpperCase)
-      keywords.map(keyword => searchTerms.contains(keyword.toUpperCase())).getOrElse(false)
+      keywords.exists(keyword => searchTerms.contains(keyword.toUpperCase()))
   }
 
 }

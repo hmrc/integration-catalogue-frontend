@@ -22,7 +22,21 @@ import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, Platf
 
 case class IntegrationResponse(count: Int, pagedCount: Option[Int] = None, results: List[IntegrationDetail])
 
-// Integration Catalogule File Transfer Sepcification
+case class DynamicPageResponse(itemsPerPage: Int,
+                               currentPage: Int,
+                               numberOfPages: Int,
+                               fromResults: Int,
+                               toResults: Int,
+                               totalCount: Int,
+                               firstPageLink: Int,
+                               lastPageLink: Int,
+                               results: List[ApiDetailSummary])
+
+object DynamicPageResponse {
+  implicit  val detailFormat = Json.format[ApiDetailSummary]
+  implicit val format = Json.format[DynamicPageResponse]
+}
+// Integration Catalogue File Transfer Sepcification
 // Json look like this :point_down:
 case class FileTransferPublishRequest(
     fileTransferSpecificationVersion: String, // Set to 0.1?
@@ -42,7 +56,6 @@ case class IntegrationFilter(
     searchText: List[String] = List.empty,
     platforms: List[PlatformType] = List.empty,
     backendsFilter: List[String] = List.empty,
-    backends: List[String] = List.empty,
     itemsPerPage: Option[Int] = None,
     currentPage: Option[Int] = None)
 

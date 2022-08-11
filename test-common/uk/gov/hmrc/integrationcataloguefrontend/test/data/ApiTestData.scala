@@ -178,6 +178,101 @@ trait ApiTestData {
     reviewedDate = reviewedDate
   )
 
+  val apiDetail5: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    publisherReference = "API1005",
+    title = "Title 5",
+    description = "Description 5",
+    lastUpdated = dateValue,
+    platform = coreIfPlatform,
+    maintainer = coreIfMaintainer,
+    version = "1.1.0",
+    specificationType = SpecificationType.OAS_V3,
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    hods = List("ETMP"),
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 2",
+    apiStatus = ApiStatus.LIVE,
+    reviewedDate = reviewedDate
+  )
+
+  val apiDetail6: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    publisherReference = "API1006",
+    title = "Title 6",
+    description = "Description 6",
+    lastUpdated = dateValue,
+    platform = coreIfPlatform,
+    maintainer = coreIfMaintainer,
+    version = "1.1.0",
+    specificationType = SpecificationType.OAS_V3,
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    hods = List("ETMP"),
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 2",
+    apiStatus = ApiStatus.LIVE,
+    reviewedDate = reviewedDate
+  )
+
+  val apiDetail7: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    publisherReference = "API1007",
+    title = "Title 7",
+    description = "Description 7",
+    lastUpdated = dateValue,
+    platform = coreIfPlatform,
+    maintainer = coreIfMaintainer,
+    version = "1.1.0",
+    specificationType = SpecificationType.OAS_V3,
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    hods = List("ETMP"),
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 2",
+    apiStatus = ApiStatus.LIVE,
+    reviewedDate = reviewedDate
+  )
+
+  val apiDetail8: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    publisherReference = "API1008",
+    title = "Title 8",
+    description = "Description 8",
+    lastUpdated = dateValue,
+    platform = coreIfPlatform,
+    maintainer = coreIfMaintainer,
+    version = "1.1.0",
+    specificationType = SpecificationType.OAS_V3,
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    hods = List("ETMP"),
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 2",
+    apiStatus = ApiStatus.LIVE,
+    reviewedDate = reviewedDate
+  )
+
+  val apiDetail9: ApiDetail = ApiDetail(
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    publisherReference = "API1009",
+    title = "Title 9",
+    description = "Description 9",
+    lastUpdated = dateValue,
+    platform = coreIfPlatform,
+    maintainer = coreIfMaintainer,
+    version = "1.1.0",
+    specificationType = SpecificationType.OAS_V3,
+    endpoints = endpoints,
+    components = Components(List.empty, List.empty),
+    hods = List("ETMP"),
+    shortDescription = None,
+    openApiSpecification = "OAS Content  for Title 2",
+    apiStatus = ApiStatus.LIVE,
+    reviewedDate = reviewedDate
+  )
+
   val exampleApiDetail: ApiDetail = ApiDetail(
     IntegrationId(UUID.fromString("e2e4ce48-29b0-11eb-adc1-0242ac120002")),
     publisherReference = "API1003",

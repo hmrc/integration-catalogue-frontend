@@ -1,10 +1,12 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import bloop.integrations.sbt.BloopDefaults
+import uk.gov.hmrc.ForkedJvmPerTestSettings.oneForkedJvmPerTest
 
 val appName = "integration-catalogue-frontend"
 
 val silencerVersion = "1.7.6"
+lazy val ComponentTest = config("component") extend Test
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
@@ -42,6 +44,18 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
     (managedClasspath in IntegrationTest) += (packageBin in Assets).value
+  )
+  .configs(ComponentTest)
+  .settings(inConfig(ComponentTest)(Defaults.testSettings): _*)
+  .settings(inConfig(ComponentTest)(BloopDefaults.configSettings))
+  .settings(
+    ComponentTest / testOptions := Seq(Tests.Argument(TestFrameworks.ScalaTest, "-eT")),
+    ComponentTest / unmanagedSourceDirectories ++= Seq(baseDirectory.value / "component", baseDirectory.value / "test-common"),
+    ComponentTest / unmanagedResourceDirectories += baseDirectory.value / "test",
+    ComponentTest / unmanagedResourceDirectories += baseDirectory.value / "target" / "web" / "public" / "test",
+    ComponentTest / testOptions += Tests.Setup(() => System.setProperty("javascript.enabled", "true")),
+    ComponentTest / testGrouping := oneForkedJvmPerTest((definedTests in ComponentTest).value),
+    ComponentTest / parallelExecution := false
   )
 
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
