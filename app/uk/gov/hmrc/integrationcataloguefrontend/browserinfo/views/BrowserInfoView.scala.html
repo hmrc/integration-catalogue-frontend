@@ -24,6 +24,8 @@
 
 @layout(pageTitle = Some(s"About - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
   <h1 class="govuk-heading-l" id="page-heading">Browser Info</h1>
+ 
+  <div id="demo"></div>
 
  <table class="govuk-table">
   <caption class="govuk-table__caption govuk-table__caption--m">Dates and amounts</caption>
@@ -42,4 +44,27 @@
    }
   </tbody>
  </table>
+ 
+ 
+ <script>
+        
+         function getLocation() {
+          if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+           document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
+          }
+         }
+
+         function showPosition(position) {
+          document.getElementById("demo").innerHTML = "Latitude: " + position.coords.latitude +
+                  "<br>Longitude: " + position.coords.longitude;
+         }
+
+         document.addEventListener('DOMContentLoaded', function () {
+
+          getLocation();
+
+         });
+ </script>
 }
