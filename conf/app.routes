@@ -26,6 +26,8 @@ GET        /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcat
 POST       /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataTargetAction()
 GET        /filetransfer/wizard/connections           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.getFileTransferTransportsByPlatform(source: String, target: String)
 
+GET        /browserinfo                               uk.gov.hmrc.integrationcataloguefrontend.browserinfo.controllers.BrowserInfoController.browserInfo()
+
 
 GET        /dynamic-search                            uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.dynamicList()
 GET        /quicksearch                               uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.quickSearch(searchValue: String, platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], currentPage: Option[Int])
