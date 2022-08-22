@@ -22,9 +22,18 @@ Feature: Dynamic Search Setup
     And Navigation should display Showing '1' to '2' of '10' results
     And Navigation controls should be visible on page '1' of '5' pages
 
-  Scenario: One APIs setup in the backend and search for one and it is returned
+  Scenario: One APIs setup in the backend and search for one and it is returned when clicking the search button
     When One api exists that match search keyword '1API'
     And I enter the search keyword '1API' then click the search button
+    And I wait '500' milliSeconds for the api list to be redrawn
+    Then One Api result is shown
+    And Element with id 'page-heading' exists with text '1 APIs'
+    And Navigation should display Showing '1' to '1' of '1' results
+    And Navigation controls should not be visible
+
+  Scenario: One APIs setup in the backend and search for one and it is returned when pressing Enter
+    When One api exists that match search keyword '1API'
+    And I enter the search keyword '1API' then press Enter
     And I wait '500' milliSeconds for the api list to be redrawn
     Then One Api result is shown
     And Element with id 'page-heading' exists with text '1 APIs'

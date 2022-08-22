@@ -7,7 +7,8 @@ export class ApiList {
 
     init() {
         setUpOnClicks()
-       initialLoad()
+        setupOnKeys()
+        initialLoad()
     }
 
 }
@@ -271,6 +272,18 @@ function addOnClickToElement(element) {
     }
 }
 
+function addOnKeyPressToElement(element) {
+    if (element.addEventListener) {
+        element.addEventListener('keypress', (evt) => {
+            if (evt.key === "Enter") handleSearchBoxClick();
+        });
+    } else if (element.attachEvent) {
+        element.attachEvent('onkeypress', (evt) => {
+            if (evt.key === "Enter") handleSearchBoxClick();
+        });
+    }
+}
+
 
 function setUpOnClicks() {
     addOnBlurElement(document.getElementById("intCatSearch"))
@@ -280,6 +293,10 @@ function setUpOnClicks() {
         addOnClickToElement(platformRadios[i])
     }
     addOnClickToElement(document.getElementById("intCatSearchButton"))
+}
+
+function setupOnKeys() {
+    addOnKeyPressToElement(document.getElementById("intCatSearch"))
 }
 
 /**

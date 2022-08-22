@@ -20,7 +20,7 @@ import component.stubs.IntegrationCatalogueStub
 import io.cucumber.scala.{EN, ScalaDsl}
 import matchers.CustomMatchers
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.{By, WebDriver}
+import org.openqa.selenium.{By, Keys, WebDriver}
 import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import pages.DynamicSearchPageWithSearchResults.{allApis, generateIntegrationResponse, integrationResponse}
@@ -93,6 +93,11 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     actions.moveToElement(link)
     actions.click()
     actions.perform()
+  }
+  
+  When("""^I enter the search keyword '(.*)' then press Enter$""") { keyword: String =>
+    val inputBox = webDriver.findElement(By.id("intCatSearch"))
+    inputBox.sendKeys(keyword, Keys.ENTER)
   }
 
   Then("""^One Api result is shown$""") { () =>
