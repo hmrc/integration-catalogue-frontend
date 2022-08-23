@@ -68,7 +68,11 @@ function updateUrl(searchTerm, platformFilter, page) {
             url.searchParams.append(platformFilterParamName, platformCode)
         });
 
-    url.searchParams.set(pageParamName, page);
+    if(page>1) {
+        url.searchParams.set(pageParamName, page);
+    } else{
+        url.searchParams.delete(pageParamName)
+    }
 
     window.history.replaceState(null, null, url);
 }
