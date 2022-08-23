@@ -212,8 +212,8 @@ function drawPagingNavigation(itemsPerPage,
 
     }
     let toResultsVal = toResults > totalCount ? totalCount : toResults
-    let pageResultsText = '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Showing  <b>' + fromResults + '</b> to <b>' + toResultsVal + '</b> of <b>' + totalCount + '</b> results';
-    let pageResults = buildDomElement("p", "page-results", ["moj-pagination__results"], pageResultsText)
+    let pageResultsText = 'Showing  <b>' + fromResults + '</b> to <b>' + toResultsVal + '</b> of <b>' + totalCount + '</b> results';
+    let pageResults = buildDomElement("p", "page-results", ["moj-pagination__results"], pageResultsText, "float: right;")
 
     nav.appendChild(navLabel)
     nav.appendChild(navButtons)
@@ -243,7 +243,7 @@ function buildApiCount(rootNode, apiCountVal) {
     rootNode.appendChild(buildDomElement("h1", "page-heading", ["govuk-body"], apiCountVal + countText))
 }
 
-function buildDomElement(tag, idValue, classes, innerHtml) {
+function buildDomElement(tag, idValue, classes, innerHtml, style = "") {
     let element = document.createElement(tag)
     if (idValue.length > 0) {
         element.setAttribute("id", idValue);
@@ -251,6 +251,9 @@ function buildDomElement(tag, idValue, classes, innerHtml) {
     element.classList.add(...classes)
     if (innerHtml.length > 0) {
         element.innerHTML = innerHtml
+    }
+    if (style.length > 0) {
+        element.setAttribute("style", style)
     }
     return element
 }
