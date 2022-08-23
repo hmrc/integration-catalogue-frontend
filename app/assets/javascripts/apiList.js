@@ -1,5 +1,10 @@
 'use strict';
 
+const minSearchTerms = 2
+const keywordsParamName = "keywords";
+const platformFilterParamName = "platformFilter";
+const pageParamName = "page";
+
 export class ApiList {
 
     constructor() {
@@ -12,17 +17,70 @@ export class ApiList {
     }
 
 }
+
 function initialLoad(){
     console.log("INITIAL LOAD TIME")
-   handleSearchBoxClick()
+    const url = new URL(window.location.href);
+    reviveFilterOptions(url)
+
+    const pageParam = url.searchParams.get(pageParamName)
+    const currentPage = (pageParam !== null && !isNaN(pageParam) ) ? pageParam : 1 
+ 
+    handlePageLinkClick(currentPage)
+}
+
+function reviveFilterOptions(url){ 
+
+    const searchTerm = url.searchParams.get(keywordsParamName)
+    if(searchTerm !== null) {
+
+        const searchBox = document.getElementById("intCatSearch")
+        searchBox.setAttribute("value", searchTerm)
+    }
+    
+    const platformFilters = url.searchParams.getAll(platformFilterParamName)
+    if(platformFilters !== null && platformFilters.length > 0) {
+        const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
+        for (let x = 0; x < platformBoxes.length; x++) {
+           
+           platformFilters.forEach((value) => {
+               if(platformBoxes[x].getAttribute('value') === value) {
+                   platformBoxes[x].checked = true;
+               }
+           })
+
+        }   
+    }
+}
+
+function updateUrl(searchTerm, platformFilter, page) {
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete(keywordsParamName);
+    if (searchTerm.length >= minSearchTerms)
+        url.searchParams.set(keywordsParamName, searchTerm);
+
+    url.searchParams.delete(platformFilterParamName);
+    if (platformFilter.length > 0)
+        platformFilter.slice(1).split("&").map(platform => {
+            const platformCode = platform.split("=")[1]
+            url.searchParams.append(platformFilterParamName, platformCode)
+        });
+
+    url.searchParams.set(pageParamName, page);
+
+    window.history.replaceState(null, null, url);
 }
 
 function loadData(searchTerm, platformFilter, page) {
     console.log("loadData -  searchTerm:" + searchTerm)
     console.log("loadData -  platformFilter:" + platformFilter)
     console.log("loadData -  page:" + page)
+    
+    updateUrl(searchTerm, platformFilter, page);
 
-    if (searchTerm.length < 2 && platformFilter.length === 0) {
+    if (searchTerm.length < minSearchTerms && platformFilter.length === 0) {
         getApis("", "", page, function () {
             drawResults(this.responseText);
         });
@@ -230,7 +288,7 @@ function clearApiList() {
     rootNode.innerHTML = '';
 }
 
-function handlePageLinkClick(page, event){
+function handlePageLinkClick(page){
     const searchBox = document.getElementById("intCatSearch")
     const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
 
@@ -250,9 +308,9 @@ function handlePageLinkClick(page, event){
 
 function addOnClickToPageElement(element, page) {
     if (element.addEventListener) {
-        element.addEventListener('click', (evt) => handlePageLinkClick(page, evt));
+        element.addEventListener('click', (evt) => handlePageLinkClick(page));
     } else if (element.attachEvent) {
-        element.attachEvent('onclick', (evt) => handlePageLinkClick(page, evt));
+        element.attachEvent('onclick', (evt) => handlePageLinkClick(page));
     }
 }
 
