@@ -314,11 +314,11 @@ function addOnClickToPageElement(element, page) {
     }
 }
 
-function addOnBlurElement(element) {
+function addOnFocusElement(element) {
     if (element.addEventListener) {
-        element.addEventListener('blur', (evt) => handleSearchBoxClick());
+        element.addEventListener('focus', (evt) => handleSearchBoxClick());
     } else if (element.attachEvent) {
-        element.attachEvent('onblur', (evt) => handleSearchBoxClick());
+        element.attachEvent('onFocus', (evt) => handleSearchBoxClick());
     }
 }
 
@@ -344,12 +344,11 @@ function addOnKeyPressToElement(element) {
 
 
 function setUpOnClicks() {
-    addOnBlurElement(document.getElementById("intCatSearch"))
-
     const platformRadios = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
     for(let i=0;i<platformRadios.length;i++) {
         addOnClickToElement(platformRadios[i])
     }
+    addOnFocusElement(document.getElementById("intCatSearchButton"))
     addOnClickToElement(document.getElementById("intCatSearchButton"))
 }
 
