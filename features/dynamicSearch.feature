@@ -10,6 +10,7 @@ Feature: Dynamic Search Setup
   Scenario: no results text is shown when no results are returned from search
     When no apis exist that match search keyword 'API'
     And I enter the search keyword 'API' then click the search button
+    And I wait '500' milliSeconds for the api list to be redrawn
     Then The 'No Results' Content is shown
     And Navigation controls should not be visible
 
