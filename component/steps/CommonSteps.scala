@@ -104,6 +104,10 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
   }
 
   When( """^I click on the element with id '(.*)'$""") { id: String =>
+    clickOnElement(id)
+  }
+
+  def clickOnElement(id: String) ={
     val link = webDriver.findElement(By.id(id))
     val actions = new Actions(webDriver)
     actions.moveToElement(link)

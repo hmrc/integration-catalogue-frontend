@@ -50,17 +50,34 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   }
 
-  Then("""^Element with id '(.*)' exists with text '(.*)'"""){ (id: String, text: String) =>
-    val element = webDriver.findElement(By.id(id))
-    element.isDisplayed shouldBe true
-    element.getText shouldBe text
+  Then("""^Element with id '(.*)' exists with text '(.*)'"""){ (id: String, expectedText: String) =>
+    validateTextOfElement(id, expectedText)
+  }
+  Then("""^Page heading is displayed with the text '(.*)'""") { (expectedText: String) =>
+    validateTextOfElement("page-heading", expectedText)
   }
 
-  Then("""^Element with id '(.*)' exists with value '(.*)'""") { (id: String, text: String) =>
+
+  private def validateTextOfElement(id: String, expectedText: String) ={
     val element = webDriver.findElement(By.id(id))
     element.isDisplayed shouldBe true
-    element.getAttribute("value") shouldBe text
+    element.getText shouldBe expectedText
   }
+
+  Then("""^Element with id '(.*)' exists with value '(.*)'""") { (id: String, expectedValue: String) =>
+    validateInputBox(id, expectedValue)
+  }
+
+  Then("""^Search box is displayed with value '(.*)'""") { (expectedValue: String) =>
+    validateInputBox("intCatSearch", expectedValue)
+  }
+
+  private def validateInputBox(id: String, expectedValue: String) ={
+    val element = webDriver.findElement(By.id(id))
+    element.isDisplayed shouldBe true
+    element.getAttribute("value") shouldBe expectedValue
+  }
+
 
   When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") {
     (itemsPerPage: String, page: String) =>
@@ -125,6 +142,10 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
       assertApiRow(i, results(i))
     }
   }
+  //    Then I click on the page link '4'
+  When("""^I click on the page link '(.*)'$""") { pageNumber: String =>
+    clickOnElement(s"pageLink-$pageNumber")
+  }
 
   Then("""^Navigation should display Showing '(.*)' to '(.*)' of '(.*)' results$""") { (from:String, to:String, total: String) =>
     webDriver.findElement(By.id("page-results")).getText.trim shouldBe s"Showing $from to $to of $total results"
@@ -175,6 +196,14 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
       elementShouldNotBeDisplayed(s"pagenumber-$page")
     }
 
+  }
+
+  def clickOnElement(id: String) = {
+    val link = webDriver.findElement(By.id(id))
+    val actions = new Actions(webDriver)
+    actions.moveToElement(link)
+    actions.click()
+    actions.perform()
   }
 
   def navigationLink(id:String, shouldBeVisible: Boolean): Assertion = {
