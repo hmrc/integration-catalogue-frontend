@@ -91,3 +91,16 @@ Feature: Dynamic Search Setup
     Then page '5' of all api results are shown
     And Navigation should display Showing '9' to '10' of '10' results
     And Navigation controls should be visible on page '5' of '5' pages
+
+  Scenario: Searching for an API by keyword, navigating to it, then navigating back, returns to the same search result
+    When All 10 test apis are matched, items per page is '2' and requested page should be '2' and search keyword is 'API1'
+    And An api exists with id '136791a6-2b1c-11eb-adc1-0242ac120003'
+    And I enter the search keyword 'API1' then press Enter
+    And I wait '500' milliSeconds for the api list to be redrawn
+    And I click on the element with id 'pageLink-2'
+    And I wait '500' milliSeconds for the api list to be redrawn
+    And I click on the element with id 'details-href-0'
+    And I click on the 'Back' link
+    And I wait '500' milliSeconds for the api list to be redrawn
+    Then page '2' of all api results are shown
+    And Element with id 'intCatSearch' exists with value 'API1'

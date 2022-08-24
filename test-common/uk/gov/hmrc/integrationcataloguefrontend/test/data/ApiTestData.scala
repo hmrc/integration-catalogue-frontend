@@ -160,7 +160,7 @@ trait ApiTestData {
   )
 
   val apiDetail3: ApiDetail = ApiDetail(
-    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120003")),
     publisherReference = "API1002",
     title = "Title 2",
     description = "Description 2",
@@ -179,7 +179,7 @@ trait ApiTestData {
   )
 
   val apiDetail5: ApiDetail = ApiDetail(
-    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120005")),
     publisherReference = "API1005",
     title = "Title 5",
     description = "Description 5",
@@ -198,7 +198,7 @@ trait ApiTestData {
   )
 
   val apiDetail6: ApiDetail = ApiDetail(
-    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120006")),
     publisherReference = "API1006",
     title = "Title 6",
     description = "Description 6",
@@ -217,7 +217,7 @@ trait ApiTestData {
   )
 
   val apiDetail7: ApiDetail = ApiDetail(
-    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120007")),
     publisherReference = "API1007",
     title = "Title 7",
     description = "Description 7",
@@ -236,7 +236,7 @@ trait ApiTestData {
   )
 
   val apiDetail8: ApiDetail = ApiDetail(
-    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120008")),
     publisherReference = "API1008",
     title = "Title 8",
     description = "Description 8",
@@ -255,7 +255,7 @@ trait ApiTestData {
   )
 
   val apiDetail9: ApiDetail = ApiDetail(
-    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120002")),
+    IntegrationId(UUID.fromString("136791a6-2b1c-11eb-adc1-0242ac120009")),
     publisherReference = "API1009",
     title = "Title 9",
     description = "Description 9",

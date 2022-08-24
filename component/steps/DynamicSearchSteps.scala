@@ -56,6 +56,12 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     element.getText shouldBe text
   }
 
+  Then("""^Element with id '(.*)' exists with value '(.*)'""") { (id: String, text: String) =>
+    val element = webDriver.findElement(By.id(id))
+    element.isDisplayed shouldBe true
+    element.getAttribute("value") shouldBe text
+  }
+
   When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") {
     (itemsPerPage: String, page: String) =>
     IntegrationCatalogueStub.findNoFiltersPaged(allApis, page, itemsPerPage, OK)
@@ -82,6 +88,11 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   When("""^One api exists that match search keyword '(.*)'$""") { keyword: String =>
     IntegrationCatalogueStub.findWithFilter(keyword, generateIntegrationResponse(List(apiDetail1)), OK)
+  }
+
+  When("""^An api exists with id '(.*)'$""") { id: String =>
+    IntegrationCatalogueStub.findPlatformContacts()
+    IntegrationCatalogueStub.findSpecificApi(apiDetail3, OK, id)
   }
 
   When("""^I enter the search keyword '(.*)' then click the search button$""") { keyword: String =>

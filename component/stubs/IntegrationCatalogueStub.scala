@@ -2,10 +2,11 @@ package component.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.http.Status.OK
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationDetail, IntegrationResponse, PlatformContactResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
-import pages.DynamicSearchPageWithSearchResults.{generateIntegrationResponse, integrationResponse}
+import pages.DynamicSearchPageWithSearchResults.generateIntegrationResponse
 import play.api.libs.json.Json
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelper
 
 object IntegrationCatalogueStub extends ListIntegrationsHelper {
@@ -72,6 +73,38 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
             .withBody(Json.toJson(integrationResponse).toString())
         )
     )
+  }
+
+  def findSpecificApi(apiDetail: ApiDetail, status: Int = OK, id: String) = {
+
+    stubFor(
+      get(urlEqualTo(s"/integration-catalogue/integrations/$id"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(Json.toJson(apiDetail.asInstanceOf[IntegrationDetail]).toString())
+        )
+    )
+  }
+
+  def findPlatformContacts(status: Int = OK) = {
+
+
+    val apiPlatformContact = PlatformContactResponse(
+      PlatformType.API_PLATFORM,
+      Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))),
+      true)
+    val coreIfPlatformContact = PlatformContactResponse(
+      PlatformType.CORE_IF,
+      Some(ContactInformation(Some("CoreIf"), Some("core.if@email"))),
+      true)
+    stubFor(get(urlEqualTo("/integration-catalogue/platform/contacts"))
+      .willReturn(
+        aResponse()
+          .withStatus(status)
+          .withHeader("Content-Type", "application/json")
+          .withBody(Json.toJson(List(apiPlatformContact, coreIfPlatformContact)).toString())
+      ))
   }
 }
 
