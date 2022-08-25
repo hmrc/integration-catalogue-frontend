@@ -20,7 +20,7 @@ import component.stubs.IntegrationCatalogueStub
 import io.cucumber.scala.{EN, ScalaDsl}
 import matchers.CustomMatchers
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.{By, Keys, WebDriver}
+import org.openqa.selenium.{By, Keys, WebDriver, WebElement}
 import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import pages.DynamicSearchPageWithSearchResults.{allApis, generateIntegrationResponse, integrationResponse}
@@ -34,6 +34,12 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   with CustomMatchers with ApiTestData with PagingHelper{
 
   implicit val webDriver: WebDriver = Env.driver
+
+  Given("""^I land on the Dynamic Search Page for the first time""") { () =>
+    val pageName = "Dynamic Search"
+    IntegrationCatalogueStub.findNoFiltersPaged(allApis, "1", "2", OK)
+    withClue(s"Fail to load page: $pageName")(goOn(CommonSteps.pages(pageName)))
+  }
 
   When("""^I enter no search keyword then click the search button$""") { () =>
 
@@ -72,12 +78,23 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     validateInputBox("intCatSearch", expectedValue)
   }
 
+  Then("""^Platform checkboxes '(.*)' are selected""") { (platforms: String) =>
+    platforms.split(",").map( platform =>   validateCheckBox(platform, isChecked = true))
+  }
+  
   private def validateInputBox(id: String, expectedValue: String) ={
     val element = webDriver.findElement(By.id(id))
     element.isDisplayed shouldBe true
     element.getAttribute("value") shouldBe expectedValue
   }
 
+  private def validateCheckBox(id: String, isChecked: Boolean) = {
+    val element: WebElement = webDriver.findElement(By.id(id))
+    
+    withClue(s"element $id isSelected does not match $isChecked") {
+      element.isSelected shouldBe isChecked
+    }
+  }
 
   When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") {
     (itemsPerPage: String, page: String) =>
@@ -89,22 +106,29 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     IntegrationCatalogueStub.findWithFilterPaged(keyword, allApis, page, itemsPerPage,  OK)
   }
 
+  When("""^All Apis for platforms '(.*)'$""") {
+    (platforms: String) =>
+      IntegrationCatalogueStub.findWithFilter( platforms = platforms.split(",").toList,  integrationResponse = generateIntegrationResponse(allApis))
+  }
 
   When("""^All available apis are available"""){ () =>
     IntegrationCatalogueStub.findNoFilters(integrationResponse, OK)
   }
 
   When("""^no apis exist that match search keyword '(.*)'$""") { keyword: String =>
-    IntegrationCatalogueStub.findWithFilter(keyword, generateIntegrationResponse(List.empty), OK)
+    IntegrationCatalogueStub.findWithFilter(generateIntegrationResponse(List.empty), keyword = keyword)
   }
 
+  When("""^no apis exist that match platforms '(.*)'$""") { platforms: String =>
+    IntegrationCatalogueStub.findWithFilter(generateIntegrationResponse(List.empty), platforms = platforms.split(",").toList)
+  }
 
   When("""^All apis are exist that match search keyword '(.*)'$""") { keyword: String =>
-    IntegrationCatalogueStub.findWithFilter(keyword, integrationResponse, OK)
+    IntegrationCatalogueStub.findWithFilter(integrationResponse, keyword = keyword)
   }
 
   When("""^One api exists that match search keyword '(.*)'$""") { keyword: String =>
-    IntegrationCatalogueStub.findWithFilter(keyword, generateIntegrationResponse(List(apiDetail1)), OK)
+    IntegrationCatalogueStub.findWithFilter(generateIntegrationResponse(List(apiDetail1)), keyword = keyword)
   }
 
   When("""^An api exists with id '(.*)'$""") { id: String =>
@@ -126,6 +150,13 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   When("""^I enter the search keyword '(.*)' then press Enter$""") { keyword: String =>
     val inputBox = webDriver.findElement(By.id("intCatSearch"))
     inputBox.sendKeys(keyword, Keys.ENTER)
+  }
+
+  When("""^I select the platforms '(.*)'$""") { platforms: String =>
+    platforms.split(",").foreach { platform =>
+      val checkBox = webDriver.findElement(By.id(platform))
+      checkBox.click()
+    }
   }
 
   Then("""^One Api result is shown$""") { () =>
@@ -231,14 +262,6 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     }
   }
 
-  def waitForApiListRedraw(timeToWaitInSeconds: Int)={
-    import org.openqa.selenium.By
-    import org.openqa.selenium.support.ui.ExpectedConditions
-    import org.openqa.selenium.support.ui.WebDriverWait
-    val wait = new WebDriverWait(webDriver, timeToWaitInSeconds)
-
-    wait.until(ExpectedConditions.presenceOfElementLocated(By.id("api_list")))
-  }
 
   private def assertApiRow(rowNumber: Int, apiDetail: ApiDetail) ={
     webDriver.findElement(By.id(s"details-href-$rowNumber")).getText shouldBe apiDetail.title

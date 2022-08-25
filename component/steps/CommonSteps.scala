@@ -28,6 +28,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.concurrent.duration._
 import org.scalatest.matchers.should.Matchers
+import steps.CommonSteps.pages
 
 object TableMisuseAdapters {
   def asListOfKV(dataTable: DataTable): Map[String,String] = {
@@ -45,10 +46,7 @@ object TableMisuseAdapters {
 class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar with CustomMatchers {
   implicit val webDriver: WebDriver = Env.driver
 
-  val pages: Map[String, WebPage] = Map(
-    "Dynamic Search" -> DynamicSearchPage,
-    "Dynamic Search with results" -> DynamicSearchPageWithSearchResults
-  )
+
 
   When( """^I navigate to the '(.*)' page$""") { (pageName: String) =>
     withClue(s"Fail to load page: $pageName")(goOn(pages(pageName)))
@@ -127,4 +125,11 @@ class CommonSteps extends ScalaDsl with EN with Matchers with NavigationSugar wi
     val button = webDriver.findElement(By.id(id))
     button.click()
   }
+}
+
+object CommonSteps {
+  val pages: Map[String, WebPage] = Map(
+    "Dynamic Search" -> DynamicSearchPage,
+    "Dynamic Search with results" -> DynamicSearchPageWithSearchResults
+  )
 }

@@ -243,7 +243,7 @@ function drawApiRow(listNode, api, rowNumber) {
 }
 
 function buildApiCount(rootNode, apiCountVal) {
-    var countText = apiCountVal>0? " APIs" : " API"
+    var countText = apiCountVal>1? " APIs" : " API"
     rootNode.appendChild(buildDomElement("h1", "page-heading", ["govuk-body"], apiCountVal + countText))
 }
 

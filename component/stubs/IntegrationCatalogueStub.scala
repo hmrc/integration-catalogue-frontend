@@ -9,6 +9,8 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelper
 
+import scala.jdk.CollectionConverters._
+
 object IntegrationCatalogueStub extends ListIntegrationsHelper {
 
   def findNoFiltersPaged(apis: List[ApiDetail], page: String, itemsPerPage: String, status: Int = OK) = {
@@ -42,22 +44,21 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
     )
 
   }
-  def findWithFilter(keyword: String, integrationResponse: IntegrationResponse, status: Int = OK) = {
 
+  def findWithFilter(integrationResponse: IntegrationResponse, keyword: String = "", platforms: List[String] = List.empty) = {
 
-      stubFor(
-        get(urlPathEqualTo("/integration-catalogue/integrations"))
-          .withQueryParam("searchTerm", equalTo(keyword))
-          .withQueryParam("itemsPerPage", equalTo("2"))
-          .withQueryParam("currentPage", equalTo("1"))
-          .withQueryParam("integrationType", equalTo("API"))
-          .willReturn(
-            aResponse()
-              .withStatus(status)
-              .withBody(Json.toJson(integrationResponse).toString())
-          )
-      )
-    }
+    stubFor(get(urlPathEqualTo("/integration-catalogue/integrations"))
+      .withQueryParams((if (keyword.nonEmpty) List(keyword) else List.empty).map(keyword => "searchTerm" -> equalTo(keyword)).toMap.asJava)
+      .withQueryParams(platforms.map(platform => "platformFilter" -> equalTo(platform)).toMap.asJava)
+      .withQueryParam("itemsPerPage", equalTo("2"))
+      .withQueryParam("currentPage", equalTo("1"))
+      .withQueryParam("integrationType", equalTo("API"))
+      .willReturn(
+        aResponse()
+          .withStatus(OK)
+          .withBody(Json.toJson(integrationResponse).toString())
+      ))
+  }
 
   def findNoFilters(integrationResponse: IntegrationResponse, status: Int = OK) = {
 
