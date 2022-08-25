@@ -106,7 +106,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     IntegrationCatalogueStub.findWithFilterPaged(keyword, allApis, page, itemsPerPage,  OK)
   }
 
-  When("""^All Apis for platforms '(.*)'$""") {
+  When("""^All Apis will be returned for platforms '(.*)'$""") {
     (platforms: String) =>
       IntegrationCatalogueStub.findWithFilter( platforms = platforms.split(",").toList,  integrationResponse = generateIntegrationResponse(allApis))
   }

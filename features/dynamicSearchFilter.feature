@@ -16,7 +16,7 @@ Feature: Dynamic Search Filter Setup
     And Navigation controls should not be visible
 
   Scenario: Ten APIs setup in the backend and search returns all ten
-    When All Apis for platforms 'API_PLATFORM'
+    When All Apis will be returned for platforms 'API_PLATFORM'
     And I select the platforms 'api-platform'
     And I wait '100' milliSeconds for the api list to be redrawn
     Then page '1' of all api results are shown
@@ -24,7 +24,7 @@ Feature: Dynamic Search Filter Setup
     And Platform checkboxes 'api-platform' are selected
 
   Scenario: Searching for an API by platform, navigating to it, then navigating back, returns to the same search result
-    When All Apis for platforms 'API_PLATFORM,CMA'
+    When All Apis will be returned for platforms 'API_PLATFORM,CMA'
     And An api exists with id '2f0c9fc4-7773-433b-b4cf-15d4cb932e36'
     And I select the platforms 'api-platform,cma'
     And I wait '100' milliSeconds for the api list to be redrawn
