@@ -2,11 +2,14 @@ package component.stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.http.Status.OK
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationDetail, IntegrationResponse, PlatformContactResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
-import pages.DynamicSearchPageWithSearchResults.{generateIntegrationResponse, integrationResponse}
+import pages.DynamicSearchPageWithSearchResults.generateIntegrationResponse
 import play.api.libs.json.Json
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelper
+
+import scala.jdk.CollectionConverters._
 
 object IntegrationCatalogueStub extends ListIntegrationsHelper {
 
@@ -41,22 +44,21 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
     )
 
   }
-  def findWithFilter(keyword: String, integrationResponse: IntegrationResponse, status: Int = OK) = {
 
+  def findWithFilter(integrationResponse: IntegrationResponse, keyword: String = "", platforms: List[String] = List.empty) = {
 
-      stubFor(
-        get(urlPathEqualTo("/integration-catalogue/integrations"))
-          .withQueryParam("searchTerm", equalTo(keyword))
-          .withQueryParam("itemsPerPage", equalTo("2"))
-          .withQueryParam("currentPage", equalTo("1"))
-          .withQueryParam("integrationType", equalTo("API"))
-          .willReturn(
-            aResponse()
-              .withStatus(status)
-              .withBody(Json.toJson(integrationResponse).toString())
-          )
-      )
-    }
+    stubFor(get(urlPathEqualTo("/integration-catalogue/integrations"))
+      .withQueryParams((if (keyword.nonEmpty) List(keyword) else List.empty).map(keyword => "searchTerm" -> equalTo(keyword)).toMap.asJava)
+      .withQueryParams(platforms.map(platform => "platformFilter" -> equalTo(platform)).toMap.asJava)
+      .withQueryParam("itemsPerPage", equalTo("2"))
+      .withQueryParam("currentPage", equalTo("1"))
+      .withQueryParam("integrationType", equalTo("API"))
+      .willReturn(
+        aResponse()
+          .withStatus(OK)
+          .withBody(Json.toJson(integrationResponse).toString())
+      ))
+  }
 
   def findNoFilters(integrationResponse: IntegrationResponse, status: Int = OK) = {
 
@@ -72,6 +74,38 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
             .withBody(Json.toJson(integrationResponse).toString())
         )
     )
+  }
+
+  def findSpecificApi(apiDetail: ApiDetail, status: Int = OK, id: String) = {
+
+    stubFor(
+      get(urlEqualTo(s"/integration-catalogue/integrations/$id"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(Json.toJson(apiDetail.asInstanceOf[IntegrationDetail]).toString())
+        )
+    )
+  }
+
+  def findPlatformContacts(status: Int = OK) = {
+
+
+    val apiPlatformContact = PlatformContactResponse(
+      PlatformType.API_PLATFORM,
+      Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))),
+      true)
+    val coreIfPlatformContact = PlatformContactResponse(
+      PlatformType.CORE_IF,
+      Some(ContactInformation(Some("CoreIf"), Some("core.if@email"))),
+      true)
+    stubFor(get(urlEqualTo("/integration-catalogue/platform/contacts"))
+      .willReturn(
+        aResponse()
+          .withStatus(status)
+          .withHeader("Content-Type", "application/json")
+          .withBody(Json.toJson(List(apiPlatformContact, coreIfPlatformContact)).toString())
+      ))
   }
 }
 

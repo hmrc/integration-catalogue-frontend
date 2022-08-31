@@ -1,5 +1,10 @@
 'use strict';
 
+const minSearchTerms = 2
+const keywordsParamName = "keywords";
+const platformFilterParamName = "platformFilter";
+const pageParamName = "page";
+
 export class ApiList {
 
     constructor() {
@@ -7,28 +12,82 @@ export class ApiList {
 
     init() {
         setUpOnClicks()
-       initialLoad()
+        setupOnKeys()
+        initialLoad()
     }
 
 }
+
 function initialLoad(){
     console.log("INITIAL LOAD TIME")
-   handleSearchBoxClick(true)
+    const url = new URL(window.location.href);
+    reviveFilterOptions(url)
+
+    const pageParam = url.searchParams.get(pageParamName)
+    const currentPage = (pageParam !== null && !isNaN(pageParam) ) ? pageParam : 1 
+ 
+    handlePageLinkClick(currentPage)
 }
 
-function loadData(searchTerm, platformFilter, page, ignoreFilterChecks) {
+function reviveFilterOptions(url){ 
+
+    const searchTerm = url.searchParams.get(keywordsParamName)
+    if(searchTerm !== null) {
+
+        const searchBox = document.getElementById("intCatSearch")
+        searchBox.setAttribute("value", searchTerm)
+    }
+    
+    const platformFilters = url.searchParams.getAll(platformFilterParamName)
+    if(platformFilters !== null && platformFilters.length > 0) {
+        const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
+        for (let x = 0; x < platformBoxes.length; x++) {
+           
+           platformFilters.forEach((value) => {
+               if(platformBoxes[x].getAttribute('value') === value) {
+                   platformBoxes[x].checked = true;
+               }
+           })
+
+        }   
+    }
+}
+
+function updateUrl(searchTerm, platformFilter, page) {
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete(keywordsParamName);
+    if (searchTerm.length >= minSearchTerms)
+        url.searchParams.set(keywordsParamName, searchTerm);
+
+    url.searchParams.delete(platformFilterParamName);
+    if (platformFilter.length > 0)
+        platformFilter.slice(1).split("&").map(platform => {
+            const platformCode = platform.split("=")[1]
+            url.searchParams.append(platformFilterParamName, platformCode)
+        });
+
+    if(page>1) {
+        url.searchParams.set(pageParamName, page);
+    } else{
+        url.searchParams.delete(pageParamName)
+    }
+
+    window.history.replaceState(null, null, url);
+}
+
+function loadData(searchTerm, platformFilter, page) {
     console.log("loadData -  searchTerm:" + searchTerm)
     console.log("loadData -  platformFilter:" + platformFilter)
-    console.log("loadData -  searchTerm:" + searchTerm)
+    console.log("loadData -  page:" + page)
+    
+    updateUrl(searchTerm, platformFilter, page);
 
-    if (searchTerm.length < 2 && platformFilter.length === 0) {
-        if (ignoreFilterChecks) {
-            getApis("", "", page, function () {
-                drawResults(this.responseText);
-            });
-        } else {
-            drawNoResults()
-        }
+    if (searchTerm.length < minSearchTerms && platformFilter.length === 0) {
+        getApis("", "", page, function () {
+            drawResults(this.responseText);
+        });
     } else {
         getApis(searchTerm, platformFilter, page, function () {
             drawResults(this.responseText);
@@ -157,8 +216,8 @@ function drawPagingNavigation(itemsPerPage,
 
     }
     let toResultsVal = toResults > totalCount ? totalCount : toResults
-    let pageResultsText = '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Showing  <b>' + fromResults + '</b> to <b>' + toResultsVal + '</b> of <b>' + totalCount + '</b> results';
-    let pageResults = buildDomElement("p", "page-results", ["moj-pagination__results"], pageResultsText)
+    let pageResultsText = 'Showing  <b>' + fromResults + '</b> to <b>' + toResultsVal + '</b> of <b>' + totalCount + '</b> results';
+    let pageResults = buildDomElement("p", "page-results", ["moj-pagination__results"], pageResultsText, "float: right;")
 
     nav.appendChild(navLabel)
     nav.appendChild(navButtons)
@@ -184,11 +243,11 @@ function drawApiRow(listNode, api, rowNumber) {
 }
 
 function buildApiCount(rootNode, apiCountVal) {
-    var countText = apiCountVal>0? " APIs" : " API"
+    var countText = apiCountVal>1? " APIs" : " API"
     rootNode.appendChild(buildDomElement("h1", "page-heading", ["govuk-body"], apiCountVal + countText))
 }
 
-function buildDomElement(tag, idValue, classes, innerHtml) {
+function buildDomElement(tag, idValue, classes, innerHtml, style = "") {
     let element = document.createElement(tag)
     if (idValue.length > 0) {
         element.setAttribute("id", idValue);
@@ -196,6 +255,9 @@ function buildDomElement(tag, idValue, classes, innerHtml) {
     element.classList.add(...classes)
     if (innerHtml.length > 0) {
         element.innerHTML = innerHtml
+    }
+    if (style.length > 0) {
+        element.setAttribute("style", style)
     }
     return element
 }
@@ -209,7 +271,7 @@ function buildParams(key, items) {
     return params
 }
 
-function handleSearchBoxClick(ignoreFilterChecks) {
+function handleSearchBoxClick() {
     const searchBox = document.getElementById("intCatSearch")
     const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
 
@@ -223,7 +285,7 @@ function handleSearchBoxClick(ignoreFilterChecks) {
     }
 
     let platformFilter = buildParams("platformFilter", selectedPlatformRadios)
-    loadData(searchBox.value, platformFilter, 1, ignoreFilterChecks);
+    loadData(searchBox.value, platformFilter, 1);
 }
 
 function clearApiList() {
@@ -233,7 +295,7 @@ function clearApiList() {
     rootNode.innerHTML = '';
 }
 
-function handlePageLinkClick(page, event){
+function handlePageLinkClick(page){
     const searchBox = document.getElementById("intCatSearch")
     const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
 
@@ -246,45 +308,59 @@ function handlePageLinkClick(page, event){
         }
     }
 
-    loadData(searchBox.value, buildParams("platformFilter", selectedPlatformRadios), page, true);
+    loadData(searchBox.value, buildParams("platformFilter", selectedPlatformRadios), page);
 }
 
 
 
 function addOnClickToPageElement(element, page) {
     if (element.addEventListener) {
-        element.addEventListener('click', (evt) => handlePageLinkClick(page, evt));
+        element.addEventListener('click', (evt) => handlePageLinkClick(page));
     } else if (element.attachEvent) {
-        element.attachEvent('onclick', (evt) => handlePageLinkClick(page, evt));
+        element.attachEvent('onclick', (evt) => handlePageLinkClick(page));
     }
 }
 
-function addOnBlurElement(element) {
+function addOnFocusElement(element) {
     if (element.addEventListener) {
-        element.addEventListener('blur', (evt) => handleSearchBoxClick(false));
+        element.addEventListener('focus', (evt) => handleSearchBoxClick());
     } else if (element.attachEvent) {
-        element.attachEvent('onblur', (evt) => handleSearchBoxClick(false));
+        element.attachEvent('onFocus', (evt) => handleSearchBoxClick());
     }
 }
 
 function addOnClickToElement(element) {
     if (element.addEventListener) {
-        element.addEventListener('click', (evt) => handleSearchBoxClick(false));
+        element.addEventListener('click', (evt) => handleSearchBoxClick());
     } else if (element.attachEvent) {
-        element.attachEvent('onclick', (evt) => handleSearchBoxClick(false));
+        element.attachEvent('onclick', (evt) => handleSearchBoxClick());
+    }
+}
+
+function addOnKeyPressToElement(element) {
+    if (element.addEventListener) {
+        element.addEventListener('keypress', (evt) => {
+            if (evt.key === "Enter") handleSearchBoxClick();
+        });
+    } else if (element.attachEvent) {
+        element.attachEvent('onkeypress', (evt) => {
+            if (evt.key === "Enter") handleSearchBoxClick();
+        });
     }
 }
 
 
 function setUpOnClicks() {
-    addOnBlurElement(document.getElementById("intCatSearch"))
-    addOnClickToElement(document.getElementById("intCatSearch"))
-
     const platformRadios = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
     for(let i=0;i<platformRadios.length;i++) {
         addOnClickToElement(platformRadios[i])
     }
+    addOnFocusElement(document.getElementById("intCatSearchButton"))
     addOnClickToElement(document.getElementById("intCatSearchButton"))
+}
+
+function setupOnKeys() {
+    addOnKeyPressToElement(document.getElementById("intCatSearch"))
 }
 
 /**
