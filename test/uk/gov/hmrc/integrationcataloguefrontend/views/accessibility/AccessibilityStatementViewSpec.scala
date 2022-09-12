@@ -35,10 +35,10 @@ class AccessibilityStatementViewSpec extends CommonViewSpec {
        val document: Document = Jsoup.parse(page.body)
 
        document.getElementById("page-heading").text() shouldBe "Accessibility statement"
-      document.getElementById("page-content1").text() shouldBe "This accessibility statement explains how accessible this service is," +
+      document.getElementById("summary-statement").text() shouldBe "This accessibility statement explains how accessible this service is," +
         " what to do if you have difficulty using it," +
         " and how to report accessibility problems with the service."
-      document.getElementById("page-content2").text() shouldBe "This page only contains information about the internal API Catalogue service," +
+      document.getElementById("disclaimer").text() shouldBe "This page only contains information about the internal API Catalogue service," +
         " available at https://admin.tax.service.gov.uk/api-catalogue"
     }
   }

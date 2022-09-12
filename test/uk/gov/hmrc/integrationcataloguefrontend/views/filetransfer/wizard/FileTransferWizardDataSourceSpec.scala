@@ -57,7 +57,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
       document.getElementById("error-link-0").text() shouldBe "error"
       // do we check that errors element is not displayed?
       document.getElementById("submit").text() shouldBe "Continue"
-      document.getElementById("file-transfer-source-error").text() shouldBe "Error: Select where your data currently stored"
+      document.getElementById("file-transfer-source-error").text() shouldBe "Error: Select where your data is currently stored"
 
       testFileTransferBackends(document, isChecked = false)
 
