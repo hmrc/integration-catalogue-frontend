@@ -24,35 +24,35 @@
 
 @layout(pageTitle = Some(s"About - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
     <h1 class="govuk-heading-l" id="page-heading">About the API catalogue</h1>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         If you want to access or transfer data, you can check if there’s an existing way to access and transfer data across HMRC.
     </p>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         By reusing what’s already available, you don’t need to build a single use solution which saves you time and money.
     </p>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         There are two ways you can securely access and transfer data across HMRC.
     </p>
     <ol class="govuk-list govuk-list--number">
         <li>APIs</li>
         <li>File transfer connections</li>
     </ol>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         APIs let IT systems and applications talk to each other and share data in real time.
     </p>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         File transfers move batch files or sets of data from A to B. Unlike an API, a file transfer only moves data from one place to another.
     </p>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         File transfers use connections to send data. You can reuse existing file transfer connections for your service.
     </p>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" class="govuk-link">Review available HMRC APIs</a>
          or 
          <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart.url" class="govuk-link">check for file transfer connections</a>
     </p>
     <h2 class="govuk-heading-m">Using the service</h2>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         Use this service to:
     </p>
     <ul class="govuk-list govuk-list--bullet">
@@ -60,14 +60,14 @@
         <li>find existing HMRC APIs and file transfer connections</li>
         <li>read details about APIs</li>
     </ul>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         <a href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.getStartedPage" class="govuk-link">Read our get started guide before you start searching.</a>
     </p>
     <h2 class="govuk-heading-m">Reusing APIs and file transfer connections</h2>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         Instead of building a new API or file transfer connection every time your service needs to access or transfer data, you can reuse existing APIs and file transfer connections.
     </p>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         Reusing what's available:
     </p>
     <ul class="govuk-list govuk-list--bullet">
@@ -77,7 +77,7 @@
         <li>removes the need for single use APIs or file transfers</li>
     </ul>
     <h2 class="govuk-heading-m">Contact the API catalogue team</h2>
-    <p class="govuk-body" id="page-content">
+    <p class="govuk-body">
         You can email the API catalogue team at
             <a href="mailto:@HtmlFormat.raw("api-catalogue-g@digital.hmrc.gov.uk")" class="govuk-link" style="white-space: nowrap">@HtmlFormat.raw("api-catalogue-g@digital.hmrc.gov.uk")</a>.
     </p>

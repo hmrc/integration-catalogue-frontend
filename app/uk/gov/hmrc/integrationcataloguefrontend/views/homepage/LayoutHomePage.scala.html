@@ -49,9 +49,14 @@
     <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>
 }
 
+@stylesheets = {
+    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/homepage.css")'>
+}
+
 @bodyEndDefault = {
     @bodyEndBlock
     @scripts
+    @stylesheets
 }
 
 @govukTemplate(
