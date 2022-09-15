@@ -45,11 +45,11 @@
     </ul>
 
     @for(platformContact <- platformContacts) {
-        <p id="contact-section" class="govuk-body">For information about the @{platformContact.platform.fileTransferName} connection, email
-        </br>
-          <a id="contact-link" href="mailto:@{platformContact.email}" class="govuk-link" style="white-space: nowrap">@{platformContact.email}</a>.
-        </p>
-      </br>
+      <p id="contact-section" class="govuk-body">For information about the @{platformContact.platform.fileTransferName} connection, email
+        <br>
+        <a id="contact-link" href="mailto:@{platformContact.email}" class="govuk-link" style="white-space: nowrap">@{platformContact.email}</a>.
+      </p>
+      <br>
     }
 
   </form>
