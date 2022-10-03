@@ -37,9 +37,9 @@ class FileTransferWizardNoConnectionsSpec extends CommonViewSpec {
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "No file transfer connection exists -"
       document.getElementById("page-heading").text() shouldBe s"No file transfer connection exists between $source and $target"
-      document.getElementById("contact-section").text() shouldBe "Contact the Integration Framework team at SM124450863@internal.hmrc.gov.uk to request a new file transfer connection."
-      document.getElementById("contact-link").text() shouldBe "SM124450863@internal.hmrc.gov.uk"
-      document.getElementById("contact-link").attr("href") shouldBe "mailto:SM124450863@internal.hmrc.gov.uk"
+      document.getElementById("contact-section").text() shouldBe "Contact deslivesupport@hmrc.gov.uk to request a new file transfer connection."
+      document.getElementById("contact-link").text() shouldBe "deslivesupport@hmrc.gov.uk"
+      document.getElementById("contact-link").attr("href") shouldBe "mailto:deslivesupport@hmrc.gov.uk"
 
     }
   }
