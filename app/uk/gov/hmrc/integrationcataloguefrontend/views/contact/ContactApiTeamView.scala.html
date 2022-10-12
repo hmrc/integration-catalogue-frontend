@@ -44,11 +44,11 @@
 
         <div id="form-group" class="govuk-form-group">
 
-            <fieldset class="govuk-fieldset">
-            @helper.form(action =
-                uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.contactApiTeamAction(apiDetail.id)) {
-                @helper.CSRF.formField
+        @helper.form(action =
+            uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.contactApiTeamAction(apiDetail.id)) {
+            @helper.CSRF.formField
 
+            <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group">
                     <label id="full-name-label" class="govuk-label govuk-!-margin-top-5" for="fullName">
                         Full name
@@ -98,14 +98,12 @@
                     </label>
                     <textarea class="govuk-textarea" id="specificQuestion" name="specificQuestion" rows="5"></textarea>
                 </div>
-            }
             </fieldset>
 
-            <div class="govuk-form-group">
-                <button id="send-message-button" class="govuk-button" data-module="govuk-button">
-                    Send message
-                </button>
-            </div>
+            <button id="send-message-button" class="govuk-button" data-module="govuk-button">
+                Send message
+            </button>
+        }
         </div>
     </div>
 
