@@ -23,65 +23,21 @@ import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.PlatformFilterComponent
 
-import scala.collection.JavaConverters._
-
 class PlatformFilterComponentSpec extends CommonViewSpec {
 
   trait Setup {
     val platformFilterComponent = app.injector.instanceOf[PlatformFilterComponent]
   }
 
-
   "PlatformFilterComponent" should {
     val platformFilter: List[PlatformType] = PlatformType.values.toList
-
-    def testPlatformFilterLabels(document : Document)={
-      document.getElementById("api-platform-filter-label").text() shouldBe "API Platform"
-      document.getElementById("cma-filter-label").text() shouldBe "Containerised Managed Architecture (CMA)"
-      document.getElementById("cds-classic-filter-label").text() shouldBe "Customs Declaration System (CDS Classic)"
-      document.getElementById("dapi-filter-label").text() shouldBe "DAPI"
-      document.getElementById("des-filter-label").text() shouldBe "Data Exchange Service (DES)"
-      document.getElementById("digi-filter-label").text() shouldBe "DIGI"
-      document.getElementById("core-if-filter-label").text() shouldBe "Integration Framework (IF)"
-      document.getElementById("transaction-engine-filter-label").text() shouldBe "Transaction Engine"
-      document.getElementById("cip-filter-label").text() shouldBe "CIP (Customer Insight Platform)"
-    }
-
-    def testPlatformFilter(document: Document, isChecked: Boolean) ={
-                testPlatformFilterLabels(document)
-                testPlatformFilterCheckBoxes(document, isChecked)
-    }
-
-    def testPlatformFilterCheckBoxes(document: Document, isChecked: Boolean )= {
-        testCheckBox(document, "api-platform", isChecked )
-        testCheckBox(document, "cma", isChecked )
-        testCheckBox(document, "cds-classic", isChecked )
-        testCheckBox(document, "dapi", isChecked )
-        testCheckBox(document, "des", isChecked )
-        testCheckBox(document, "digi", isChecked )
-        testCheckBox(document, "core-if", isChecked)
-        testCheckBox(document, "transaction-engine", isChecked )
-        testCheckBox(document, "cip", isChecked )
-
-    }
-
-    def testCheckBox(document: Document, checkboxId: String, isChecked: Boolean) ={
-      withClue(s"checkbox $checkboxId test failed") {
-        document.getElementById(checkboxId)
-          .attributes().asList().asScala.map(_.getKey)
-          .contains( "checked") shouldBe isChecked
-      }
-    }
 
     "render platform filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
        val page : Html = platformFilterComponent.render(List.empty)
        val document: Document = Jsoup.parse(page.body)
       document.getElementById("platform-filter-label").text() shouldBe "Platform"
-
-      //test filter labels
       testPlatformFilter(document, isChecked = false)
-     
     }
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
@@ -90,8 +46,6 @@ class PlatformFilterComponentSpec extends CommonViewSpec {
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("platform-filter-label").text() shouldBe "Platform"
-
-      //test filter labels
       testPlatformFilter(document, isChecked = true)
     }
   }

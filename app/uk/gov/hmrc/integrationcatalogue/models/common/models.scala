@@ -43,7 +43,8 @@ object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {
   case object DAPI extends PlatformType("DAPI", "DAPI", "DAPI")
   case object DIGI extends PlatformType("DIGI", "DIGI", "DIGI")
   case object SDES extends PlatformType("SDES", "SDES", "SDES")
-  case object CIP extends PlatformType("CIP (Customer Insight Platform)", "CIP", "CIP")
+  case object CIP extends PlatformType("Customer Insight Platform (CIP)", "CIP", "CIP")
+  case object HIP extends PlatformType("Hybrid Integration Platform (HIP)", "HIP", "HIP")
 }
 
 sealed trait SpecificationType extends EnumEntry

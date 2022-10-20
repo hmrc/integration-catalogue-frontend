@@ -44,7 +44,8 @@ class FilterApisComponentSpec extends CommonViewSpec {
       document.getElementById("digi-filter-label").text() shouldBe "DIGI"
       document.getElementById("core-if-filter-label").text() shouldBe "Integration Framework (IF)"
       document.getElementById("transaction-engine-filter-label").text() shouldBe "Transaction Engine"
-      document.getElementById("cip-filter-label").text() shouldBe "CIP (Customer Insight Platform)"
+      document.getElementById("cip-filter-label").text() shouldBe "Customer Insight Platform (CIP)"
+      document.getElementById("hip-filter-label").text() shouldBe "Hybrid Integration Platform (HIP)"
     }
 
     def testPlatformFilter(document: Document, isChecked: Boolean) = {
@@ -62,6 +63,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
       testCheckBox(document, "core-if", isChecked)
       testCheckBox(document, "transaction-engine", isChecked)
       testCheckBox(document, "cip", isChecked)
+      testCheckBox(document, "hip", isChecked)
     }
 
     def testCheckBox(document: Document, checkboxId: String, isChecked: Boolean) = {
