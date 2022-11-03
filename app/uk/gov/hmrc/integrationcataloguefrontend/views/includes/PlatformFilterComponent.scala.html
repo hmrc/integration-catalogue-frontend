@@ -33,14 +33,14 @@
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="api-platform" name="platformFilter" type="checkbox" value="API_PLATFORM" @if(platformFilter.contains(API_PLATFORM)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="api-platform" id="api-platform-filter-label" >
-                    API Platform
+                @{API_PLATFORM.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="cma" name="platformFilter" type="checkbox" value="CMA" @if(platformFilter.contains(CMA)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cma" id="cma-filter-label">
-                    Containerised Managed Architecture (CMA)
+                    @{CMA.displayName}
                 </label>
             </div>
 
@@ -48,49 +48,55 @@
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="cds-classic" name="platformFilter" type="checkbox" value="CDS_CLASSIC" @if(platformFilter.contains(CDS_CLASSIC)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cds-classic" id="cds-classic-filter-label" >
-                    Customs Declaration System (CDS Classic)
+                    @{CDS_CLASSIC.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="dapi" name="platformFilter" type="checkbox" value="DAPI" @if(platformFilter.contains(DAPI)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="dapi" id="dapi-filter-label">
-                   DAPI
+                    @{DAPI.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="des" name="platformFilter" type="checkbox" value="DES" @if(platformFilter.contains(DES)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="des" id="des-filter-label">
-                   Data Exchange Service (DES)
+                    @{DES.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="digi" name="platformFilter" type="checkbox" value="DIGI" @if(platformFilter.contains(DIGI)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="digi" id="digi-filter-label">
-                   DIGI
+                    @{DIGI.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="core-if" name="platformFilter" type="checkbox" value="CORE_IF" @if(platformFilter.contains(CORE_IF)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="core-if" id="core-if-filter-label">
-                    Integration Framework (IF)
+                    @{CORE_IF.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="transaction-engine" name="platformFilter" type="checkbox" value="TRANSACTION_ENGINE" @if(platformFilter.contains(TRANSACTION_ENGINE)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="transaction-engine" id="transaction-engine-filter-label">
-                    Transaction Engine
+                    @{TRANSACTION_ENGINE.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="cip" name="platformFilter" type="checkbox" value="CIP" @if(platformFilter.contains(CIP)){ checked }>
                 <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cip" id="cip-filter-label">
-                    CIP (Customer Insight Platform)
+                    @{CIP.displayName}
+                </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="hip" name="platformFilter" type="checkbox" value="HIP" @if(platformFilter.contains(HIP)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="hip" id="hip-filter-label">
+                    @{HIP.displayName}
                 </label>
             </div>
 
