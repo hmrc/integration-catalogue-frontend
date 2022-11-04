@@ -45,16 +45,16 @@
             </div>
 
             <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="cds-classic" name="platformFilter" type="checkbox" value="CDS_CLASSIC" @if(platformFilter.contains(CDS_CLASSIC)){ checked }>
-                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cds-classic" id="cds-classic-filter-label" >
-                    @{CDS_CLASSIC.displayName}
+                <input class="govuk-checkboxes__input" id="cip" name="platformFilter" type="checkbox" value="CIP" @if(platformFilter.contains(CIP)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cip" id="cip-filter-label">
+                @{CIP.displayName}
                 </label>
             </div>
 
             <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="cip" name="platformFilter" type="checkbox" value="CIP" @if(platformFilter.contains(CIP)){ checked }>
-                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cip" id="cip-filter-label">
-                @{CIP.displayName}
+                <input class="govuk-checkboxes__input" id="cds-classic" name="platformFilter" type="checkbox" value="CDS_CLASSIC" @if(platformFilter.contains(CDS_CLASSIC)){ checked }>
+                <label class="govuk-label govuk-checkboxes__label checkbox-label-small" for="cds-classic" id="cds-classic-filter-label" >
+                @{CDS_CLASSIC.displayName}
                 </label>
             </div>
 
