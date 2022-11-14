@@ -19,7 +19,6 @@ export class ApiList {
 }
 
 function initialLoad(){
-    console.log("INITIAL LOAD TIME")
     const url = new URL(window.location.href);
     reviveFilterOptions(url)
 
@@ -78,10 +77,7 @@ function updateUrl(searchTerm, platformFilter, page) {
 }
 
 function loadData(searchTerm, platformFilter, page) {
-    console.log("loadData -  searchTerm:" + searchTerm)
-    console.log("loadData -  platformFilter:" + platformFilter)
-    console.log("loadData -  page:" + page)
-    
+
     updateUrl(searchTerm, platformFilter, page);
 
     if (searchTerm.length < minSearchTerms && platformFilter.length === 0) {
@@ -100,7 +96,6 @@ function getApis(searchTerm, platforms, page, callback) {
 
     var pageFilter = "&currentPage=" + page
     var url = "/api-catalogue/quicksearch?searchValue=" + searchTerm + platforms + pageFilter;
-    console.log(url)
     var xhttp = new XMLHttpRequest();
 
     xhttp.addEventListener('load', callback);
@@ -280,7 +275,6 @@ function handleSearchBoxClick() {
     for (let x = 0; x < platformBoxes.length; x++) {
         if (platformBoxes[x].checked) {
             selectedPlatformRadios.push(platformBoxes[x].value)
-            console.log(platformBoxes[x].value)
         }
     }
 
@@ -289,7 +283,6 @@ function handleSearchBoxClick() {
 }
 
 function clearApiList() {
-    console.log("about to clean api list")
 
     const rootNode = document.getElementById('api-container');
     rootNode.innerHTML = '';
@@ -304,7 +297,6 @@ function handlePageLinkClick(page){
     for (let x = 0; x < platformBoxes.length; x++) {
         if (platformBoxes[x].checked) {
             selectedPlatformRadios.push(platformBoxes[x].value)
-            console.log(platformBoxes[x].value)
         }
     }
 
