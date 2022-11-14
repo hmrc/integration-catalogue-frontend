@@ -11,7 +11,7 @@ GET        /case-studies                              uk.gov.hmrc.integrationcat
 GET        /file-transfer-patterns                    uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.fileTransferPatternsPage
 
 #dynamic pages
-GET        /search                                    uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.listIntegrations(keywords: Option[String], platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], backendsFilter: List[String], itemsPerPage: Option[Int], currentPage: Option[Int])
+#GET        /search                                    uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.listIntegrations(keywords: Option[String], platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], backendsFilter: List[String], itemsPerPage: Option[Int], currentPage: Option[Int])
 GET        /integrations/:id/contact                  uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.contactApiTeamPage(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId)
 POST       /integrations/:id/contact                  uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.contactApiTeamAction(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId)
 GET        /integrations/:id/files/oas                uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationOas(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId)
@@ -27,5 +27,5 @@ POST       /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcat
 GET        /filetransfer/wizard/connections           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.getFileTransferTransportsByPlatform(source: String, target: String)
 
 
-GET        /dynamic-search                            uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.dynamicList()
+GET        /search                                    uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.dynamicList()
 GET        /quicksearch                               uk.gov.hmrc.integrationcataloguefrontend.controllers.QuickSearchController.quickSearch(searchValue: String, platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], currentPage: Option[Int])

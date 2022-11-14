@@ -69,17 +69,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         result.status mustBe OK
       }
 
-      "respond with 200 and render fileTransferInterruptBox when keyword matches fileTransferSearchTerm" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-                          Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=filetransfer&itemsPerPage=30&integrationType=API")
-
-        val result = callGetEndpoint(s"$url/search?keywords=filetransfer", List.empty)
-        result.status mustBe OK
-
-        val document: Document = Jsoup.parse(result.body)
-        Option(document.getElementById("ft-interrupt-heading")).isDefined mustBe true
-      }
-
       "respond with 200 and do not render fileTransferInterruptBox when keyword does not match any fileTransferSearchTerms" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
                           Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=api&itemsPerPage=30&integrationType=API")
@@ -92,29 +81,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
       }
 
-      "respond with 500 and render correctly when Not Found returned from backend" in {
-        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_FOUND)
-
-        val result = callGetEndpoint(s"$url/search", List.empty)
-        result.status mustBe INTERNAL_SERVER_ERROR
-
-      }
-
-      "respond with 400 and render correctly when Bad Request returned from backend" in {
-        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", BAD_REQUEST)
-
-        val result = callGetEndpoint(s"$url/search", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 400  when unexpected error from backend" in {
-        primeIntegrationCatalogueServiceFindWithFilterReturnsError("?itemsPerPage=30&integrationType=API", NOT_ACCEPTABLE)
-
-        val result = callGetEndpoint(s"$url/search", List.empty)
-        result.status mustBe INTERNAL_SERVER_ERROR
-
-      }
 
       "respond with 200 and render correctly when search query param provided" in {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
@@ -141,18 +107,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
         val result = callGetEndpoint(s"$url/search?keywords=marriage&someUnKnownKey=CORE_IF", List.empty)
         result.status mustBe OK
-
-      }
-
-      "respond with 400 when invalid platform type provided as filter" in {
-        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=UNKNOWN", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 400 when empty platform type provided as filter" in {
-        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=", List.empty)
-        result.status mustBe BAD_REQUEST
 
       }
 

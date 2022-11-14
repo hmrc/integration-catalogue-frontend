@@ -61,7 +61,7 @@ object CurrentPage extends CommonPage {
 case object DynamicSearchPage extends CommonJsPage {
 
   override val pageTitle: String = "Search results - API catalogue"
-  override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
+  override val url: String = s"${Env.host}/api-catalogue/search"
 
 }
 
@@ -69,7 +69,7 @@ case object DynamicSearchPageWithSearchResults extends CommonPage with PagingHel
 
   // pageTitle is populated dynamically
   override val pageTitle: String = ""
-  override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
+  override val url: String = s"${Env.host}/api-catalogue/search"
 
   val publisherRefAndApiMap = Map(
     "marraige-allowance" -> apiDetail1,
