@@ -1,4 +1,5 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
+import com.typesafe.sbt.digest.Import._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import bloop.integrations.sbt.BloopDefaults
 import uk.gov.hmrc.ForkedJvmPerTestSettings.oneForkedJvmPerTest
@@ -9,10 +10,11 @@ val silencerVersion = "1.7.6"
 lazy val ComponentTest = config("component") extend Test
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(SbtWeb, play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
   .settings(
     majorVersion                     := 0,
     scalaVersion                     := "2.12.15",
+
     routesImport                      += "uk.gov.hmrc.integrationcataloguefrontend.controllers.binders._",
     Test / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
@@ -32,7 +34,11 @@ lazy val microservice = Project(appName, file("."))
     )
     // ***************
   )
-  .settings(publishingSettings, 
+  .settings(
+    pipelineStages := Seq(digest),
+    includeFilter in digest := "*.js"
+  )
+  .settings(publishingSettings,
    scoverageSettings)
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)

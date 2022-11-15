@@ -5,7 +5,7 @@ const keywordsParamName = "keywords";
 const platformFilterParamName = "platformFilter";
 const pageParamName = "page";
 
-export class ApiList {
+class ApiList {
 
     constructor() {
     }
@@ -23,12 +23,12 @@ function initialLoad(){
     reviveFilterOptions(url)
 
     const pageParam = url.searchParams.get(pageParamName)
-    const currentPage = (pageParam !== null && !isNaN(pageParam) ) ? pageParam : 1 
- 
+    const currentPage = (pageParam !== null && !isNaN(pageParam) ) ? pageParam : 1
+
     handlePageLinkClick(currentPage)
 }
 
-function reviveFilterOptions(url){ 
+function reviveFilterOptions(url){
 
     const searchTerm = url.searchParams.get(keywordsParamName)
     if(searchTerm !== null) {
@@ -36,19 +36,19 @@ function reviveFilterOptions(url){
         const searchBox = document.getElementById("intCatSearch")
         searchBox.setAttribute("value", searchTerm)
     }
-    
+
     const platformFilters = url.searchParams.getAll(platformFilterParamName)
     if(platformFilters !== null && platformFilters.length > 0) {
         const platformBoxes = document.getElementById("platform-items").getElementsByClassName("govuk-checkboxes__input")
         for (let x = 0; x < platformBoxes.length; x++) {
-           
+
            platformFilters.forEach((value) => {
                if(platformBoxes[x].getAttribute('value') === value) {
                    platformBoxes[x].checked = true;
                }
            })
 
-        }   
+        }
     }
 }
 
@@ -365,4 +365,3 @@ document.addEventListener('DOMContentLoaded', function () {
     apiList.init();
 
 });
-
