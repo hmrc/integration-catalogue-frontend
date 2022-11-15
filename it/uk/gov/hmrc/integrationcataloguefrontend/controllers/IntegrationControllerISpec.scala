@@ -60,63 +60,6 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
 
   "ApiController" when {
 
-    "GET /search" should {
-      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-          Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?itemsPerPage=30&integrationType=API")
-
-        val result = callGetEndpoint(s"$url/search", List.empty)
-        result.status mustBe OK
-      }
-
-      "respond with 200 and do not render fileTransferInterruptBox when keyword does not match any fileTransferSearchTerms" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-                          Json.toJson(IntegrationResponse(count = 0, results = List.empty)).toString, "?searchTerm=api&itemsPerPage=30&integrationType=API")
-
-        val result = callGetEndpoint(s"$url/search?keywords=api", List.empty)
-        result.status mustBe OK
-
-        val document: Document = Jsoup.parse(result.body)
-        Option(document.getElementById("ft-interrupt-heading")).isDefined mustBe false
-
-      }
-
-
-      "respond with 200 and render correctly when search query param provided" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-          Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
-
-        val result = callGetEndpoint(s"$url/search?keywords=marriage", List.empty)
-        result.status mustBe OK
-
-      }
-
-      "respond with 200 and render correctly when platform & search query params provided" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-          Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString,
-          "?searchTerm=marriage&platformFilter=CORE_IF&backendsFilter=ETMP&itemsPerPage=30&integrationType=API")
-
-        val result = callGetEndpoint(s"$url/search?keywords=marriage&platformFilter=CORE_IF&backendsFilter=ETMP", List.empty)
-        result.status mustBe OK
-
-      }
-
-      "respond with 200 and render correctly when search query params provided but another invalid query paramkey" in {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK,
-          Json.toJson(IntegrationResponse(count = 1, results = List(exampleApiDetail))).toString, "?searchTerm=marriage&itemsPerPage=30&integrationType=API")
-
-        val result = callGetEndpoint(s"$url/search?keywords=marriage&someUnKnownKey=CORE_IF", List.empty)
-        result.status mustBe OK
-
-      }
-
-      "respond with 404 and render errorTemplate Correctly when path invalid" in {
-        val result = callGetEndpoint(s"$url/unknown-path", List.empty)
-        result.status mustBe NOT_FOUND
-
-      }
-    }
-
 
     "GET /integrations/{apiId}/{encodedTitle}" should {
       "respond with 200 and render correctly when title in url matches integration title when encoded" in {
