@@ -19,7 +19,6 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.technicaldetails
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiTechnicalDetailsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
-import play.api.test.FakeRequest
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import play.twirl.api.Html
 import org.jsoup.nodes.Document

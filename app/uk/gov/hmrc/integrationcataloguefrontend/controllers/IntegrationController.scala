@@ -30,7 +30,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
-import uk.gov.hmrc.play.bootstrap.controller.WithDefaultFormBinding
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -55,7 +55,7 @@ class IntegrationController @Inject() (
     extends FrontendController(mcc)
     with Logging
     with ListIntegrationsHelper
-    with WithDefaultFormBinding {
+    with WithUnsafeDefaultFormBinding {
 
   implicit val config: AppConfig = appConfig
 

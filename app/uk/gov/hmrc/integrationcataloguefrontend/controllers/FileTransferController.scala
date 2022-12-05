@@ -24,7 +24,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
-import uk.gov.hmrc.play.bootstrap.controller.WithDefaultFormBinding
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
@@ -44,7 +44,7 @@ class FileTransferController @Inject() (
   )(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
       with FtWizardHelper
-      with WithDefaultFormBinding {
+      with WithUnsafeDefaultFormBinding {
 
   implicit val config: AppConfig = appConfig
 

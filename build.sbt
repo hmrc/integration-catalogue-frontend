@@ -43,7 +43,7 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / parallelExecution := false,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
-    (managedClasspath in IntegrationTest) += (packageBin in Assets).value
+    IntegrationTest / managedClasspath += (Assets / packageBin).value
   )
   .configs(ComponentTest)
   .settings(inConfig(ComponentTest)(Defaults.testSettings): _*)
@@ -54,7 +54,7 @@ lazy val microservice = Project(appName, file("."))
     ComponentTest / unmanagedResourceDirectories += baseDirectory.value / "test",
     ComponentTest / unmanagedResourceDirectories += baseDirectory.value / "target" / "web" / "public" / "test",
     ComponentTest / testOptions += Tests.Setup(() => System.setProperty("javascript.enabled", "true")),
-    ComponentTest / testGrouping := oneForkedJvmPerTest((definedTests in ComponentTest).value),
+    ComponentTest / testGrouping := oneForkedJvmPerTest((ComponentTest / definedTests).value),
     ComponentTest / parallelExecution := false
   )
 
@@ -69,6 +69,6 @@ lazy val microservice = Project(appName, file("."))
       ScoverageKeys.coverageMinimumBranchTotal := 85,
       ScoverageKeys.coverageFailOnMinimum := true,
       ScoverageKeys.coverageHighlighting := true,
-      parallelExecution in Test := false
+      Test / parallelExecution := false
   )
 }
