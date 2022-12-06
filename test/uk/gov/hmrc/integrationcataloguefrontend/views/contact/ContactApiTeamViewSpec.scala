@@ -18,11 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.contact
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.mvc.{AnyContent, Request}
 import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.api.test.FakeRequest
 import play.twirl.api.Html
-import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ContactApiTeamForm
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
@@ -33,7 +31,7 @@ class ContactApiTeamViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
     val contactApiTeamView = app.injector.instanceOf[ContactApiTeamView]
-    val fakeRequest = FakeRequest().withCSRFToken.withBody()
+    val fakeRequest = FakeRequest().withCSRFToken
   }
 
   "ContactApiTeamPage" should {

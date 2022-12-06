@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import org.mockito.captor.{ArgCaptor, Captor}
 import org.mockito.stubbing.ScalaOngoingStubbing
 import play.api.http.Status.{ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Writes

@@ -29,7 +29,6 @@ import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.WithCSRFAddToken
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.dynamic.DynamicListView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 

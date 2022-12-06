@@ -19,7 +19,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.FakeRequest
-import play.api.test.CSRFTokenHelper._
+import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.twirl.api.Html
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataTarget
@@ -34,7 +34,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
   "FT wizard data target page" should {
 
     "render page correctly" in new Setup {
-      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form, "source", FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
+      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form, "source", FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "Where do you want to send your data? -"
       document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
@@ -52,7 +52,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
     }
 
     "render page correctly with errors" in new Setup {
-      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form.withError("dataSource", "error"), "source", FakeRequest().withCSRFToken.withBody(), messagesProvider.messages, appConfig)
+      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form.withError("dataSource", "error"), "source", FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"

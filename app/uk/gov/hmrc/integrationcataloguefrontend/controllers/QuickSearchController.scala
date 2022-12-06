@@ -21,7 +21,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetailSummary.fromIntegrationDetail
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, ApiDetailSummary, DynamicPageResponse, IntegrationFilter, JsonFormatters}
+import uk.gov.hmrc.integrationcatalogue.models.{DynamicPageResponse, IntegrationFilter, JsonFormatters}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.dynamic.DynamicListView
