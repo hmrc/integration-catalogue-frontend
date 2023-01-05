@@ -23,8 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationResponse
-import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
+import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
@@ -33,7 +32,6 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.helper.WithCSRFAddToken
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTeamSuccessView, ContactApiTeamView}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -67,7 +65,6 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   private val serviceConfig = new ServicesConfig(configuration)
   private val appConfig = new AppConfig(configuration, serviceConfig)
 
-  val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
   private val apiDetailView = app.injector.instanceOf[ApiDetailView]
   private val apiTechnicalDetailsView = app.injector.instanceOf[ApiTechnicalDetailsView]
   private val apiTechnicalDetailsViewRedoc = app.injector.instanceOf[ApiTechnicalDetailsViewRedoc]
@@ -92,7 +89,6 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     appConfig,
     stubMessagesControllerComponents(),
     mockIntegrationService,
-    listApisView,
     apiDetailView,
     fileTransferDetailView,
     apiTechnicalDetailsView,
@@ -103,30 +99,6 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     contactApiTeamSuccessView,
     mockEmailService
   )
-
-  "GET /" should {
-    "return 200 when Some(ApiId) is Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *)(*))
-        .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
-      val result = controller.listIntegrations(Some("SomeId"))(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return HTML" in {
-      when(mockIntegrationService.findWithFilters(*, *, *)(*))
-        .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
-      val result = controller.listIntegrations(None)(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }
-
-    "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *)(*))
-        .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
-      val result = controller.listIntegrations(Some("SomeId"), List(PlatformType.CORE_IF, PlatformType.API_PLATFORM))(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-  }
 
   "findByIntegrationId" should {
 

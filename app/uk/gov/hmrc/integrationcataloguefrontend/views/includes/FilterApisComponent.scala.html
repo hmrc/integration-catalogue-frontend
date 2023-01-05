@@ -20,7 +20,7 @@
 
 @(apiNameSearch: String,  platformFilter: List[PlatformType], backendsFilter: List[String])(implicit appConfig: AppConfig)
 
-<form class="govuk-int-search" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" method="get">
+@*<form class="govuk-int-search" name="api-search" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None).url" method="get">*@
     <div>
         <div class="govuk-filter-search-container">
             <label class="govuk-visually-hidden" for="intCatSearch" id="filter-label">Search by typing a API name</label>
@@ -40,4 +40,4 @@
             Filter
         </button>
     </div>
-</form>
+@*</form>*@

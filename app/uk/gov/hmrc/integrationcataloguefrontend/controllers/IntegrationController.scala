@@ -27,7 +27,6 @@ import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, Integrat
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTeamSuccessView, ContactApiTeamView}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
@@ -41,7 +40,6 @@ class IntegrationController @Inject() (
     appConfig: AppConfig,
     mcc: MessagesControllerComponents,
     integrationService: IntegrationService,
-    listIntegrationsView: ListIntegrationsView,
     apiDetailView: ApiDetailView,
     fileTransferDetailView: FileTransferDetailView,
     apiTechnicalDetailsView: ApiTechnicalDetailsView,
@@ -104,41 +102,6 @@ class IntegrationController @Inject() (
       case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
   }
-
-  def listIntegrations(
-      keywords: Option[String] = None,
-      platformFilter: List[PlatformType] = List.empty,
-      backendsFilter: List[String] = List.empty,
-      itemsPerPage: Option[Int] = None,
-      currentPage: Option[Int] = None
-    ): Action[AnyContent] =
-    Action.async { implicit request =>
-      val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
-      val currentPageCalc = currentPage.getOrElse(1)
-      integrationService.findWithFilters(IntegrationFilter(List(keywords.getOrElse("")), platformFilter, backendsFilter), Some(itemsPerPageCalc), currentPage).map {
-        case Right(response)              =>
-          //are keywords in list? Boolean
-          Ok(listIntegrationsView(
-            response.results,
-            keywords.getOrElse(""),
-            platformFilter,
-            backendsFilter,
-            itemsPerPageCalc,
-            response.count,
-            currentPageCalc,
-            calculateNumberOfPages(response.count, itemsPerPageCalc),
-            calculateFromResults(currentPageCalc, itemsPerPageCalc),
-            calculateToResults(currentPageCalc, itemsPerPageCalc),
-            calculateFirstPageLink(currentPageCalc),
-            calculateLastPageLink(currentPageCalc, calculateNumberOfPages(response.count, itemsPerPageCalc)),
-            showFileTransferInterrupt(config.fileTransferSearchTerms.toList, keywords)
-          ))
-
-        case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-        case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
-      }
-
-    }
 
   def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {

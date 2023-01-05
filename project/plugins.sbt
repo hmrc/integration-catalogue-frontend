@@ -15,6 +15,8 @@ addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.11")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.1")
 
+addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.4")
+
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
