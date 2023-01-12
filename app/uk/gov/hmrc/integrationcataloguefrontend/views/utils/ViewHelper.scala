@@ -20,6 +20,7 @@ import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, I
 
 object ViewHelper {
 
+  // scalastyle:off magic.number
   def handleDescription(integration: IntegrationDetail): String = {
     integration match {
       case api: ApiDetail                   =>
@@ -29,7 +30,8 @@ object ViewHelper {
     }
   }
 
-  def replaceOrRemoveInvalidChars(value: String): String = {
+  // scalastyle:on magic.number
+  def replaceOrRemoveInvalidChars(value: String): String        = {
     value
       .replaceAll("\n", " ")
       .trim

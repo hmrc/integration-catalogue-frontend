@@ -53,12 +53,12 @@ case class NumberAttributes(
 sealed trait Schema {
   def name: Option[String]
   def not: Option[Schema]
-  def `type`: Option[String]
+  def `type`: Option[String] // scalastyle:ignore
   def pattern: Option[String]
   def description: Option[String]
   def ref: Option[String]
   def properties: List[Schema]
-  def `enum`: List[String]
+  def `enum`: List[String]   // scalastyle:ignore
   def required: List[String]
   def minProperties: Option[Int]
   def maxProperties: Option[Int]
