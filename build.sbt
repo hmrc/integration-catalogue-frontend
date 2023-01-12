@@ -5,8 +5,12 @@ import uk.gov.hmrc.ForkedJvmPerTestSettings.oneForkedJvmPerTest
 
 val appName = "integration-catalogue-frontend"
 
+
+
 val silencerVersion = "1.7.6"
 lazy val ComponentTest = config("component") extend Test
+
+inConfig(ComponentTest)(org.scalafmt.sbt.ScalafmtPlugin.scalafmtConfigSettings)
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
@@ -46,6 +50,7 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / managedClasspath += (Assets / packageBin).value
   )
   .settings(headerSettings(IntegrationTest) ++ automateHeaderSettings(IntegrationTest))
+
   .configs(ComponentTest)
   .settings(inConfig(ComponentTest)(Defaults.testSettings): _*)
   .settings(inConfig(ComponentTest)(BloopDefaults.configSettings))
