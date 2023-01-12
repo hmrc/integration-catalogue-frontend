@@ -28,13 +28,13 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
 
   trait Setup {
     val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
-    val integrationsList = apiList ++ List(fileTransfer1)
+    val integrationsList                   = apiList ++ List(fileTransfer1)
   }
 
   "ListApisView" should {
 
     "render list apis page without File Transfer Interrupt Box and do not show api list when no apis are passed into the view" in new Setup {
-      val page : Html =    listApisView.render(
+      val page: Html                             = listApisView.render(
         List.empty,
         "",
         List.empty,
@@ -48,9 +48,11 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         showFileTransferInterrupt = false,
-        messagesProvider.messages, appConfig)
-      val document: Document = Jsoup.parse(page.body)
-      val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
+        messagesProvider.messages,
+        appConfig
+      )
+      val document: Document                     = Jsoup.parse(page.body)
+      val maybeApiListElements: Option[Elements] = Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
       document.getElementById("page-heading").text shouldBe "Your search did not match any APIs."
@@ -60,7 +62,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
     }
 
     "render list apis page with File Transfer Interrupt Box and do not show api list when no apis are passed into the view" in new Setup {
-      val page : Html =    listApisView.render(
+      val page: Html                             = listApisView.render(
         List.empty,
         "",
         List.empty,
@@ -74,15 +76,17 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         showFileTransferInterrupt = true,
-        messagesProvider.messages, appConfig)
-      val document: Document = Jsoup.parse(page.body)
-      val maybeApiListElements: Option[Elements] =  Option(document.getElementById("api-name")).map(_.getAllElements)
+        messagesProvider.messages,
+        appConfig
+      )
+      val document: Document                     = Jsoup.parse(page.body)
+      val maybeApiListElements: Option[Elements] = Option(document.getElementById("api-name")).map(_.getAllElements)
       maybeApiListElements.isDefined shouldBe false
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe true
     }
 
     "render list apis page without File Transfer Interrupt Box and list the apis" in new Setup {
-      val page : Html =    listApisView.render(
+      val page: Html         = listApisView.render(
         integrationsList,
         "",
         List.empty,
@@ -96,11 +100,12 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         showFileTransferInterrupt = false,
-        messagesProvider.messages, appConfig)
+        messagesProvider.messages,
+        appConfig
+      )
       val document: Document = Jsoup.parse(page.body)
 
       Option(document.getElementById("ft-interrupt-heading")).isDefined shouldBe false
-
 
       document.getElementById("page-heading").text() shouldBe "20 APIs"
       document.getElementById("api-name-0").text() shouldBe apiDetail0.title

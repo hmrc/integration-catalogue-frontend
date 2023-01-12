@@ -36,28 +36,25 @@ class QuickSearchController @Inject() (
     dynamicListView: DynamicListView,
     integrationService: IntegrationService,
     mcc: MessagesControllerComponents
-  )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc)
+  )(implicit val ec: ExecutionContext
+  ) extends FrontendController(mcc)
     with Logging
     with ListIntegrationsHelper {
 
   implicit val config: AppConfig = appConfig
 
   implicit val apisummaryFormat = JsonFormatters.formatApiDetailSummary
-  implicit val responseFormat = JsonFormatters.formatIntegrationResponse
+  implicit val responseFormat   = JsonFormatters.formatIntegrationResponse
 
   def dynamicList() = Action.async { implicit request =>
     Future.successful(Ok(dynamicListView()))
   }
 
-
-  def quickSearch(searchValue: String,
-                  platformFilter: List[PlatformType] = List.empty,
-                  currentPage: Option[Int] = None) =
+  def quickSearch(searchValue: String, platformFilter: List[PlatformType] = List.empty, currentPage: Option[Int] = None) =
     Action.async { implicit request =>
-      val itemsPerPage = appConfig.itemsPerPage
+      val itemsPerPage    = appConfig.itemsPerPage
       val currentPageCalc = currentPage.getOrElse(1)
-      val filter = IntegrationFilter(List(searchValue), platformFilter, List.empty, Option(itemsPerPage), Option(currentPageCalc))
+      val filter          = IntegrationFilter(List(searchValue), platformFilter, List.empty, Option(itemsPerPage), Option(currentPageCalc))
       integrationService.findWithFilters(filter, Option(itemsPerPage), Option(currentPageCalc))
         .map {
           case Right(response) =>
@@ -73,7 +70,7 @@ class QuickSearchController @Inject() (
               response.results.flatMap(fromIntegrationDetail)
             )))
 
-          case _               => InternalServerError("")
+          case _ => InternalServerError("")
 
         }
 

@@ -34,9 +34,8 @@ class ApiEndpointsSpec extends CommonViewSpec with ApiTestData {
     "render page with api details" in new Setup {
 
       // apiDetail0
-      val page: Html = apiEndpoints.render(endpoints)
+      val page: Html         = apiEndpoints.render(endpoints)
       val document: Document = Jsoup.parse(page.body)
-
 
       document.getElementById("endpoints-heading").text() shouldBe "Endpoints"
       document.getElementById("endpoint-path-0").text() shouldBe "/some/url/endpoint1"

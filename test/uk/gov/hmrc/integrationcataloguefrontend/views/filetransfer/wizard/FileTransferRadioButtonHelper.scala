@@ -22,14 +22,13 @@ import uk.gov.hmrc.integrationcataloguefrontend.models.FileTransferBackends
 
 import scala.collection.JavaConverters._
 
-
-trait FileTransferRadioButtonHelper extends Matchers{
+trait FileTransferRadioButtonHelper extends Matchers {
 
   private def testFileTransferBackendsLabels(document: Document): Unit = {
     for (item <- FileTransferBackends.radiobuttons) {
       val inputId = s"filetransfer-backends-radio-button-${item.name}"
       Option(document.getElementById(inputId)).isDefined shouldBe true
-      
+
       document.getElementById(s"filetransfer-backends-radio-button-${item.name}-label").text() shouldBe item.displayName
 
       document.getElementById(s"filetransfer-backends-radio-button-${item.name}-label").attr("for") shouldBe inputId

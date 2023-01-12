@@ -31,12 +31,12 @@ class SiteHeaderSpec extends CommonViewSpec {
   "SiteHeader" should {
 
     "render The main header correctly" in new Setup {
-       val page : Html =    siteHeader.render(None, includeSearch = false, messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html         = siteHeader.render(None, includeSearch = false, messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementsByClass("hmrc-internal-header__logo-text").first().text() shouldBe "HM Revenue & Customs"
-       document.getElementsByClass("hmrc-internal-header__logo-link").first()
-         .attr("href") shouldBe "https://www.gov.uk/government/organisations/hm-revenue-customs"
+      document.getElementsByClass("hmrc-internal-header__logo-text").first().text() shouldBe "HM Revenue & Customs"
+      document.getElementsByClass("hmrc-internal-header__logo-link").first()
+        .attr("href") shouldBe "https://www.gov.uk/government/organisations/hm-revenue-customs"
 
       document.getElementsByClass("hmrc-internal-header__service-name").first().text() shouldBe "API catalogue"
       document.getElementsByClass("hmrc-internal-header__link").first().attr("href") shouldBe "/api-catalogue"

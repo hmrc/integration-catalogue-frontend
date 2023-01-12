@@ -31,7 +31,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import utils.PagingHelper
 
 class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationSugar with PageSugar
-  with CustomMatchers with ApiTestData with PagingHelper{
+    with CustomMatchers with ApiTestData with PagingHelper {
 
   implicit val webDriver: WebDriver = Env.driver
 
@@ -42,8 +42,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   }
 
   When("""^I enter no search keyword then click the search button$""") { () =>
-
-    val link = webDriver.findElement(By.id("intCatSearchButton"))
+    val link    = webDriver.findElement(By.id("intCatSearchButton"))
     val actions = new Actions(webDriver)
     actions.moveToElement(link)
     actions.click()
@@ -56,15 +55,14 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   }
 
-  Then("""^Element with id '(.*)' exists with text '(.*)'"""){ (id: String, expectedText: String) =>
+  Then("""^Element with id '(.*)' exists with text '(.*)'""") { (id: String, expectedText: String) =>
     validateTextOfElement(id, expectedText)
   }
   Then("""^Page heading is displayed with the text '(.*)'""") { (expectedText: String) =>
     validateTextOfElement("page-heading", expectedText)
   }
 
-
-  private def validateTextOfElement(id: String, expectedText: String) ={
+  private def validateTextOfElement(id: String, expectedText: String) = {
     val element = webDriver.findElement(By.id(id))
     element.isDisplayed shouldBe true
     element.getText shouldBe expectedText
@@ -79,10 +77,10 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   }
 
   Then("""^Platform checkboxes '(.*)' are selected""") { (platforms: String) =>
-    platforms.split(",").map( platform =>   validateCheckBox(platform, isChecked = true))
+    platforms.split(",").map(platform => validateCheckBox(platform, isChecked = true))
   }
-  
-  private def validateInputBox(id: String, expectedValue: String) ={
+
+  private def validateInputBox(id: String, expectedValue: String) = {
     val element = webDriver.findElement(By.id(id))
     element.isDisplayed shouldBe true
     element.getAttribute("value") shouldBe expectedValue
@@ -90,7 +88,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   private def validateCheckBox(id: String, isChecked: Boolean) = {
     val element: WebElement = webDriver.findElement(By.id(id))
-    
+
     withClue(s"element $id isSelected does not match $isChecked") {
       element.isSelected shouldBe isChecked
     }
@@ -98,20 +96,20 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
 
   When("""^All 10 test apis are matched, with no search filters, items per page is '(.*)' and requested page should be '(.*)'""") {
     (itemsPerPage: String, page: String) =>
-    IntegrationCatalogueStub.findNoFiltersPaged(allApis, page, itemsPerPage, OK)
+      IntegrationCatalogueStub.findNoFiltersPaged(allApis, page, itemsPerPage, OK)
   }
 
   When("""^All 10 test apis are matched, items per page is '(.*)' and requested page should be '(.*)' and search keyword is '(.*)'""") {
     (itemsPerPage: String, page: String, keyword: String) =>
-    IntegrationCatalogueStub.findWithFilterPaged(keyword, allApis, page, itemsPerPage,  OK)
+      IntegrationCatalogueStub.findWithFilterPaged(keyword, allApis, page, itemsPerPage, OK)
   }
 
   When("""^All Apis will be returned for platforms '(.*)'$""") {
     (platforms: String) =>
-      IntegrationCatalogueStub.findWithFilter( platforms = platforms.split(",").toList,  integrationResponse = generateIntegrationResponse(allApis))
+      IntegrationCatalogueStub.findWithFilter(platforms = platforms.split(",").toList, integrationResponse = generateIntegrationResponse(allApis))
   }
 
-  When("""^All available apis are available"""){ () =>
+  When("""^All available apis are available""") { () =>
     IntegrationCatalogueStub.findNoFilters(integrationResponse, OK)
   }
 
@@ -140,13 +138,13 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     val inputBox = webDriver.findElement(By.id("intCatSearch"))
     inputBox.sendKeys(keyword)
 
-    val link = webDriver.findElement(By.id("intCatSearchButton"))
+    val link    = webDriver.findElement(By.id("intCatSearchButton"))
     val actions = new Actions(webDriver)
     actions.moveToElement(link)
     actions.click()
     actions.perform()
   }
-  
+
   When("""^I enter the search keyword '(.*)' then press Enter$""") { keyword: String =>
     val inputBox = webDriver.findElement(By.id("intCatSearch"))
     inputBox.sendKeys(keyword, Keys.ENTER)
@@ -166,10 +164,10 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     elementShouldNotBeDisplayed("api-description-1")
   }
 
-  Then("""^page '(.*)' of all api results are shown$"""){ (pageVal: String) =>
+  Then("""^page '(.*)' of all api results are shown$""") { (pageVal: String) =>
     val results = getPageOfResults(allApis, pageVal.toInt)
 
-    for(i <- results.indices){
+    for (i <- results.indices) {
       assertApiRow(i, results(i))
     }
   }
@@ -178,11 +176,11 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     clickOnElement(s"pageLink-$pageNumber")
   }
 
-  Then("""^Navigation should display Showing '(.*)' to '(.*)' of '(.*)' results$""") { (from:String, to:String, total: String) =>
+  Then("""^Navigation should display Showing '(.*)' to '(.*)' of '(.*)' results$""") { (from: String, to: String, total: String) =>
     webDriver.findElement(By.id("page-results")).getText.trim shouldBe s"Showing $from to $to of $total results"
   }
 
-  Then("""^Navigation controls should be visible on page '(.*)' of '(.*)' pages$"""){ (page: String, numberOfPages: String) =>
+  Then("""^Navigation controls should be visible on page '(.*)' of '(.*)' pages$""") { (page: String, numberOfPages: String) =>
     navigationControlsCheck(shouldBeVisible = true, page.toInt, numberOfPages.toInt)
 
   }
@@ -205,17 +203,17 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     Thread.sleep(timeToWait.toLong)
   }
 
-  def navigationControlsCheck(shouldBeVisible: Boolean, page: Int=0, numberOfPages: Int=0): Any ={
-    if(shouldBeVisible){
-      if(page==1){
+  def navigationControlsCheck(shouldBeVisible: Boolean, page: Int = 0, numberOfPages: Int = 0): Any = {
+    if (shouldBeVisible) {
+      if (page == 1) {
         navigationLink("page-prev", shouldBeVisible = false)
-      }else{
+      } else {
         navigationLink("page-prev", shouldBeVisible = true)
       }
 
-      if(page==numberOfPages){
+      if (page == numberOfPages) {
         navigationLink("page-next", shouldBeVisible = false)
-      }else{
+      } else {
         navigationLink("page-next", shouldBeVisible = true)
       }
 
@@ -230,29 +228,29 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
   }
 
   def clickOnElement(id: String) = {
-    val link = webDriver.findElement(By.id(id))
+    val link    = webDriver.findElement(By.id(id))
     val actions = new Actions(webDriver)
     actions.moveToElement(link)
     actions.click()
     actions.perform()
   }
 
-  def navigationLink(id:String, shouldBeVisible: Boolean): Assertion = {
-    if(shouldBeVisible) {
+  def navigationLink(id: String, shouldBeVisible: Boolean): Assertion = {
+    if (shouldBeVisible) {
       elementShouldBeDisplayed(id)
       elementShouldBeDisplayed(s"$id-link")
-    }else{
+    } else {
       elementShouldNotBeDisplayed(id)
       elementShouldNotBeDisplayed(s"$id-link")
     }
   }
 
-  def navigationPageLinksAreVisible(currentPage: Int = 0, numberOfPages: Int  = 0): Unit = {
-    val lastPage =   calculateLastPageLink(currentPage, numberOfPages)
+  def navigationPageLinksAreVisible(currentPage: Int = 0, numberOfPages: Int = 0): Unit = {
+    val lastPage  = calculateLastPageLink(currentPage, numberOfPages)
     val firstPage = calculateFirstPageLink(currentPage)
-    for (i <- firstPage to lastPage)  {
+    for (i <- firstPage to lastPage) {
 
-      if(currentPage === i) {
+      if (currentPage === i) {
         elementShouldBeDisplayed(s"pagenumber-$i")
         elementShouldNotBeDisplayed(s"pageLink-$i")
       } else {
@@ -262,8 +260,7 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
     }
   }
 
-
-  private def assertApiRow(rowNumber: Int, apiDetail: ApiDetail) ={
+  private def assertApiRow(rowNumber: Int, apiDetail: ApiDetail) = {
     webDriver.findElement(By.id(s"details-href-$rowNumber")).getText shouldBe apiDetail.title
     webDriver.findElement(By.id(s"api-description-$rowNumber")).getText shouldBe apiDetail.shortDescription.getOrElse(apiDetail.description)
   }
@@ -273,18 +270,18 @@ class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationS
       webDriver.findElement(By.id(elementId)).isDisplayed shouldBe true
     } catch {
       case e: org.openqa.selenium.NoSuchElementException => fail(s"Element $elementId should be displayed")
-      case _: Throwable => fail(s"unexpected exception thrown trying to assert if $elementId is displayed")
+      case _: Throwable                                  => fail(s"unexpected exception thrown trying to assert if $elementId is displayed")
     }
   }
 
-  private def elementShouldNotBeDisplayed(elementId: String)={
-   try {
-     webDriver.findElement(By.id(elementId)).isDisplayed
-     fail(s"Element $elementId should not be displayed")
-   } catch {
-     case e: org.openqa.selenium.NoSuchElementException => succeed
-     case _: Throwable => fail(s"unexpected exception thrown trying to assert if $elementId is displayed")
-   }
- }
+  private def elementShouldNotBeDisplayed(elementId: String) = {
+    try {
+      webDriver.findElement(By.id(elementId)).isDisplayed
+      fail(s"Element $elementId should not be displayed")
+    } catch {
+      case e: org.openqa.selenium.NoSuchElementException => succeed
+      case _: Throwable                                  => fail(s"unexpected exception thrown trying to assert if $elementId is displayed")
+    }
+  }
 
 }

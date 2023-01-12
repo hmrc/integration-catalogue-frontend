@@ -31,8 +31,8 @@ class BlueInterruptBoxSpec extends CommonViewSpec {
   "BlueInterruptBox" should {
 
     "render the blue interrupt box correctly" in new Setup {
-       val page : Html =    blueInterruptBox.render("API 1001", "API Description")
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html         = blueInterruptBox.render("API 1001", "API Description")
+      val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("interrupt-box-heading").text() shouldBe "API 1001"
       document.getElementById("interrupt-box-description").text() shouldBe "API Description"

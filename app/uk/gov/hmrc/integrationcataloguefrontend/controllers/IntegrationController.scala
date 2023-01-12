@@ -51,8 +51,8 @@ class IntegrationController @Inject() (
     contactApiTeamView: ContactApiTeamView,
     contactApiTeamSuccessView: ContactApiTeamSuccessView,
     emailService: EmailService
-  )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc)
+  )(implicit val ec: ExecutionContext
+  ) extends FrontendController(mcc)
     with Logging
     with ListIntegrationsHelper
     with WithUnsafeDefaultFormBinding {
@@ -114,10 +114,10 @@ class IntegrationController @Inject() (
     ): Action[AnyContent] =
     Action.async { implicit request =>
       val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
-      val currentPageCalc = currentPage.getOrElse(1)
+      val currentPageCalc  = currentPage.getOrElse(1)
       integrationService.findWithFilters(IntegrationFilter(List(keywords.getOrElse("")), platformFilter, backendsFilter), Some(itemsPerPageCalc), currentPage).map {
-        case Right(response)              =>
-          //are keywords in list? Boolean
+        case Right(response) =>
+          // are keywords in list? Boolean
           Ok(listIntegrationsView(
             response.results,
             keywords.getOrElse(""),

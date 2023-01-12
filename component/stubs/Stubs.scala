@@ -31,7 +31,6 @@ object Stubs extends Logging {
     )
   }
 
-  
   def setupDeleteRequest(path: String, status: Int) =
     stubFor(delete(urlEqualTo(path)).willReturn(aResponse().withStatus(status)))
 
@@ -41,7 +40,7 @@ object Stubs extends Logging {
   def setupPutRequest(path: String, status: Int, response: String) =
     stubFor(
       put(urlEqualTo(path))
-      .willReturn(aResponse().withStatus(status).withBody(response))
+        .willReturn(aResponse().withStatus(status).withBody(response))
     )
 
   def setupPostRequest(path: String, status: Int, response: String) =
@@ -60,7 +59,7 @@ object Stubs extends Logging {
 }
 
 object AuditStub extends Matchers {
-  val auditPath: String = "/write/audit"
+  val auditPath: String       = "/write/audit"
   val mergedAuditPath: String = "/write/audit/merged"
 
   def setupAudit(status: Int = NO_CONTENT, data: Option[String] = None) = {

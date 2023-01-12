@@ -31,10 +31,10 @@ class AccessibilityStatementViewSpec extends CommonViewSpec {
   "AccessibilityStatementView" should {
 
     "render accessibility statement page correctly" in new Setup {
-       val page : Html =    accessibilityStatementView.render(messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html         = accessibilityStatementView.render(messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("page-heading").text() shouldBe "Accessibility statement"
+      document.getElementById("page-heading").text() shouldBe "Accessibility statement"
       document.getElementById("summary-statement").text() shouldBe "This accessibility statement explains how accessible this service is," +
         " what to do if you have difficulty using it," +
         " and how to report accessibility problems with the service."

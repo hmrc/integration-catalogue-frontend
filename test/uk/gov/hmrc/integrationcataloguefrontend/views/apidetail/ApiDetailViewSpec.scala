@@ -34,8 +34,8 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details that has status LIVE" in new Setup {
       val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE)
-      val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-      val document: Document = Jsoup.parse(page.body)
+      val page: Html           = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val document: Document   = Jsoup.parse(page.body)
 
       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")
@@ -62,13 +62,12 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
       document.getElementById("api-detail-link").text() shouldBe "See API details"
       document.getElementById("api-detail-link").attr("href") shouldBe "/api-catalogue/integrations/2f0c9fc4-7773-433b-b4cf-15d4cb932e36/marriage-allowance/redoc"
 
-
     }
 
     "render page with api details that has status BETA" in new Setup {
       val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.BETA)
-      val page: Html = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
-      val document: Document = Jsoup.parse(page.body)
+      val page: Html           = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val document: Document   = Jsoup.parse(page.body)
 
       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
       document.getElementById("interrupt-box-description").text() shouldBe apiParsed.shortDescription.getOrElse("")

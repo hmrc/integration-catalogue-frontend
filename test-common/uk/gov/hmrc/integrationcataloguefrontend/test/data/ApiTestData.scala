@@ -26,22 +26,22 @@ import java.util.UUID
 
 trait ApiTestData {
 
-  val filename = "API1001.1.0.yaml"
+  val filename     = "API1001.1.0.yaml"
   val fileContents = "{}"
-  val uuid: UUID = UUID.fromString("28c0bd67-4176-42c7-be13-53be98a4db58")
+  val uuid: UUID   = UUID.fromString("28c0bd67-4176-42c7-be13-53be98a4db58")
 
   val dateValue: DateTime = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
-  val reviewedDate = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
+  val reviewedDate        = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
 
   val coreIfPlatform: PlatformType = PlatformType.CORE_IF
-  val apiPlatform: PlatformType = PlatformType.API_PLATFORM
+  val apiPlatform: PlatformType    = PlatformType.API_PLATFORM
 
-  val apiMaintainerContactInfo: ContactInformation = ContactInformation(Some("APT Maintainer"), Some("api.platform.team@example.com"))
-  val apiPlatformMaintainer: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(apiMaintainerContactInfo))
+  val apiMaintainerContactInfo: ContactInformation    = ContactInformation(Some("APT Maintainer"), Some("api.platform.team@example.com"))
+  val apiPlatformMaintainer: Maintainer               = Maintainer("Api Platform Team", "#team-api-platform-sup", List(apiMaintainerContactInfo))
   val apiPlatformMaintainerWithNoContacts: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
-  val apiPlatformMaintainerWithOnlyEmail: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(None, Some("email"))))
-  val apiPlatformMaintainerWithOnlyName: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), None)))
-  val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation(Some("name"), Some("email"))))
+  val apiPlatformMaintainerWithOnlyEmail: Maintainer  = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(None, Some("email"))))
+  val apiPlatformMaintainerWithOnlyName: Maintainer   = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), None)))
+  val coreIfMaintainer: Maintainer                    = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation(Some("name"), Some("email"))))
 
   val selfassessmentApiId: IntegrationId = IntegrationId(UUID.fromString("b7c649e6-e10b-4815-8a2c-706317ec484d"))
 
@@ -49,7 +49,7 @@ trait ApiTestData {
 
   val exampleRequest1name: String = "example request 1"
   val exampleRequest1Body: String = "{\"someValue\": \"abcdefg\"}"
-  val exampleRequest1: Example = Example(exampleRequest1name, exampleRequest1Body)
+  val exampleRequest1: Example    = Example(exampleRequest1name, exampleRequest1Body)
 
   val exampleResponse1: Example = Example("example response name", "example response body")
 
@@ -364,11 +364,11 @@ trait ApiTestData {
     components = Components(List(schema2), List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content for Self Assessment (MTD)",
-     apiStatus = ApiStatus.LIVE,
+    apiStatus = ApiStatus.LIVE,
     reviewedDate = reviewedDate
   )
 
-    val apiDetailWithOnlyContactName: ApiDetail = ApiDetail(
+  val apiDetailWithOnlyContactName: ApiDetail = ApiDetail(
     selfassessmentApiId,
     publisherReference = "",
     title = "Self Assessment (MTD)",
@@ -396,12 +396,12 @@ trait ApiTestData {
 
   val contactReasons = contactReasonList.mkString("|")
 
-  val apiEmails = Seq("api.platform.team@example.com")
-  val senderName= "Joe Bloggs"
-  val senderEmail= "joe.bloggs@example.com"
-  val specificQuestion = "How do I publish my API to the catalogue?"
-  val apiTitle = "Marriage Allowance"
-  val platformContactTemplate = "platformContact"
+  val apiEmails                           = Seq("api.platform.team@example.com")
+  val senderName                          = "Joe Bloggs"
+  val senderEmail                         = "joe.bloggs@example.com"
+  val specificQuestion                    = "How do I publish my API to the catalogue?"
+  val apiTitle                            = "Marriage Allowance"
+  val platformContactTemplate             = "platformContact"
   val platformContactConfirmationTemplate = "platformContactConfirmation"
 
   def getTags(templateId: String): Map[String, String] = {
@@ -409,12 +409,12 @@ trait ApiTestData {
   }
 
   val emailParams = Map(
-    "senderName" -> senderName,
-    "senderEmail" -> senderEmail,
-    "contactReasons" -> contactReasons,
+    "senderName"       -> senderName,
+    "senderEmail"      -> senderEmail,
+    "contactReasons"   -> contactReasons,
     "specificQuestion" -> specificQuestion,
-    "apiTitle" -> apiTitle,
-    "apiEmail" -> apiEmails.mkString(";")
+    "apiTitle"         -> apiTitle,
+    "apiEmail"         -> apiEmails.mkString(";")
   )
 
   def getEmailRequestForTemplate(templateId: String) = {
@@ -426,6 +426,6 @@ trait ApiTestData {
     )
   }
 
-  val emailApiPlatformRequest = getEmailRequestForTemplate(platformContactTemplate)
+  val emailApiPlatformRequest          = getEmailRequestForTemplate(platformContactTemplate)
   val emailConfirmationToSenderRequest = getEmailRequestForTemplate(platformContactConfirmationTemplate)
 }

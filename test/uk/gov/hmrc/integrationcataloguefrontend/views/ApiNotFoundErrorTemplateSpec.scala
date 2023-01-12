@@ -31,7 +31,7 @@ class ApiNotFoundErrorTemplateSpec extends CommonViewSpec {
   "ApiNotFoundErrorTemplate" should {
 
     "render api not found page correctly" in new Setup {
-      val page: Html = apiNotFoundErrorTemplate.render(messagesProvider.messages, appConfig)
+      val page: Html         = apiNotFoundErrorTemplate.render(messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-heading").text() shouldBe "API not found"
       document.getElementById("paragraph1").text() shouldBe "The API does not exist or has been removed from the API catalogue."

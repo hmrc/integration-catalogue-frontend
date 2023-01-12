@@ -26,18 +26,17 @@ import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamView
 
-
 class ContactApiTeamViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
     val contactApiTeamView = app.injector.instanceOf[ContactApiTeamView]
-    val fakeRequest = FakeRequest().withCSRFToken
+    val fakeRequest        = FakeRequest().withCSRFToken
   }
 
   "ContactApiTeamPage" should {
 
     "render as expected" in new Setup {
-      val page: Html = contactApiTeamView.render(ContactApiTeamForm.form, apiDetail0, fakeRequest, messagesProvider.messages, appConfig)
+      val page: Html         = contactApiTeamView.render(ContactApiTeamForm.form, apiDetail0, fakeRequest, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Contact the Self Assessment (MTD) team"

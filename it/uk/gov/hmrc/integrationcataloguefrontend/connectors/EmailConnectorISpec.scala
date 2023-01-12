@@ -30,11 +30,11 @@ class EmailConnectorISpec extends ServerBaseISpec with ApiTestData with BeforeAn
   protected override def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(
-        "microservice.services.auth.port" -> wireMockPort,
-        "metrics.enabled" -> true,
-        "auditing.enabled" -> false,
-        "auditing.consumer.baseUri.host" -> wireMockHost,
-        "auditing.consumer.baseUri.port" -> wireMockPort,
+        "microservice.services.auth.port"  -> wireMockPort,
+        "metrics.enabled"                  -> true,
+        "auditing.enabled"                 -> false,
+        "auditing.consumer.baseUri.host"   -> wireMockHost,
+        "auditing.consumer.baseUri.port"   -> wireMockPort,
         "microservice.services.email.host" -> wireMockHost,
         "microservice.services.email.port" -> wireMockPort
       )
@@ -42,7 +42,7 @@ class EmailConnectorISpec extends ServerBaseISpec with ApiTestData with BeforeAn
   trait Setup {
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    val sendEmailUrl = s"/hmrc/email"
+    val sendEmailUrl                   = s"/hmrc/email"
     val emailConnector: EmailConnector = app.injector.instanceOf[EmailConnector]
 
     def sendEmailStubWithStatus(status: Int): Unit = {

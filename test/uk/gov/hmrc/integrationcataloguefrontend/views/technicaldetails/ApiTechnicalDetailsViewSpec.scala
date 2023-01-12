@@ -24,20 +24,20 @@ import play.twirl.api.Html
 import org.jsoup.nodes.Document
 import org.jsoup.Jsoup
 
-class ApiTechnicalDetailsViewSpec  extends CommonViewSpec with ApiTestData {
+class ApiTechnicalDetailsViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
     val techDetailsView = app.injector.instanceOf[ApiTechnicalDetailsView]
   }
 
   "ApiTechnicalDetailsView" should {
-      "render" in new Setup {
-          val apiParsed: ApiDetail = apiDetail0
-           val page : Html = techDetailsView.render(apiParsed, appConfig)
-           val document: Document = Jsoup.parse(page.body)
-          Option(document.getElementById("backlink"))
-          .map(_.attr("href")).getOrElse("") shouldBe "javascript:history.back()"
-      }
+    "render" in new Setup {
+      val apiParsed: ApiDetail = apiDetail0
+      val page: Html           = techDetailsView.render(apiParsed, appConfig)
+      val document: Document   = Jsoup.parse(page.body)
+      Option(document.getElementById("backlink"))
+        .map(_.attr("href")).getOrElse("") shouldBe "javascript:history.back()"
+    }
   }
 
 }

@@ -22,9 +22,9 @@ import java.net.ServerSocket
 import scala.annotation.tailrec
 
 object PortHelper {
-  val rnd = new scala.util.Random
-  val range = 8000 to 39999
-  val usedPorts = List[Int]()
+  val rnd            = new scala.util.Random
+  val range          = 8000 to 39999
+  val usedPorts      = List[Int]()
   val logger: Logger = Logger(this.getClass())
 
   // scalastyle:off magic.number

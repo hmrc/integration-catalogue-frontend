@@ -38,18 +38,18 @@ class QuickSearchControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
   private val fakeRequest = FakeRequest()
 
-  private val env = Environment.simple()
+  private val env           = Environment.simple()
   private val configuration = Configuration.load(env)
 
   private val serviceConfig = new ServicesConfig(configuration)
-  private val appConfig = new AppConfig(configuration, serviceConfig)
+  private val appConfig     = new AppConfig(configuration, serviceConfig)
 
-  private val dynamicListView = app.injector.instanceOf[DynamicListView]
+  private val dynamicListView                    = app.injector.instanceOf[DynamicListView]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
-  val mockEmailService: EmailService = mock[EmailService]
+  val mockEmailService: EmailService             = mock[EmailService]
 
   implicit def materializer: Materializer = app.materializer
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier  = HeaderCarrier()
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

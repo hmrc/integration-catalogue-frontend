@@ -46,7 +46,5 @@ class UrlEncodingHelperSpec extends AsyncHmrcSpec {
       encodeTitle("API-1001-Get-Data-") shouldBe "api-1001-get-data"
     }
 
-
-
   }
 }

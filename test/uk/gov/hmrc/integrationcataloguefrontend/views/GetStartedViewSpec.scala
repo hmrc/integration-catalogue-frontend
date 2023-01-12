@@ -29,14 +29,14 @@ class GetStartedViewSpec extends CommonViewSpec {
   }
 
   "GetStartedPage" should {
- 
+
     "render case studies page correctly" in new Setup {
-       val page : Html =    getStartedPage.render(messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
-       document.getElementById("page-heading").text() shouldBe "Get started"
-       document.getElementById("heading-1").text() shouldBe "Find an API or file transfer you can use"
-       document.getElementById("heading-2").text() shouldBe "Get contact information for an API or file transfer"
-       document.getElementById("heading-3").text() shouldBe "Share with your team"
+      val page: Html         = getStartedPage.render(messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("page-heading").text() shouldBe "Get started"
+      document.getElementById("heading-1").text() shouldBe "Find an API or file transfer you can use"
+      document.getElementById("heading-2").text() shouldBe "Get contact information for an API or file transfer"
+      document.getElementById("heading-3").text() shouldBe "Share with your team"
     }
   }
 

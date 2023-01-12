@@ -44,7 +44,8 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
     )
 
   }
-  def findWithFilterPaged(keyword: String, apis: List[ApiDetail], page: String, itemsPerPage: String,  status: Int = OK) = {
+
+  def findWithFilterPaged(keyword: String, apis: List[ApiDetail], page: String, itemsPerPage: String, status: Int = OK) = {
 
     stubFor(
       get(urlPathEqualTo("/integration-catalogue/integrations"))
@@ -55,7 +56,7 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
         .willReturn(
           aResponse()
             .withStatus(status)
-            .withBody(Json.toJson(  generateIntegrationResponse(apis, page.toInt, itemsPerPage.toInt)).toString())
+            .withBody(Json.toJson(generateIntegrationResponse(apis, page.toInt, itemsPerPage.toInt)).toString())
         )
     )
 
@@ -77,7 +78,6 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
   }
 
   def findNoFilters(integrationResponse: IntegrationResponse, status: Int = OK) = {
-
 
     stubFor(
       get(urlPathEqualTo("/integration-catalogue/integrations"))
@@ -106,15 +106,16 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
 
   def findPlatformContacts(status: Int = OK) = {
 
-
-    val apiPlatformContact = PlatformContactResponse(
+    val apiPlatformContact    = PlatformContactResponse(
       PlatformType.API_PLATFORM,
       Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))),
-      true)
+      true
+    )
     val coreIfPlatformContact = PlatformContactResponse(
       PlatformType.CORE_IF,
       Some(ContactInformation(Some("CoreIf"), Some("core.if@email"))),
-      true)
+      true
+    )
     stubFor(get(urlEqualTo("/integration-catalogue/platform/contacts"))
       .willReturn(
         aResponse()
@@ -124,4 +125,3 @@ object IntegrationCatalogueStub extends ListIntegrationsHelper {
       ))
   }
 }
-

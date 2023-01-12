@@ -38,31 +38,37 @@ import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-
 class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData
-  with FileTransferTestData  {
+    with FileTransferTestData {
 
   private val fakeRequest = FakeRequest("GET", "/")
 
-  private val env = Environment.simple()
+  private val env           = Environment.simple()
   private val configuration = Configuration.load(env)
 
   private val serviceConfig = new ServicesConfig(configuration)
-  private val appConfig = new AppConfig(configuration, serviceConfig)
+  private val appConfig     = new AppConfig(configuration, serviceConfig)
 
   // private val mockWizardStartView: FileTransferWizardStart = app.injector.instanceOf[FileTransferWizardStart]
-  private val mockWizardStartView: FileTransferWizardStart = mock[FileTransferWizardStart]
-  private val mockWizardDataSourceView: FileTransferWizardDataSource = mock[FileTransferWizardDataSource]
-  private val mockWizardDataTargetView: FileTransferWizardDataTarget = mock[FileTransferWizardDataTarget]
+  private val mockWizardStartView: FileTransferWizardStart                       = mock[FileTransferWizardStart]
+  private val mockWizardDataSourceView: FileTransferWizardDataSource             = mock[FileTransferWizardDataSource]
+  private val mockWizardDataTargetView: FileTransferWizardDataTarget             = mock[FileTransferWizardDataTarget]
   private val mockWizardFoundConnectionsView: FileTransferWizardFoundConnections = mock[FileTransferWizardFoundConnections]
-  private val mockWizardNoConnectionsView: FileTransferWizardNoConnections = mock[FileTransferWizardNoConnections]
-  private val mockErrorTemplate = mock[ErrorTemplate]
-  private val mockIntegrationService: IntegrationService = mock[IntegrationService]
+  private val mockWizardNoConnectionsView: FileTransferWizardNoConnections       = mock[FileTransferWizardNoConnections]
+  private val mockErrorTemplate                                                  = mock[ErrorTemplate]
+  private val mockIntegrationService: IntegrationService                         = mock[IntegrationService]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockIntegrationService, mockWizardDataSourceView, mockWizardStartView, mockWizardDataTargetView, mockWizardFoundConnectionsView,
-      mockWizardNoConnectionsView, mockErrorTemplate)
+    reset(
+      mockIntegrationService,
+      mockWizardDataSourceView,
+      mockWizardStartView,
+      mockWizardDataTargetView,
+      mockWizardFoundConnectionsView,
+      mockWizardNoConnectionsView,
+      mockErrorTemplate
+    )
   }
 
   private val controller = new FileTransferController(
@@ -88,7 +94,6 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       verify(mockWizardStartView).apply()(*, *)
       verifyZeroInteractions(mockIntegrationService)
     }
-
 
   }
 
@@ -129,7 +134,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
     val dataSource = "SOURCE"
     val dataTarget = "TARGET"
-    val htmlVal = "<head></head>"
+    val htmlVal    = "<head></head>"
 
     "return 200 when connections found and have correct view when called" in {
 
@@ -197,7 +202,6 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       verify(mockIntegrationService).getPlatformContacts()(any[HeaderCarrier])
     }
 
-
     "return 500 when service returns NotFound Exception" in {
 
       when(mockErrorTemplate.apply(*, *, *)(*, *)).thenReturn(HtmlFormat.raw(htmlVal))
@@ -219,9 +223,9 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
   "POST       /filetransfer/wizard/data-source" should {
 
     "redirect to Data Target view when successful" in {
-      val dataSource = "BTM"
+      val dataSource      = "BTM"
       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource))
-      val result = controller.dataSourceAction()(requestWithForm)
+      val result          = controller.dataSourceAction()(requestWithForm)
       status(result) shouldBe Status.SEE_OTHER
       redirectLocation(result) shouldBe Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetView(dataSource).url)
     }
@@ -229,7 +233,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
     "show error page when form is invalid" in {
       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", ""))
       when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
-      val result = controller.dataSourceAction()(requestWithForm)
+      val result          = controller.dataSourceAction()(requestWithForm)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "htmlVal"
     }
@@ -243,9 +247,12 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
     "redirect to getFileTransferTransportsByPlatform when successful" in {
 
       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", dataTarget))
-      val result = controller.dataTargetAction()(requestWithForm)
+      val result          = controller.dataTargetAction()(requestWithForm)
       status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(dataSource, dataTarget).url)
+      redirectLocation(result) shouldBe Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(
+        dataSource,
+        dataTarget
+      ).url)
 
       verifyZeroInteractions(mockWizardDataTargetView)
     }
@@ -253,7 +260,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
     "show error page when form is invalid" in {
       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", ""))
       when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], any[String])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
-      val result = controller.dataTargetAction()(requestWithForm)
+      val result          = controller.dataTargetAction()(requestWithForm)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "htmlVal"
 

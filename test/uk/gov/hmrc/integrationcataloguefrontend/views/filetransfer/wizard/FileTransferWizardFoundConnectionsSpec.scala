@@ -50,7 +50,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     }
 
     "render page correctly when  contacts are provided" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, results, List(PlatformEmail(CORE_IF, "me@myemail.com")), messagesProvider.messages, appConfig)
+      val page: Html         = foundConnectionsPage.render(source, target, results, List(PlatformEmail(CORE_IF, "me@myemail.com")), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       assertCommonPageElements(document)
 
@@ -61,7 +61,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     }
 
     "render page correctly when  contacts are not provided" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, results, List.empty, messagesProvider.messages, appConfig)
+      val page: Html         = foundConnectionsPage.render(source, target, results, List.empty, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       assertCommonPageElements(document)
 
@@ -72,14 +72,13 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
 
     // This should never happen due to controller logic
     "render page correctly when no contacts and no file transfer results are provided" in new Setup {
-      val page: Html = foundConnectionsPage.render(source, target, List.empty, List.empty, messagesProvider.messages, appConfig)
+      val page: Html         = foundConnectionsPage.render(source, target, List.empty, List.empty, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "A file transfer connection exists -"
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
       document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"
 
       Option(document.getElementById("connection-0")) shouldBe None
-
 
       Option(document.getElementById("contact-section")) shouldBe None
       Option(document.getElementById("contact-link")) shouldBe None

@@ -29,11 +29,11 @@ class ContactViewSpec extends CommonViewSpec {
   }
 
   "ContactPage" should {
- 
+
     "render contact page correctly" in new Setup {
-       val page : Html =    getStartedPage.render(messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
-       document.getElementById("page-heading").text() shouldBe "Contacting the API catalogue team"
+      val page: Html         = getStartedPage.render(messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("page-heading").text() shouldBe "Contacting the API catalogue team"
       document.getElementById("paragraph1").text() shouldBe "Email the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk."
       document.getElementById("paragraph2").text() shouldBe "Expect a reply in 3 working days."
     }

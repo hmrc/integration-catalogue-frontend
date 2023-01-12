@@ -22,11 +22,11 @@ import play.api.test.Helpers.BAD_REQUEST
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 
 trait IntegrationCatalogueConnectorStub {
-  val getApisUrl = "/integration-catalogue/integrations"
-  val getPlatformContactsUrl = "/integration-catalogue/platform/contacts"
+  val getApisUrl                                             = "/integration-catalogue/integrations"
+  val getPlatformContactsUrl                                 = "/integration-catalogue/platform/contacts"
   def getFileTransferTransportsByPlatformUrl(params: String) = s"/integration-catalogue/filetransfers/platform/transports$params"
-  def getIntegrationByIdUrl(id: String) = s"/integration-catalogue/integrations/$id"
-  def findWithFiltersUrl(searchTerm: String) = s"/integration-catalogue/integrations$searchTerm"
+  def getIntegrationByIdUrl(id: String)                      = s"/integration-catalogue/integrations/$id"
+  def findWithFiltersUrl(searchTerm: String)                 = s"/integration-catalogue/integrations$searchTerm"
 
   def primeIntegrationCatalogueServiceFindWithFilterWithBadRequest(searchTerm: String) = {
 

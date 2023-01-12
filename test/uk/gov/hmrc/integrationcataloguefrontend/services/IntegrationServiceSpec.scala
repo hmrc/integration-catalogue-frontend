@@ -36,7 +36,7 @@ class IntegrationServiceSpec
     with FileTransferTestData {
 
   val mockIntegrationCatalogueConnector: IntegrationCatalogueConnector = mock[IntegrationCatalogueConnector]
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier                               = HeaderCarrier()
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -44,11 +44,11 @@ class IntegrationServiceSpec
   }
 
   trait SetUp {
-    val objInTest = new IntegrationService(mockIntegrationCatalogueConnector)
-    val exampleIntegrationId = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
+    val objInTest                      = new IntegrationService(mockIntegrationCatalogueConnector)
+    val exampleIntegrationId           = IntegrationId(UUID.fromString("2840ce2d-03fa-46bb-84d9-0299402b7b32"))
     val apiPlatformContactWithOverride = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), true)
-    val apiPlatformContactNoOverride = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
-  
+    val apiPlatformContactNoOverride   = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
+
     val apiPlatformNoContact = PlatformContactResponse(PlatformType.API_PLATFORM, None, false)
 
     def validateDefaultContacts(
@@ -57,13 +57,12 @@ class IntegrationServiceSpec
         defaultPlatformContacts: List[PlatformContactResponse] = List.empty,
         callGetPlatformContacts: Boolean,
         callGetPlatformContactsReturnsError: Boolean = false
-
       ) = {
       val id = IntegrationId(UUID.randomUUID())
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(integrationReturned)))
       if (callGetPlatformContacts) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
-      if(callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
-      
+      if (callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
+
       val result: Either[Throwable, IntegrationDetail] =
         await(objInTest.findByIntegrationId(id))
 
@@ -73,10 +72,9 @@ class IntegrationServiceSpec
       }
 
       verify(mockIntegrationCatalogueConnector).findByIntegrationId(eqTo(id))(eqTo(hc))
-    if (callGetPlatformContacts || callGetPlatformContactsReturnsError) {
+      if (callGetPlatformContacts || callGetPlatformContactsReturnsError) {
         verify(mockIntegrationCatalogueConnector).getPlatformContacts()(*)
-      }
-        else verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
+      } else verify(mockIntegrationCatalogueConnector, times(0)).getPlatformContacts()(*)
     }
 
   }
@@ -89,7 +87,8 @@ class IntegrationServiceSpec
         results = expectedResult
       ))))
 
-      val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("search"), platforms = List(PlatformType.CORE_IF), backendsFilter = List("ETMP")), None, None))
+      val result: Either[Throwable, IntegrationResponse] =
+        await(objInTest.findWithFilters(IntegrationFilter(searchText = List("search"), platforms = List(PlatformType.CORE_IF), backendsFilter = List("ETMP")), None, None))
 
       result match {
         case Left(_)                                         => fail()
@@ -109,7 +108,7 @@ class IntegrationServiceSpec
         case Right(_) => fail()
       }
 
-      verify(mockIntegrationCatalogueConnector).findWithFilters(eqTo(integrationFilter),eqTo(None), eqTo(None))(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).findWithFilters(eqTo(integrationFilter), eqTo(None), eqTo(None))(eqTo(hc))
     }
   }
 
@@ -156,7 +155,7 @@ class IntegrationServiceSpec
       )
     }
 
-  "return apidetail with oas contact when oas file only has contact email and no platform contact information exists" in new SetUp {
+    "return apidetail with oas contact when oas file only has contact email and no platform contact information exists" in new SetUp {
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactEmail,
         expectedIntegration = apiDetailWithOnlyContactEmail,
@@ -168,14 +167,15 @@ class IntegrationServiceSpec
     "return apidetail with platform default when oas contact only has contact email but platform override is true" in new SetUp {
       validateDefaultContacts(
         integrationReturned = apiDetailWithOnlyContactEmail,
-        expectedIntegration = apiDetailWithOnlyContactEmail.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = List(apiPlatformContactWithOverride.contactInfo.get))),
+        expectedIntegration =
+          apiDetailWithOnlyContactEmail.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = List(apiPlatformContactWithOverride.contactInfo.get))),
         defaultPlatformContacts = List(apiPlatformContactWithOverride),
         callGetPlatformContacts = true
       )
     }
 
     "return apidetail with default platform contact info when api only has contact name and override is false" in new SetUp {
-      val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+      val contactList       = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
 
       validateDefaultContacts(
@@ -186,7 +186,6 @@ class IntegrationServiceSpec
       )
 
     }
-
 
     "return apidetail with empty contact list when api only has contact name and defaultPlatformContacts list is empty" in new SetUp {
       val expectedApiDetail = apiDetailWithOnlyContactName.copy(maintainer = apiPlatformMaintainerWithNoContacts)
@@ -201,7 +200,7 @@ class IntegrationServiceSpec
     }
 
     "return apidetail with default platform contact info when api does not have any contact information" in new SetUp {
-      val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+      val contactList       = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedApiDetail = apiDetail0.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
 
       validateDefaultContacts(
@@ -215,7 +214,7 @@ class IntegrationServiceSpec
 
     "return file transfer detail with default platform contact info when FT does not have any contact information" in new SetUp {
 
-      val contactList = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
+      val contactList         = apiPlatformContactNoOverride.contactInfo.map(contact => List(contact)).getOrElse(List.empty)
       val expectedIntegration = fileTransfer4.copy(maintainer = apiPlatformMaintainerWithNoContacts.copy(contactInfo = contactList))
       validateDefaultContacts(
         integrationReturned = fileTransfer4,
@@ -235,7 +234,7 @@ class IntegrationServiceSpec
     }
 
     "return apidetail with empty contactInfo list when api has no contacts and defaultPlatform list is empty" in new SetUp {
-     validateDefaultContacts(
+      validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
         defaultPlatformContacts = List.empty,
@@ -244,8 +243,8 @@ class IntegrationServiceSpec
     }
 
     "return apidetail with empty contactInfo list when api has no contacts and getPlatformContacts returns a Left from connector" in new SetUp {
-     when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
-     validateDefaultContacts(
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
+      validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
         defaultPlatformContacts = List.empty,
@@ -284,28 +283,28 @@ class IntegrationServiceSpec
   }
 
   "getFileTransferTransportsByPlatform" should {
-    //TODO add param mock check
+    // TODO add param mock check
     "return Right with List of FileTransferTransportsForPlatform" in new SetUp {
       val expectedResult = List(
         FileTransferTransportsForPlatform(API_PLATFORM, List("S3", "WTM")),
         FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
       )
-      when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(*,*)(*))
+      when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(*, *)(*))
         .thenReturn(Future.successful(Right(expectedResult)))
-      val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
+      val result         = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
       result match {
         case Right(response) => response shouldBe expectedResult
-        case _ => fail
+        case _               => fail
       }
 
-      verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(*,*)(eqTo(hc))
+      verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(*, *)(eqTo(hc))
     }
   }
 
   "return Left when error in backend" in new SetUp {
     val dataSource = "SOURCE"
     val dataTarget = "TARGET"
-    when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(eqTo(dataSource),eqTo(dataTarget))(*))
+    when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(*))
       .thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
 
     val result = await(objInTest.getFileTransferTransportsByPlatform(dataSource, dataTarget))
@@ -314,7 +313,7 @@ class IntegrationServiceSpec
       case Right(_) => fail()
     }
 
-    verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(eqTo(dataSource),eqTo(dataTarget))(eqTo(hc))
+    verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(eqTo(hc))
   }
 
 }

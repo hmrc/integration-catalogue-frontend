@@ -43,7 +43,8 @@ case class NumberAttributes(
     maximum: Option[BigDecimal],
     multipleOf: Option[BigDecimal],
     exclusiveMinimum: Option[Boolean],
-    exclusiveMaximum: Option[Boolean])
+    exclusiveMaximum: Option[Boolean]
+  )
 
 // types that could be T are: OffsetDateTime, byte[], UUID, Number, Date, Boolean, BigDecimal, String
 
@@ -77,8 +78,8 @@ case class DefaultSchema(
     maxProperties: Option[Int] = None,
     format: Option[String] = None,
     default: Option[String] = None,
-    example: Option[String] = None)
-    extends Schema
+    example: Option[String] = None
+  ) extends Schema
 
 case class ComposedSchema(
     name: Option[String] = None,
@@ -94,8 +95,8 @@ case class ComposedSchema(
     maxProperties: Option[Int] = None,
     allOf: List[Schema],
     anyOf: List[Schema],
-    oneOf: List[Schema])
-    extends Schema
+    oneOf: List[Schema]
+  ) extends Schema
 
 case class ArraySchema(
     name: Option[String] = None,
@@ -112,8 +113,8 @@ case class ArraySchema(
     minItems: Option[Int] = None,
     maxItems: Option[Int] = None,
     uniqueItems: Option[Boolean] = None,
-    items: Option[Schema] = None)
-    extends Schema
+    items: Option[Schema] = None
+  ) extends Schema
 
 case class Header(
     name: String,
@@ -121,7 +122,8 @@ case class Header(
     description: Option[String] = None,
     required: Option[Boolean] = None,
     deprecated: Option[Boolean] = None,
-    schema: Option[Schema] = None)
+    schema: Option[Schema] = None
+  )
 
 case class Parameter(
     name: Option[String],
@@ -131,7 +133,8 @@ case class Parameter(
     required: Option[Boolean] = None,
     deprecated: Option[Boolean] = None,
     allowEmptyValue: Option[Boolean] = None,
-    schema: Option[Schema] = None)
+    schema: Option[Schema] = None
+  )
 
 case class Components(schemas: List[Schema], headers: List[Header], parameters: List[Parameter] = List.empty)
 
@@ -144,7 +147,8 @@ case class Response(
     schema: Option[Schema],
     mediaType: Option[String],
     examples: List[Example] = List.empty,
-    headers: List[Header] = List.empty)
+    headers: List[Header] = List.empty
+  )
 
 case class Endpoint(path: String, methods: List[EndpointMethod])
 
@@ -155,18 +159,21 @@ case class EndpointMethod(
     description: Option[String],
     request: Option[Request],
     responses: List[Response],
-    parameters: List[Parameter] = List.empty)
+    parameters: List[Parameter] = List.empty
+  )
 
 sealed abstract class ApiStatus(val displayName: String, val shortName: String) extends EnumEntry
-object ApiStatus extends Enum[ApiStatus] with PlayJsonEnum[ApiStatus] {
+
+object ApiStatus                                                                extends Enum[ApiStatus] with PlayJsonEnum[ApiStatus] {
 
   val values = findValues
 
-  case object ALPHA extends ApiStatus("Alpha – not ready to use (documentation only and could change)", "ALPHA")
-  case object BETA extends ApiStatus("Beta – early stage of development and may be available (expect breaking changes)", "BETA")
-  case object LIVE extends ApiStatus("Live – available to use", "LIVE")
+  case object ALPHA      extends ApiStatus("Alpha – not ready to use (documentation only and could change)", "ALPHA")
+  case object BETA       extends ApiStatus("Beta – early stage of development and may be available (expect breaking changes)", "BETA")
+  case object LIVE       extends ApiStatus("Live – available to use", "LIVE")
   case object DEPRECATED extends ApiStatus("Deprecated – not recommended for use", "DEPRECATED")
 }
+
 case class ApiDetail(
     id: IntegrationId,
     publisherReference: String,
@@ -183,54 +190,57 @@ case class ApiDetail(
     components: Components,
     shortDescription: Option[String],
     openApiSpecification: String,
-    apiStatus: ApiStatus)
-    extends IntegrationDetail {
+    apiStatus: ApiStatus
+  ) extends IntegrationDetail {
   override val integrationType: IntegrationType = IntegrationType.API
 }
 
 case class ApiDetailSummary(
-                      id: IntegrationId,
-                      publisherReference: String,
-                      encodedTitle: String,
-                      title: String,
-                      description: String,
-                      platform: PlatformType,
-                      apiStatus: ApiStatus){
-}
+    id: IntegrationId,
+    publisherReference: String,
+    encodedTitle: String,
+    title: String,
+    description: String,
+    platform: PlatformType,
+    apiStatus: ApiStatus
+  ) {}
 
 object ApiDetailSummary {
 
   def fromIntegrationDetail(detail: IntegrationDetail) = {
     detail match {
       case apiDetail: ApiDetail => Option(fromApiDetail(apiDetail))
-      case _ => None
+      case _                    => None
     }
   }
-  def fromApiDetail(apiDetail: ApiDetail) = {
-    ApiDetailSummary(apiDetail.id,
+
+  def fromApiDetail(apiDetail: ApiDetail)              = {
+    ApiDetailSummary(
+      apiDetail.id,
       apiDetail.publisherReference,
       UrlEncodingHelper.encodeTitle(apiDetail.title),
       apiDetail.title,
       ViewHelper.handleDescription(apiDetail),
       apiDetail.platform,
-      apiDetail.apiStatus)
+      apiDetail.apiStatus
+    )
   }
 }
 
 case class FileTransferDetail(
-    id: IntegrationId, // Ignore
+    id: IntegrationId,                        // Ignore
     fileTransferSpecificationVersion: String, // Set to 0.1?
     publisherReference: String,
     title: String,
     description: String,
-    platform: PlatformType, // Split this to Platform and type
+    platform: PlatformType,                   // Split this to Platform and type
     lastUpdated: DateTime,
     reviewedDate: DateTime,
     maintainer: Maintainer,
     sourceSystem: List[String],
     targetSystem: List[String],
     transports: List[String],
-    fileTransferPattern: String)
-    extends IntegrationDetail {
+    fileTransferPattern: String
+  ) extends IntegrationDetail {
   override val integrationType: IntegrationType = IntegrationType.FILE_TRANSFER
 }

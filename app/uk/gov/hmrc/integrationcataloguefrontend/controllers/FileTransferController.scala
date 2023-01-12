@@ -41,10 +41,10 @@ class FileTransferController @Inject() (
     wizardNoConnectionsView: FileTransferWizardNoConnections,
     integrationService: IntegrationService,
     errorTemplate: ErrorTemplate
-  )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc)
-      with FtWizardHelper
-      with WithUnsafeDefaultFormBinding {
+  )(implicit val ec: ExecutionContext
+  ) extends FrontendController(mcc)
+    with FtWizardHelper
+    with WithUnsafeDefaultFormBinding {
 
   implicit val config: AppConfig = appConfig
 
@@ -72,33 +72,32 @@ class FileTransferController @Inject() (
 
   def dataTargetAction(): Action[AnyContent] = Action.async { implicit request =>
     val form = SelectedDataTargetForm.form.bindFromRequest
-  
+
     Future.successful {
       form.fold(
         formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.getOrElse("dataSource", ""))),
         okForm =>
-        Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource.getOrElse(""), okForm.dataTarget.getOrElse("")))
-
+          Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(
+            okForm.dataSource.getOrElse(""),
+            okForm.dataTarget.getOrElse("")
+          ))
       )
     }
   }
 
-
-
   def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
-
-    val results = for{
-      contacts <- EitherT(integrationService.getPlatformContacts)
+    val results = for {
+      contacts  <- EitherT(integrationService.getPlatformContacts)
       transfers <- EitherT(integrationService.getFileTransferTransportsByPlatform(source, target))
     } yield (transfers, contacts)
 
     results.value.map {
-      case Right((result: List[FileTransferTransportsForPlatform], _ )) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
-      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse] )) =>
-          val platformIntersect: List[PlatformType] = result.map(_.platform).intersect(platformContacts.map(_.platformType))
+      case Right((result: List[FileTransferTransportsForPlatform], _)) if result.isEmpty                             => Ok(wizardNoConnectionsView(source, target))
+      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse])) =>
+        val platformIntersect: List[PlatformType] = result.map(_.platform).intersect(platformContacts.map(_.platformType))
 
-          Ok(wizardFoundConnectionsView(source, target, result, getPlatformEmails(platformContacts, platformIntersect)))
-       case _                          => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
+        Ok(wizardFoundConnectionsView(source, target, result, getPlatformEmails(platformContacts, platformIntersect)))
+      case _                                                                                                         => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
     }
   }
 }

@@ -24,8 +24,6 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
 
 import java.net.URL
 
-
-
 case class WireMockBaseUrl(value: URL)
 
 object WireMockSupport {
@@ -40,10 +38,10 @@ trait WireMockSupport extends BeforeAndAfterAll with BeforeAndAfterEach {
 
   def commonStubs(): Unit
 
-  val wireMockPort: Int = WireMockSupport.wireMockPort
-  val wireMockHost = "localhost"
-  val wireMockBaseUrlAsString = s"http://$wireMockHost:$wireMockPort"
-  val wireMockBaseUrl = new URL(wireMockBaseUrlAsString)
+  val wireMockPort: Int                                           = WireMockSupport.wireMockPort
+  val wireMockHost                                                = "localhost"
+  val wireMockBaseUrlAsString                                     = s"http://$wireMockHost:$wireMockPort"
+  val wireMockBaseUrl                                             = new URL(wireMockBaseUrlAsString)
   protected implicit val implicitWireMockBaseUrl: WireMockBaseUrl = WireMockBaseUrl(wireMockBaseUrl)
 
   protected def basicWireMockConfig(): WireMockConfiguration = wireMockConfig()
@@ -71,4 +69,3 @@ trait WireMockSupport extends BeforeAndAfterAll with BeforeAndAfterEach {
 
   protected def startWireMockServer(): Unit = wireMockServer.start()
 }
-

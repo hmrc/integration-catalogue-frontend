@@ -34,7 +34,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
   "FT wizard data target page" should {
 
     "render page correctly" in new Setup {
-      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form, "source", FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
+      val page: Html         = dataTargetPage.render(SelectedDataTargetForm.form, "source", FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "Where do you want to send your data? -"
       document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
@@ -52,7 +52,8 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
     }
 
     "render page correctly with errors" in new Setup {
-      val page: Html = dataTargetPage.render(SelectedDataTargetForm.form.withError("dataSource", "error"), "source", FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
+      val page: Html         =
+        dataTargetPage.render(SelectedDataTargetForm.form.withError("dataSource", "error"), "source", FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Where do you want to send your data?"
@@ -61,8 +62,7 @@ class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferR
       document.getElementById("submit").text() shouldBe "Continue"
 
       document.getElementById("dataSource").attr("value") shouldBe "source"
-     document.getElementById("file-transfer-target-error").text() shouldBe "Error: Select where you want to send your data"
-
+      document.getElementById("file-transfer-target-error").text() shouldBe "Error: Select where you want to send your data"
 
       testFileTransferBackends(document, isChecked = false)
 

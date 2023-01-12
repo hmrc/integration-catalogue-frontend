@@ -34,20 +34,20 @@ class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: Execu
       contactReasons: String,
       specificQuestion: String
     )(implicit hc: HeaderCarrier
-    ) : Future[Boolean] = {
+    ): Future[Boolean] = {
 
     val emailParams: Map[String, String] = Map(
-      "apiTitle" -> apiTitle,
-      "senderName" -> senderName,
-      "senderEmail" -> senderEmail,
-      "contactReasons" -> contactReasons,
+      "apiTitle"         -> apiTitle,
+      "senderName"       -> senderName,
+      "senderEmail"      -> senderEmail,
+      "contactReasons"   -> contactReasons,
       "specificQuestion" -> specificQuestion,
-      "apiEmail" -> apiEmails.mkString(";")
+      "apiEmail"         -> apiEmails.mkString(";")
     )
 
     emailConnector.sendEmailToPlatform(apiEmails, emailParams).flatMap {
       case true => emailConnector.sendConfirmationEmailToSender(senderEmail, emailParams)
-      case _ => Future.successful(false)
+      case _    => Future.successful(false)
     }
   }
 

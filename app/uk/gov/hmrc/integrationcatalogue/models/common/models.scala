@@ -27,7 +27,6 @@ object IntegrationId {
   implicit val apiIdFormat = Json.valueFormat[IntegrationId]
 }
 
-
 sealed abstract class PlatformType(val displayName: String, val shortName: String, val fileTransferName: String) extends EnumEntry
 
 object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {
@@ -35,16 +34,16 @@ object PlatformType extends Enum[PlatformType] with PlayJsonEnum[PlatformType] {
   val values = findValues
 
   case object TRANSACTION_ENGINE extends PlatformType("Transaction Engine", "TRANSACTION_ENGINE", "TRANSACTION ENGINE")
-  case object DES extends PlatformType("Data Exchange Service (DES)", "DES", "DES")
-  case object CDS_CLASSIC extends PlatformType("Customs Declaration System (CDS Classic)", "CDS_CLASSIC", "CDS Classic")
-  case object CMA extends PlatformType("Containerised Managed Architecture (CMA)", "CMA", "CMA")
-  case object CORE_IF extends PlatformType("Integration Framework (IF)", "CORE IF", "IF")
-  case object API_PLATFORM extends PlatformType("API Platform", "API Platform", "API Platform")
-  case object DAPI extends PlatformType("DAPI", "DAPI", "DAPI")
-  case object DIGI extends PlatformType("DIGI", "DIGI", "DIGI")
-  case object SDES extends PlatformType("SDES", "SDES", "SDES")
-  case object CIP extends PlatformType("Customer Insight Platform (CIP)", "CIP", "CIP")
-  case object HIP extends PlatformType("Hybrid Integration Platform (HIP)", "HIP", "HIP")
+  case object DES                extends PlatformType("Data Exchange Service (DES)", "DES", "DES")
+  case object CDS_CLASSIC        extends PlatformType("Customs Declaration System (CDS Classic)", "CDS_CLASSIC", "CDS Classic")
+  case object CMA                extends PlatformType("Containerised Managed Architecture (CMA)", "CMA", "CMA")
+  case object CORE_IF            extends PlatformType("Integration Framework (IF)", "CORE IF", "IF")
+  case object API_PLATFORM       extends PlatformType("API Platform", "API Platform", "API Platform")
+  case object DAPI               extends PlatformType("DAPI", "DAPI", "DAPI")
+  case object DIGI               extends PlatformType("DIGI", "DIGI", "DIGI")
+  case object SDES               extends PlatformType("SDES", "SDES", "SDES")
+  case object CIP                extends PlatformType("Customer Insight Platform (CIP)", "CIP", "CIP")
+  case object HIP                extends PlatformType("Hybrid Integration Platform (HIP)", "HIP", "HIP")
 }
 
 sealed trait SpecificationType extends EnumEntry
@@ -60,7 +59,6 @@ object SpecificationType extends Enum[SpecificationType] with PlayJsonEnum[Speci
 case class ContactInformation(name: Option[String], emailAddress: Option[String])
 
 case class Maintainer(name: String, slackChannel: String, contactInfo: List[ContactInformation] = List.empty)
-
 
 sealed trait IntegrationType extends EnumEntry {
   val integrationType: String

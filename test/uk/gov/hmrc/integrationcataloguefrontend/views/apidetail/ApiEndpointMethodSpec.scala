@@ -33,7 +33,7 @@ class ApiEndpointMethodSpec extends CommonViewSpec with ApiTestData {
 
     "render page with endpoint method GET" in new Setup {
 
-      val page: Html = apiEndpointMethod.render(endpointGetMethod, 1)
+      val page: Html         = apiEndpointMethod.render(endpointGetMethod, 1)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("GET").text() shouldBe "GET"
@@ -42,10 +42,9 @@ class ApiEndpointMethodSpec extends CommonViewSpec with ApiTestData {
       document.getElementById("responses-heading-1").text() shouldBe "Responses"
     }
 
-
     "render page with endpoint method PUT" in new Setup {
 
-      val page: Html = apiEndpointMethod.render(endpointPutMethod, 1)
+      val page: Html         = apiEndpointMethod.render(endpointPutMethod, 1)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("PUT").text() shouldBe "PUT"

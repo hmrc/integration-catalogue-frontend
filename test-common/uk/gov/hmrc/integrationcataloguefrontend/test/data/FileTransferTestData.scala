@@ -41,8 +41,8 @@ trait FileTransferTestData {
 
   val fileTransferReviewedDate = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
 
-  val contactInfo = List(ContactInformation(Some("Services"), Some("services@example.com")))
-  val coreIfFileTransferMaintainer: Maintainer = Maintainer("Maintainer", "N/A", contactInfo)
+  val contactInfo                                      = List(ContactInformation(Some("Services"), Some("services@example.com")))
+  val coreIfFileTransferMaintainer: Maintainer         = Maintainer("Maintainer", "N/A", contactInfo)
   val apiPlatformMaintainerWithNoContacts2: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
 
   val corpToCorp: String = "Corporate to Corporate"

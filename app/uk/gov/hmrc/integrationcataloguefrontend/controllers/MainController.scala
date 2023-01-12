@@ -31,16 +31,17 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import scala.concurrent.Future
 
 @Singleton
-class MainController @Inject()(appConfig: AppConfig,
-                               mcc: MessagesControllerComponents,
-                               landingPageView: HomePage,
-                               caseStudiesView: CaseStudies,
-                               getStartedView: GetStarted,
-                               aboutView: About,
-                               accessibilityStatementView: AccessibilityStatementView,
-                               contactView: ContactView,
-                               fileTransferPattern: FileTransferPatternView)
-  extends FrontendController(mcc) {
+class MainController @Inject() (
+    appConfig: AppConfig,
+    mcc: MessagesControllerComponents,
+    landingPageView: HomePage,
+    caseStudiesView: CaseStudies,
+    getStartedView: GetStarted,
+    aboutView: About,
+    accessibilityStatementView: AccessibilityStatementView,
+    contactView: ContactView,
+    fileTransferPattern: FileTransferPatternView
+  ) extends FrontendController(mcc) {
 
   implicit val config: AppConfig = appConfig
 
@@ -48,7 +49,7 @@ class MainController @Inject()(appConfig: AppConfig,
     Future.successful(Ok(landingPageView()))
   }
 
-   def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
+  def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(aboutView()))
   }
 

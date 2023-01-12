@@ -22,20 +22,23 @@ import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, Platf
 
 case class IntegrationResponse(count: Int, pagedCount: Option[Int] = None, results: List[IntegrationDetail])
 
-case class DynamicPageResponse(itemsPerPage: Int,
-                               currentPage: Int,
-                               numberOfPages: Int,
-                               fromResults: Int,
-                               toResults: Int,
-                               totalCount: Int,
-                               firstPageLink: Int,
-                               lastPageLink: Int,
-                               results: List[ApiDetailSummary])
+case class DynamicPageResponse(
+    itemsPerPage: Int,
+    currentPage: Int,
+    numberOfPages: Int,
+    fromResults: Int,
+    toResults: Int,
+    totalCount: Int,
+    firstPageLink: Int,
+    lastPageLink: Int,
+    results: List[ApiDetailSummary]
+  )
 
 object DynamicPageResponse {
-  implicit  val detailFormat = Json.format[ApiDetailSummary]
-  implicit val format = Json.format[DynamicPageResponse]
+  implicit val detailFormat = Json.format[ApiDetailSummary]
+  implicit val format       = Json.format[DynamicPageResponse]
 }
+
 // Integration Catalogue File Transfer Sepcification
 // Json look like this :point_down:
 case class FileTransferPublishRequest(
@@ -43,12 +46,13 @@ case class FileTransferPublishRequest(
     publisherReference: String,
     title: String,
     description: String,
-    platformType: PlatformType, // Split this to Platform and type. TBD
+    platformType: PlatformType,               // Split this to Platform and type. TBD
     lastUpdated: DateTime,
-    contact: ContactInformation, // (single name + email)
-    sourceSystem: List[String], // One or many
+    contact: ContactInformation,              // (single name + email)
+    sourceSystem: List[String],               // One or many
     targetSystem: List[String],
-    fileTransferPattern: String)
+    fileTransferPattern: String
+  )
 
 case class PlatformContactResponse(platformType: PlatformType, contactInfo: Option[ContactInformation], overrideOasContacts: Boolean)
 
@@ -57,7 +61,8 @@ case class IntegrationFilter(
     platforms: List[PlatformType] = List.empty,
     backendsFilter: List[String] = List.empty,
     itemsPerPage: Option[Int] = None,
-    currentPage: Option[Int] = None)
+    currentPage: Option[Int] = None
+  )
 
 case class FileTransferTransportsForPlatform(platform: PlatformType, transports: List[String])
 
@@ -68,4 +73,5 @@ case class EmailRequest(
     force: Boolean = false,
     eventUrl: Option[String] = None,
     onSendUrl: Option[String] = None,
-    tags: Map[String, String])
+    tags: Map[String, String]
+  )

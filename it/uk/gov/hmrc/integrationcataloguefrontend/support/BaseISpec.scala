@@ -27,10 +27,8 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-
-
 abstract class BaseISpec
-  extends PlaySpec with WireMockSupport with MetricsTestSupport with Matchers{
+    extends PlaySpec with WireMockSupport with MetricsTestSupport with Matchers {
 
   def app: Application
   protected def appBuilder: GuiceApplicationBuilder
@@ -41,7 +39,7 @@ abstract class BaseISpec
 
   protected implicit def materializer: Materializer = app.materializer
 
-  private lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  private lazy val messagesApi            = app.injector.instanceOf[MessagesApi]
   private implicit def messages: Messages = messagesApi.preferred(Seq.empty[Lang])
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString

@@ -45,42 +45,43 @@ import scala.concurrent.Future
 
 class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData with FileTransferTestData with WithCSRFAddToken {
 
-  private val fakeRequest = FakeRequest()
+  private val fakeRequest                       = FakeRequest()
+
   val validContactFormData: Map[String, String] = Map(
-    "fullName" -> senderName,
-    "emailAddress" -> senderEmail,
-    "reasonOne" -> contactReasonList.head,
-    "reasonTwo" -> contactReasonList(1),
-    "reasonThree" -> contactReasonList(2),
+    "fullName"         -> senderName,
+    "emailAddress"     -> senderEmail,
+    "reasonOne"        -> contactReasonList.head,
+    "reasonTwo"        -> contactReasonList(1),
+    "reasonThree"      -> contactReasonList(2),
     "specificQuestion" -> specificQuestion
   )
 
   private val fakeRequestWithCsrf = fakeRequest
-    .withCSRFToken.withFormUrlEncodedBody(validContactFormData.toSeq:_*)
+    .withCSRFToken.withFormUrlEncodedBody(validContactFormData.toSeq: _*)
 
   private val fakeRequestWithInvalidForm = fakeRequest
     .withCSRFToken.withFormUrlEncodedBody("fullName" -> "")
 
-  private val env = Environment.simple()
+  private val env           = Environment.simple()
   private val configuration = Configuration.load(env)
 
   private val serviceConfig = new ServicesConfig(configuration)
-  private val appConfig = new AppConfig(configuration, serviceConfig)
+  private val appConfig     = new AppConfig(configuration, serviceConfig)
 
-  val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
-  private val apiDetailView = app.injector.instanceOf[ApiDetailView]
-  private val apiTechnicalDetailsView = app.injector.instanceOf[ApiTechnicalDetailsView]
-  private val apiTechnicalDetailsViewRedoc = app.injector.instanceOf[ApiTechnicalDetailsViewRedoc]
-  private val fileTransferDetailView = app.injector.instanceOf[FileTransferDetailView]
-  private val errorTemplate = app.injector.instanceOf[ErrorTemplate]
-  private val apiNotFoundErrorTemplate = app.injector.instanceOf[ApiNotFoundErrorTemplate]
-  private val contactApiTeamView = app.injector.instanceOf[ContactApiTeamView]
-  private val contactApiTeamSuccessView = app.injector.instanceOf[ContactApiTeamSuccessView]
+  val listApisView: ListIntegrationsView         = app.injector.instanceOf[ListIntegrationsView]
+  private val apiDetailView                      = app.injector.instanceOf[ApiDetailView]
+  private val apiTechnicalDetailsView            = app.injector.instanceOf[ApiTechnicalDetailsView]
+  private val apiTechnicalDetailsViewRedoc       = app.injector.instanceOf[ApiTechnicalDetailsViewRedoc]
+  private val fileTransferDetailView             = app.injector.instanceOf[FileTransferDetailView]
+  private val errorTemplate                      = app.injector.instanceOf[ErrorTemplate]
+  private val apiNotFoundErrorTemplate           = app.injector.instanceOf[ApiNotFoundErrorTemplate]
+  private val contactApiTeamView                 = app.injector.instanceOf[ContactApiTeamView]
+  private val contactApiTeamSuccessView          = app.injector.instanceOf[ContactApiTeamSuccessView]
   val mockIntegrationService: IntegrationService = mock[IntegrationService]
-  val mockEmailService: EmailService = mock[EmailService]
+  val mockEmailService: EmailService             = mock[EmailService]
 
   implicit def materializer: Materializer = app.materializer
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier  = HeaderCarrier()
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

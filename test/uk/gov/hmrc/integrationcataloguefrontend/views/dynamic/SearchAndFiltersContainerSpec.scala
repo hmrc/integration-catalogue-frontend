@@ -32,7 +32,7 @@ class SearchAndFiltersContainerSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when page renders" in new Setup {
 
-      val page: Html = searchAndFiltersContainer.render()
+      val page: Html         = searchAndFiltersContainer.render()
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("intCatSearch").attr("placeholder") shouldBe "Search APIs"
       document.getElementById("intCatSearchButton").text() shouldBe "Search"

@@ -31,7 +31,7 @@ class FileTransferWizardStartSpec extends CommonViewSpec {
   "FT wizard start page" should {
 
     "render start page correctly" in new Setup {
-      val page: Html = startPage.render(messagesProvider.messages, appConfig)
+      val page: Html         = startPage.render(messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "Reusing file transfer connections -"
       document.getElementById("page-heading").text() shouldBe "Reusing file transfer connections"

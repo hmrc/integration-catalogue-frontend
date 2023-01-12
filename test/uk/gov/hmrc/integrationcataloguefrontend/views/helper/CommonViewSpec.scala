@@ -32,10 +32,10 @@ import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import scala.collection.JavaConverters.asScalaBufferConverter
 
 trait CommonViewSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
-  val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi = mcc.messagesApi
+  val mcc                                         = app.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi                                 = mcc.messagesApi
   implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
-  implicit val appConfig: AppConfig = mock[AppConfig]
+  implicit val appConfig: AppConfig               = mock[AppConfig]
 
   when(appConfig.footerLinkItems).thenReturn(Seq("govukHelp"))
 

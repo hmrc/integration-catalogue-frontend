@@ -31,8 +31,9 @@ object BackendFilterItem {
 }
 
 object Backends {
-    val filters = List(
-   BackendFilterItem("Case Mgt", "Case Mgt"),
+
+  val filters = List(
+    BackendFilterItem("Case Mgt", "Case Mgt"),
     BackendFilterItem("CID", "CID"),
     BackendFilterItem("EDH", "EDH"),
     BackendFilterItem("Elec Folders", "Elec Folders"),
@@ -42,7 +43,7 @@ object Backends {
     BackendFilterItem("ITSD", "ITSD"),
     BackendFilterItem("NPS", "NPS"),
     BackendFilterItem("RTI", "RTI")
-    ).sorted
+  ).sorted
 }
 
 case class FileTransferBackendItem(name: String, displayName: String)
@@ -56,6 +57,7 @@ object FileTransferBackendItem {
 }
 
 object FileTransferBackends {
+
   val radiobuttons = List(
     FileTransferBackendItem("ATOS", "Atos"),
     FileTransferBackendItem("BARCLAYS", "Barclays"),

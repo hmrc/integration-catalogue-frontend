@@ -16,7 +16,6 @@
 
 package steps
 
-
 import java.io.{File, IOException}
 import java.net.URL
 import java.util.Calendar
@@ -43,39 +42,38 @@ import org.scalatest.matchers.should.Matchers
 
 import java.util.concurrent.TimeUnit
 
-
 trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logging {
   var passedTestCount: Int = 0
   var failedTestCount: Int = 0
   // please do not change this port as it is used for acceptance tests
   // when the service is run with "service manager"
-  val port = 6001
-  val host = s"http://localhost:$port"
-  val stubPort = sys.env.getOrElse("WIREMOCK_PORT", "11111").toInt
-  val stubHost = "localhost"
-  val wireMockUrl = s"http://$stubHost:$stubPort"
+  val port                 = 6001
+  val host                 = s"http://localhost:$port"
+  val stubPort             = sys.env.getOrElse("WIREMOCK_PORT", "11111").toInt
+  val stubHost             = "localhost"
+  val wireMockUrl          = s"http://$stubHost:$stubPort"
 
   private val wireMockConfiguration = wireMockConfig().port(stubPort)
 
-  val wireMockServer = new WireMockServer(wireMockConfiguration)
+  val wireMockServer     = new WireMockServer(wireMockConfiguration)
   var server: TestServer = null
-  lazy val windowSize = new Dimension(1280, 720)
+  lazy val windowSize    = new Dimension(1280, 720)
 
   Runtime.getRuntime addShutdownHook new Thread {
+
     override def run() {
       shutdown()
     }
   }
   val driver: WebDriver = createWebDriver
 
-
   lazy val createWebDriver: WebDriver = {
-  val driver =  Properties.propOrElse("test_driver", "chrome") match {
-      case "chrome" => createChromeDriver()
-      case "firefox" => createFirefoxDriver()
-      case "remote-chrome" => createRemoteChromeDriver()
+    val driver = Properties.propOrElse("test_driver", "chrome") match {
+      case "chrome"         => createChromeDriver()
+      case "firefox"        => createFirefoxDriver()
+      case "remote-chrome"  => createRemoteChromeDriver()
       case "remote-firefox" => createRemoteFirefoxDriver()
-      case other => throw new IllegalArgumentException(s"target browser $other not recognised")
+      case other            => throw new IllegalArgumentException(s"target browser $other not recognised")
     }
     driver.manage().timeouts().implicitlyWait(150, TimeUnit.MILLISECONDS)
     driver
@@ -106,7 +104,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
 
   def createFirefoxDriver(): WebDriver = {
     val options = new FirefoxOptions()
-    .setAcceptInsecureCerts(true)
+      .setAcceptInsecureCerts(true)
     new FirefoxDriver(options)
   }
 
@@ -135,7 +133,6 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
     driver.manage().deleteAllCookies()
   }
 
-
   After(order = 1) { _ =>
     if (wireMockServer.isRunning) WireMock.reset()
   }
@@ -143,7 +140,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
   After(order = 2) { scenario =>
     if (scenario.isFailed) {
       val srcFile: Array[Byte] = Env.driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.BYTES)
-      val screenShot: String = s"./target/screenshots/${Calendar.getInstance().getTime}.png"
+      val screenShot: String   = s"./target/screenshots/${Calendar.getInstance().getTime}.png"
       try {
         FileUtils.copyFile(Env.driver.asInstanceOf[TakesScreenshot].getScreenshotAs(OutputType.FILE), new File(screenShot))
       } catch {
@@ -153,8 +150,7 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
     }
     if (scenario.getStatus == Status.PASSED) {
       passedTestCount = passedTestCount + 1
-    }
-    else if (scenario.getStatus == Status.FAILED) {
+    } else if (scenario.getStatus == Status.FAILED) {
       failedTestCount = failedTestCount + 1
     }
     logger.info("\n*******************************************************************************************************")
@@ -169,11 +165,11 @@ trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logg
       GuiceApplicationBuilder()
         .configure(
           Map(
-            "filter.hods.enable" -> false,
-            "auditing.enabled" -> false,
-            "microservice.services.integration-catalogue.port" -> 11111,
+            "filter.hods.enable"                                        -> false,
+            "auditing.enabled"                                          -> false,
+            "microservice.services.integration-catalogue.port"          -> 11111,
             "microservice.services.integration-catalogue-frontend.port" -> 11112,
-            "itemsPerPage.default" -> 2
+            "itemsPerPage.default"                                      -> 2
           )
         )
         .in(Mode.Prod)

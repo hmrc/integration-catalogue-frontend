@@ -30,7 +30,6 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
     val backendsFilterComponent = app.injector.instanceOf[BackendsFilterComponent]
   }
 
-
   "BackendsFilterComponent" should {
 
     def testBackendsFilterLabels(document: Document): Unit = {
@@ -65,22 +64,22 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
 
     "render backend filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-      val page: Html = backendsFilterComponent.render(List.empty)
+      val page: Html         = backendsFilterComponent.render(List.empty)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
-      //test filter labels
+      // test filter labels
       testBackendsFilter(document, isChecked = false)
 
     }
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page: Html = backendsFilterComponent.render(Backends.filters.map(_.name))
+      val page: Html         = backendsFilterComponent.render(Backends.filters.map(_.name))
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
-      //test filter labels
+      // test filter labels
       testBackendsFilter(document, isChecked = true)
     }
   }

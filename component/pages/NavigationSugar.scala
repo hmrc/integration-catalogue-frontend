@@ -42,7 +42,7 @@ trait NavigationSugar extends WebBrowser with Eventually with Assertions with Ma
 
   def on(page: WebPage)(implicit webDriver: WebDriver) = {
     eventually {
-      find(tagName("body"))  //.filter(_ => page.isCurrentPage)
+      find(tagName("body")) // .filter(_ => page.isCurrentPage)
     }
     withClue(s"Currently in page: $currentUrl ") {
       assert(page.isCurrentPage, s"Page was not loaded: ${page.url}")

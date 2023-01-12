@@ -64,21 +64,21 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
 
       integrationCatalogueConnector.getPlatformContacts()
         .map {
-          case Right(result: List[PlatformContactResponse]) => 
+          case Right(result: List[PlatformContactResponse]) =>
             val maybeMatchedPlatformContact = result.filter(p => p.platformType == integration.platform).headOption
-            val maybePlatformContactInfo = maybeMatchedPlatformContact.flatMap(_.contactInfo)
-            val overrideOAsContact = maybeMatchedPlatformContact.map(_.overrideOasContacts).getOrElse(false)
+            val maybePlatformContactInfo    = maybeMatchedPlatformContact.flatMap(_.contactInfo)
+            val overrideOAsContact          = maybeMatchedPlatformContact.map(_.overrideOasContacts).getOrElse(false)
 
-           (maybePlatformContactInfo, overrideOAsContact, filteredOasContacts) match {
-             case (Some(contactInfo: ContactInformation), _, Nil) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
-             case (Some(contactInfo: ContactInformation), true, oasContacts: List[ContactInformation]) =>  constructMaintainer(integration, List(maybePlatformContactInfo.get))
-             case (Some(contactInfo: ContactInformation), false, oasContacts: List[ContactInformation]) => constructMaintainer(integration, filteredOasContacts)
-             case (None, _, oasContacts: List[ContactInformation]) => constructMaintainer(integration, filteredOasContacts)
-             case _ => constructMaintainer(integration, List.empty)
-           }
-          case _  =>   constructMaintainer(integration, List.empty)
-     
-      }
+            (maybePlatformContactInfo, overrideOAsContact, filteredOasContacts) match {
+              case (Some(contactInfo: ContactInformation), _, Nil)                                       => constructMaintainer(integration, List(maybePlatformContactInfo.get))
+              case (Some(contactInfo: ContactInformation), true, oasContacts: List[ContactInformation])  => constructMaintainer(integration, List(maybePlatformContactInfo.get))
+              case (Some(contactInfo: ContactInformation), false, oasContacts: List[ContactInformation]) => constructMaintainer(integration, filteredOasContacts)
+              case (None, _, oasContacts: List[ContactInformation])                                      => constructMaintainer(integration, filteredOasContacts)
+              case _                                                                                     => constructMaintainer(integration, List.empty)
+            }
+          case _                                            => constructMaintainer(integration, List.empty)
+
+        }
     }
     integrationCatalogueConnector.findByIntegrationId(integrationId)
       .flatMap {

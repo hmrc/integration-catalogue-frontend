@@ -31,7 +31,7 @@ class HomePageSpec extends CommonViewSpec {
   "HomePage" should {
 
     "render The home page correctly" in new Setup {
-      val page: Html = homePage.render(messagesProvider.messages, appConfig)
+      val page: Html         = homePage.render(messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"
@@ -44,7 +44,9 @@ class HomePageSpec extends CommonViewSpec {
       document.getElementById("homepage-img-1").attr("src") shouldBe "/api-catalogue/assets/images/get-data.svg"
 
       document.getElementById("homepage-section-heading-2").text() shouldBe "Using the API catalogue"
-      document.getElementById("homepage-paragraph-2").text() shouldBe "Search for existing APIs and file transfers, view details about APIs and file transfers and get contact information. More on the API catalogue"
+      document.getElementById(
+        "homepage-paragraph-2"
+      ).text() shouldBe "Search for existing APIs and file transfers, view details about APIs and file transfers and get contact information. More on the API catalogue"
       document.getElementById("homepage-link-2").text() shouldBe "More on the API catalogue"
       document.getElementById("homepage-link-2").attr("href") shouldBe "/api-catalogue/about"
       document.getElementById("homepage-img-2").attr("src") shouldBe "/api-catalogue/assets/images/case-studies.svg"

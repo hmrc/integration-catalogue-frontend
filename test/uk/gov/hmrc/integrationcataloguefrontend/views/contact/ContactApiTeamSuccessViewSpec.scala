@@ -23,7 +23,6 @@ import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamSuccessView
 
-
 class ContactApiTeamSuccessViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
@@ -33,7 +32,7 @@ class ContactApiTeamSuccessViewSpec extends CommonViewSpec with ApiTestData {
   "ContactApiTeamSuccessPage" should {
 
     "render as expected" in new Setup {
-      val page: Html = contactApiTeamSuccessView.render(apiDetail0, messagesProvider.messages, appConfig)
+      val page: Html         = contactApiTeamSuccessView.render(apiDetail0, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Contact API catalogue"

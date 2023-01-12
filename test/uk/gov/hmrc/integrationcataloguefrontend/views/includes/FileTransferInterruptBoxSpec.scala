@@ -31,7 +31,7 @@ class FileTransferInterruptBoxSpec extends CommonViewSpec {
   "FileTransferInterruptBox" should {
 
     "render the blue interrupt box correctly" in new Setup {
-      val page : Html =    blueInterruptBox.render
+      val page: Html         = blueInterruptBox.render
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("ft-interrupt-heading").text() shouldBe "File transfers"

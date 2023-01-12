@@ -31,10 +31,10 @@ import scala.concurrent.{ExecutionContext, Future, TimeoutException}
 
 class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
-  private val mockHttpClient = mock[HttpClient]
-  private val mockAppConfig = mock[AppConfig]
+  private val mockHttpClient                = mock[HttpClient]
+  private val mockAppConfig                 = mock[AppConfig]
   private implicit val ec: ExecutionContext = Helpers.stubControllerComponents().executionContext
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier    = HeaderCarrier()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -47,7 +47,7 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
   }
 
   trait SetUp {
-    val connector = new EmailConnector(mockHttpClient, mockAppConfig)
+    val connector    = new EmailConnector(mockHttpClient, mockAppConfig)
     val sendEmailUrl = s"/hmrc/email"
 
     def httpCallToSendEmailWithStatus(emailRequest: EmailRequest, status: Int): ScalaOngoingStubbing[Future[HttpResponse]] = {

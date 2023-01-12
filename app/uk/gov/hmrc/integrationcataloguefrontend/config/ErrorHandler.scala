@@ -24,9 +24,10 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ErrorTemplate, NotFo
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 import javax.inject.{Inject, Singleton}
+
 @Singleton
-class ErrorHandler @Inject()(errorViewTemplate: ErrorTemplate, notFoundErrorTemplate: NotFoundErrorTemplate, val messagesApi: MessagesApi)
-                            (implicit appConfig: AppConfig) extends FrontendErrorHandler {
+class ErrorHandler @Inject() (errorViewTemplate: ErrorTemplate, notFoundErrorTemplate: NotFoundErrorTemplate, val messagesApi: MessagesApi)(implicit appConfig: AppConfig)
+    extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): HtmlFormat.Appendable = {
     errorViewTemplate(pageTitle, heading, message)

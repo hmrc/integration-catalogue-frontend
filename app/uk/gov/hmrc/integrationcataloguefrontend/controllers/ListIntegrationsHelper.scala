@@ -38,8 +38,8 @@ trait ListIntegrationsHelper {
   }
 
   def showFileTransferInterrupt(fileTransferSearchTerms: List[String], keywords: Option[String]): Boolean = {
-      val searchTerms = fileTransferSearchTerms.map(_.toUpperCase)
-      keywords.exists(keyword => searchTerms.contains(keyword.toUpperCase()))
+    val searchTerms = fileTransferSearchTerms.map(_.toUpperCase)
+    keywords.exists(keyword => searchTerms.contains(keyword.toUpperCase()))
   }
 
 }
