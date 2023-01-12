@@ -1,7 +1,8 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import bloop.integrations.sbt.BloopDefaults
-import uk.gov.hmrc.ForkedJvmPerTestSettings.oneForkedJvmPerTest
+import sbt.Tests.{Group, SubProcess}
+import sbt._
 
 val appName = "integration-catalogue-frontend"
 
@@ -22,7 +23,7 @@ lazy val ComponentTest = config("component") extend Test
 inConfig(ComponentTest)(org.scalafmt.sbt.ScalafmtPlugin.scalafmtConfigSettings)
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     majorVersion                     := 0,
     scalaVersion                     := "2.12.15",
@@ -91,3 +92,14 @@ lazy val microservice = Project(appName, file("."))
       Test / parallelExecution := false
   )
 }
+
+def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
+  tests map { test =>
+    Group(
+      test.name,
+      Seq(test),
+      SubProcess(
+        ForkOptions().withRunJVMOptions(Vector(s"-Dtest.name=${test.name}"))
+      )
+    )
+  }

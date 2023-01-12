@@ -8,7 +8,7 @@ object AppDependencies {
   lazy val enumeratumVersion = "1.6.3"
   lazy val jacksonVersion = "2.12.2"
   lazy val bootstrapVersion = "7.12.0"
-  lazy val playFrontendVersion = "3.20.0-play-28"
+  lazy val playFrontendVersion = "6.2.0-play-28"
   lazy val cucumberVersion = "6.2.2"
   lazy val seleniumVersion = "2.53.1"
 

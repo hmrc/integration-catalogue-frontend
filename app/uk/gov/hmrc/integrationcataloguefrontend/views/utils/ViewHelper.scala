@@ -31,7 +31,7 @@ object ViewHelper {
   }
 
   // scalastyle:on magic.number
-  def replaceOrRemoveInvalidChars(value: String): String        = {
+  def replaceOrRemoveInvalidChars(value: String): String = {
     value
       .replaceAll("\n", " ")
       .trim
