@@ -164,7 +164,7 @@ case class EndpointMethod(
 
 sealed abstract class ApiStatus(val displayName: String, val shortName: String) extends EnumEntry
 
-object ApiStatus                                                                extends Enum[ApiStatus] with PlayJsonEnum[ApiStatus] {
+object ApiStatus extends Enum[ApiStatus] with PlayJsonEnum[ApiStatus] {
 
   val values = findValues
 
@@ -214,7 +214,7 @@ object ApiDetailSummary {
     }
   }
 
-  def fromApiDetail(apiDetail: ApiDetail)              = {
+  def fromApiDetail(apiDetail: ApiDetail) = {
     ApiDetailSummary(
       apiDetail.id,
       apiDetail.publisherReference,

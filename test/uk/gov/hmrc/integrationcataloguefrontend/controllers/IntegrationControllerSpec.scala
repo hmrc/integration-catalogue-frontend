@@ -45,7 +45,7 @@ import scala.concurrent.Future
 
 class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData with FileTransferTestData with WithCSRFAddToken {
 
-  private val fakeRequest                       = FakeRequest()
+  private val fakeRequest = FakeRequest()
 
   val validContactFormData: Map[String, String] = Map(
     "fullName"         -> senderName,
