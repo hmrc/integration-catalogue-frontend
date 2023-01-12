@@ -5,9 +5,18 @@ import uk.gov.hmrc.ForkedJvmPerTestSettings.oneForkedJvmPerTest
 
 val appName = "integration-catalogue-frontend"
 
-
-
 val silencerVersion = "1.7.6"
+
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+
+inThisBuild(
+  List(
+    scalaVersion := "2.12.15",
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
+  )
+)
+
 lazy val ComponentTest = config("component") extend Test
 
 inConfig(ComponentTest)(org.scalafmt.sbt.ScalafmtPlugin.scalafmtConfigSettings)
