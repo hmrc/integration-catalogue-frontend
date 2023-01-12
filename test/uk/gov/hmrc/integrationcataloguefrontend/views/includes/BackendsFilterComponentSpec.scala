@@ -16,13 +16,16 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 
+import scala.collection.JavaConverters._
+
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
+import uk.gov.hmrc.integrationcataloguefrontend.models.Backends
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.BackendsFilterComponent
-import scala.collection.JavaConverters._
-import uk.gov.hmrc.integrationcataloguefrontend.models.Backends
 
 class BackendsFilterComponentSpec extends CommonViewSpec {
 

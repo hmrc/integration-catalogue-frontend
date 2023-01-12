@@ -17,6 +17,7 @@
 package uk.gov.hmrc.integrationcatalogue.models
 
 import org.joda.time.DateTime
+
 import play.api.libs.json._
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 

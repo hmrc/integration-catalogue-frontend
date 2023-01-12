@@ -17,11 +17,13 @@
 package pages
 
 import org.openqa.selenium.By
-import play.api.Logging
 import steps.Env
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import utils.PagingHelper
+
+import play.api.Logging
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
+
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
 trait CommonPage extends WebPage with Logging with ApiTestData {
   val pageTitle: String

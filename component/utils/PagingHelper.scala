@@ -17,6 +17,7 @@
 package utils
 
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelper
 
 trait PagingHelper extends ListIntegrationsHelper {

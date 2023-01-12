@@ -18,12 +18,11 @@ package uk.gov.hmrc.integrationcataloguefrontend.test.data
 
 import java.util.UUID
 
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
-import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
-import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
+
+import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, Maintainer, PlatformType}
 
 trait FileTransferTestData {
 

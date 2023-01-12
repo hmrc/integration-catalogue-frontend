@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.config
 
+import javax.inject.{Inject, Singleton}
+
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
-
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ErrorTemplate, NotFoundErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
-import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ErrorTemplate, NotFoundErrorTemplate}
 
 @Singleton
 class ErrorHandler @Inject() (errorViewTemplate: ErrorTemplate, notFoundErrorTemplate: NotFoundErrorTemplate, val messagesApi: MessagesApi)(implicit appConfig: AppConfig)

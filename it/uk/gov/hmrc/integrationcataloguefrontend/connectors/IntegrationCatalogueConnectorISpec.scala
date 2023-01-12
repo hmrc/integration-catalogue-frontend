@@ -16,9 +16,12 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
+import java.util.UUID
+
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.scalatest.BeforeAndAfterEach
+
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
@@ -28,12 +31,12 @@ import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcatalogue.models.common._
+
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 import uk.gov.hmrc.integrationcataloguefrontend.support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
-import java.util.UUID
-
+@SuppressWarnings(Array("DisableSyntax.asInstanceOf", "DisableSyntax.isInstanceOf"))
 class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestData with BeforeAndAfterEach with IntegrationCatalogueConnectorStub {
 
   protected override def appBuilder: GuiceApplicationBuilder =

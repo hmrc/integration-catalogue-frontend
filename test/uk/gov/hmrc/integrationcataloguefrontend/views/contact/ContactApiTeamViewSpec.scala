@@ -18,9 +18,11 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.contact
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ContactApiTeamForm
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec

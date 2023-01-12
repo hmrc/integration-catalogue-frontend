@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.integrationcatalogue.models
 
-import org.joda.time.DateTime
-import uk.gov.hmrc.integrationcatalogue.models.common._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import org.joda.time.DateTime
+
+import uk.gov.hmrc.integrationcatalogue.models.common._
+
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper
 import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper
 

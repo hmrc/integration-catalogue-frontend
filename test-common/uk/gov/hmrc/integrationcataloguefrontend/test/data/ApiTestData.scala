@@ -16,13 +16,14 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.test.data
 
+import java.util.UUID
+
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import play.api.http.MediaType
-import uk.gov.hmrc.integrationcatalogue.models.common._
-import uk.gov.hmrc.integrationcatalogue.models._
 
-import java.util.UUID
+import play.api.http.MediaType
+import uk.gov.hmrc.integrationcatalogue.models._
+import uk.gov.hmrc.integrationcatalogue.models.common._
 
 trait ApiTestData {
 

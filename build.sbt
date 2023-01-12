@@ -58,7 +58,10 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
     IntegrationTest / managedClasspath += (Assets / packageBin).value
   )
-  .settings(headerSettings(IntegrationTest) ++ automateHeaderSettings(IntegrationTest))
+  .settings(headerSettings(IntegrationTest) ++ automateHeaderSettings(IntegrationTest),
+    scalafixConfigSettings(IntegrationTest)
+  )
+
 
   .configs(ComponentTest)
   .settings(inConfig(ComponentTest)(Defaults.testSettings): _*)
@@ -72,7 +75,8 @@ lazy val microservice = Project(appName, file("."))
     ComponentTest / testGrouping := oneForkedJvmPerTest((ComponentTest / definedTests).value),
     ComponentTest / parallelExecution := false
   )
-  .settings(headerSettings(ComponentTest) ++ automateHeaderSettings(ComponentTest))
+  .settings(headerSettings(ComponentTest) ++ automateHeaderSettings(ComponentTest),
+    scalafixConfigSettings(ComponentTest))
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
 
   lazy val scoverageSettings = {

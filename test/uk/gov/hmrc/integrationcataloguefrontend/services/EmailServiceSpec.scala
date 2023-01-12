@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
 import uk.gov.hmrc.http.HeaderCarrier
+
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class EmailServiceSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData {
 

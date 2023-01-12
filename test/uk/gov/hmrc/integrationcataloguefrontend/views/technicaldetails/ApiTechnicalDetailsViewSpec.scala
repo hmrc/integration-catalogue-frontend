@@ -16,13 +16,15 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.technicaldetails
 
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiTechnicalDetailsView
-import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
-import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-import play.twirl.api.Html
-import org.jsoup.nodes.Document
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+
+import play.twirl.api.Html
+import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
+import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiTechnicalDetailsView
 
 class ApiTechnicalDetailsViewSpec extends CommonViewSpec with ApiTestData {
 

@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import play.api.Logging
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+
+import play.api.Logging
+import uk.gov.hmrc.http.HeaderCarrier
+
+import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
 
 @Singleton
 class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: ExecutionContext) extends Logging {

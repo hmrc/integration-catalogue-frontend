@@ -19,29 +19,29 @@ package steps
 import java.io.{File, IOException}
 import java.net.URL
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
+import scala.util.{Properties, Try}
+
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration._
-import io.cucumber.scala.{EN, ScalaDsl, Scenario}
-import org.apache.commons.io.FileUtils
-import org.openqa.selenium.{Dimension, OutputType, TakesScreenshot, WebDriver}
-import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
-import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
-import play.api.{Logging, Mode}
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.TestServer
-import play.core.server.ServerConfig
-import stubs.AuditStub
 import component.utils.BrowserStackCaps
 import io.cucumber.core.backend.Status
-
-import scala.util.{Properties, Try}
-import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.firefox.FirefoxDriver
+import io.cucumber.scala.{EN, ScalaDsl, Scenario}
+import org.apache.commons.io.FileUtils
+import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
+import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxOptions}
+import org.openqa.selenium.remote.{DesiredCapabilities, RemoteWebDriver}
+import org.openqa.selenium.{Dimension, OutputType, TakesScreenshot, WebDriver}
 import org.scalatest.matchers.should.Matchers
+import stubs.AuditStub
 
-import java.util.concurrent.TimeUnit
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.TestServer
+import play.api.{Logging, Mode}
+import play.core.server.ServerConfig
 
+@SuppressWarnings(Array("all"))
 trait Env extends ScalaDsl with EN with Matchers with BrowserStackCaps with Logging {
   var passedTestCount: Int = 0
   var failedTestCount: Int = 0

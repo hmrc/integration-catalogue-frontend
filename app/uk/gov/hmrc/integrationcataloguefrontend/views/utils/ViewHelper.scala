@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.utils
 
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationDetail
-import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail}
 
 object ViewHelper {
 

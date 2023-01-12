@@ -18,15 +18,17 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import org.jsoup.Jsoup
 import org.scalatest.{Assertion, BeforeAndAfterEach}
+
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.test.Helpers._
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
-import uk.gov.hmrc.integrationcatalogue.models.{FileTransferTransportsForPlatform, PlatformContactResponse}
-import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
+import uk.gov.hmrc.integrationcatalogue.models.{FileTransferTransportsForPlatform, PlatformContactResponse}
+
 import uk.gov.hmrc.integrationcataloguefrontend.support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
 

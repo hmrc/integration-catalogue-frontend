@@ -18,6 +18,7 @@ package stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers
+
 import play.api.Logging
 import play.api.http.Status._
 

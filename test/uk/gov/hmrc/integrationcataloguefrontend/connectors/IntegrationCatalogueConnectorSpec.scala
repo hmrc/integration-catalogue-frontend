@@ -16,18 +16,20 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
+import java.util.UUID
+import scala.concurrent.{ExecutionContext, Future}
+
 import org.mockito.captor.{ArgCaptor, Captor}
 import org.mockito.stubbing.ScalaOngoingStubbing
+
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{BadGatewayException, HttpClient, _}
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common._
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
-
-import java.util.UUID
-import scala.concurrent.{ExecutionContext, Future}
 
 class IntegrationCatalogueConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 

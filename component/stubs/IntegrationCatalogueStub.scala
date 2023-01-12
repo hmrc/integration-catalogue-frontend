@@ -16,17 +16,20 @@
 
 package component.stubs
 
-import com.github.tomakehurst.wiremock.client.WireMock._
-import play.api.http.Status.OK
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationDetail, IntegrationResponse, PlatformContactResponse}
-import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
-import pages.DynamicSearchPageWithSearchResults.generateIntegrationResponse
-import play.api.libs.json.Json
-import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
-import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelper
-
 import scala.jdk.CollectionConverters._
 
+import com.github.tomakehurst.wiremock.client.WireMock._
+import pages.DynamicSearchPageWithSearchResults.generateIntegrationResponse
+
+import play.api.http.Status.OK
+import play.api.libs.json.Json
+import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationDetail, IntegrationResponse, PlatformContactResponse}
+
+import uk.gov.hmrc.integrationcataloguefrontend.controllers.ListIntegrationsHelper
+
+@SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
 object IntegrationCatalogueStub extends ListIntegrationsHelper {
 
   def findNoFiltersPaged(apis: List[ApiDetail], page: String, itemsPerPage: String, status: Int = OK) = {

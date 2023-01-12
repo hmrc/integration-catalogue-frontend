@@ -17,9 +17,11 @@
 package uk.gov.hmrc.integrationcataloguefrontend.views.helper
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
 import play.api.test.{CSRFTokenHelper, FakeRequest}
 import play.filters.csrf.CSRFAddToken
 
+@SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
 trait WithCSRFAddToken {
   self: GuiceOneAppPerSuite =>
 

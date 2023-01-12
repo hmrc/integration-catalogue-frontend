@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.support
 
-import play.api.Logger
-
 import java.net.ServerSocket
 import scala.annotation.tailrec
 
+import play.api.Logger
+
+@SuppressWarnings(Array("DisableSyntax.null", "DisableSyntax.var"))
 object PortHelper {
   val rnd            = new scala.util.Random
   val range          = 8000 to 39999

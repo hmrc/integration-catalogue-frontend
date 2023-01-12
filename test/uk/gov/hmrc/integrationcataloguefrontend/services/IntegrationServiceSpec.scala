@@ -16,18 +16,20 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.integrationcatalogue.models._
-import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, PlatformType}
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
-import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
-import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
-
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.integrationcatalogue.models._
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, PlatformType}
+
+import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
+import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
 class IntegrationServiceSpec
     extends AsyncHmrcSpec

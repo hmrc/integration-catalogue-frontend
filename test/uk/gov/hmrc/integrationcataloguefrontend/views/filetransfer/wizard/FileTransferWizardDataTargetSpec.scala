@@ -18,12 +18,14 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.test.FakeRequest
+
 import play.api.test.CSRFTokenHelper.CSRFRequest
+import play.api.test.FakeRequest
 import play.twirl.api.Html
+
+import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataTargetForm
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataTarget
-import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataTargetForm
 
 class FileTransferWizardDataTargetSpec extends CommonViewSpec with FileTransferRadioButtonHelper {
 

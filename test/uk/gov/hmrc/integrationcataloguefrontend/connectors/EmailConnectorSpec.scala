@@ -16,18 +16,20 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
+import java.net.ConnectException
+import scala.concurrent.{ExecutionContext, Future, TimeoutException}
+
 import org.mockito.stubbing.ScalaOngoingStubbing
+
 import play.api.http.Status.{ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Writes
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{HttpClient, _}
 import uk.gov.hmrc.integrationcatalogue.models._
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
-
-import java.net.ConnectException
-import scala.concurrent.{ExecutionContext, Future, TimeoutException}
 
 class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 

@@ -25,10 +25,12 @@ import org.scalatest.Assertion
 import org.scalatest.matchers.should.Matchers
 import pages.DynamicSearchPageWithSearchResults.{allApis, generateIntegrationResponse, integrationResponse}
 import pages._
+import utils.PagingHelper
+
 import play.api.http.Status.OK
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
-import utils.PagingHelper
 
 class DynamicSearchSteps extends ScalaDsl with EN with Matchers with NavigationSugar with PageSugar
     with CustomMatchers with ApiTestData with PagingHelper {

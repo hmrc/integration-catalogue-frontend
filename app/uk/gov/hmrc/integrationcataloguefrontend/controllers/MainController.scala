@@ -17,18 +17,19 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.Future
+
 import play.api.mvc._
-import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.Future
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
 
 @Singleton
 class MainController @Inject() (

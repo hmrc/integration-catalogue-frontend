@@ -19,6 +19,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.BeforeAndAfterEach
+
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -27,9 +28,11 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse, PlatformContactResponse}
+
 import uk.gov.hmrc.integrationcataloguefrontend.support.{EmailConnectorStub, IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 
+@SuppressWarnings(Array("DisableSyntax.asInstanceOf"))
 class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     with IntegrationCatalogueConnectorStub with EmailConnectorStub with ApiTestData with FileTransferTestData {
 

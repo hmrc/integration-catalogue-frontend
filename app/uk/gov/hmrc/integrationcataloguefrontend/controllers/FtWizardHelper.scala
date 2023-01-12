@@ -18,6 +18,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+
 import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
 
 trait FtWizardHelper {

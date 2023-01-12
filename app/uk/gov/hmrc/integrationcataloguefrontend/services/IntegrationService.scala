@@ -16,25 +16,14 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.integrationcatalogue.models.{
-  ApiDetail,
-  FileTransferDetail,
-  FileTransferTransportsForPlatform,
-  IntegrationDetail,
-  IntegrationFilter,
-  IntegrationResponse,
-  PlatformContactResponse
-}
-import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
-
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
-import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.concurrent.ExecutionContext
-import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
-import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.integrationcatalogue.models._
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, Maintainer}
+
+import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 
 @Singleton
 class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector)(implicit ec: ExecutionContext) {

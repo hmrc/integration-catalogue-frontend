@@ -18,9 +18,11 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import org.jsoup.Jsoup
 import org.scalatest.BeforeAndAfterEach
+
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.test.Helpers.{NOT_FOUND, OK}
+
 import uk.gov.hmrc.integrationcataloguefrontend.support.ServerBaseISpec
 
 class MainControllerISpec extends ServerBaseISpec with BeforeAndAfterEach {
