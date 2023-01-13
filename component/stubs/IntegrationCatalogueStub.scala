@@ -23,6 +23,7 @@ import pages.DynamicSearchPageWithSearchResults.generateIntegrationResponse
 
 import play.api.http.Status.OK
 import play.api.libs.json.Json
+
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationDetail, IntegrationResponse, PlatformContactResponse}

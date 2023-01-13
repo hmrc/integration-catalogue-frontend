@@ -23,6 +23,7 @@ import scala.concurrent.Future
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 import uk.gov.hmrc.http.HeaderCarrier
+
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, PlatformType}

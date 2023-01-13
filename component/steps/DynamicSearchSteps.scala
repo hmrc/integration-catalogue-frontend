@@ -28,6 +28,7 @@ import pages._
 import utils.PagingHelper
 
 import play.api.http.Status.OK
+
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData

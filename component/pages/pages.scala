@@ -21,6 +21,7 @@ import steps.Env
 import utils.PagingHelper
 
 import play.api.Logging
+
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
 
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData

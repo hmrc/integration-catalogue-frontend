@@ -24,6 +24,7 @@ import org.mockito.stubbing.ScalaOngoingStubbing
 
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{BadGatewayException, HttpClient, _}
+
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common._
 

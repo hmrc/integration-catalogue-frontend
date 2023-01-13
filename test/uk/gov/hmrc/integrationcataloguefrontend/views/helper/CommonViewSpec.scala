@@ -27,6 +27,7 @@ import play.api.Application
 import play.api.i18n.{Lang, MessagesImpl, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
+
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig

@@ -25,6 +25,7 @@ import play.api.http.Status.{ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Writes
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{HttpClient, _}
+
 import uk.gov.hmrc.integrationcatalogue.models._
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig

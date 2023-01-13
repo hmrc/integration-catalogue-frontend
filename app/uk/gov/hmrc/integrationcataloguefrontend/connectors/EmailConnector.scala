@@ -23,6 +23,7 @@ import scala.util.control.NonFatal
 import play.api.Logging
 import play.api.http.Status.ACCEPTED
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
 import uk.gov.hmrc.integrationcatalogue.models._
 

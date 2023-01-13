@@ -20,6 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData

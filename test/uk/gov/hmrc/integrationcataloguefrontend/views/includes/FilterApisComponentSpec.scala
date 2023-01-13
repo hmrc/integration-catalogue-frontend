@@ -22,6 +22,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
