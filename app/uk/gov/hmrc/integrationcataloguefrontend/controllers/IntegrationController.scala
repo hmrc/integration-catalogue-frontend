@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,19 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.Logging
 import play.api.data.Form
 import play.api.mvc._
 import uk.gov.hmrc.http.{BadRequestException, NotFoundException}
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail, IntegrationFilter}
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
@@ -30,11 +37,6 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
-import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IntegrationController @Inject() (
@@ -51,8 +53,8 @@ class IntegrationController @Inject() (
     contactApiTeamView: ContactApiTeamView,
     contactApiTeamSuccessView: ContactApiTeamSuccessView,
     emailService: EmailService
-  )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc)
+  )(implicit val ec: ExecutionContext
+  ) extends FrontendController(mcc)
     with Logging
     with ListIntegrationsHelper
     with WithUnsafeDefaultFormBinding {
@@ -114,10 +116,10 @@ class IntegrationController @Inject() (
     ): Action[AnyContent] =
     Action.async { implicit request =>
       val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
-      val currentPageCalc = currentPage.getOrElse(1)
+      val currentPageCalc  = currentPage.getOrElse(1)
       integrationService.findWithFilters(IntegrationFilter(List(keywords.getOrElse("")), platformFilter, backendsFilter), Some(itemsPerPageCalc), currentPage).map {
-        case Right(response)              =>
-          //are keywords in list? Boolean
+        case Right(response) =>
+          // are keywords in list? Boolean
           Ok(listIntegrationsView(
             response.results,
             keywords.getOrElse(""),

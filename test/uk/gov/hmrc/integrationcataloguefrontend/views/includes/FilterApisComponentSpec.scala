@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 
+import scala.collection.JavaConverters._
+
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FilterApisComponent
-
-import scala.collection.JavaConverters._
 
 class FilterApisComponentSpec extends CommonViewSpec {
 
@@ -32,7 +35,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
   }
 
   "FilterApisComponent" should {
-    val apiNameSearch: String = "someSearch"
+    val apiNameSearch: String              = "someSearch"
     val platformFilter: List[PlatformType] = PlatformType.values.toList
 
     def testPlatformFilterLabels(document: Document) = {
@@ -76,27 +79,27 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-      val page: Html = filterApisComponent.render("", List.empty, List.empty, appConfig)
+      val page: Html         = filterApisComponent.render("", List.empty, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("intCatSearch").attr("placeholder") shouldBe "Search APIs"
       document.getElementById("intCatSearchButton").text() shouldBe "Search"
       document.getElementById("platform-filter-label").text() shouldBe "Platform"
       document.getElementById("filter-label").text() shouldBe "Search by typing a API name"
       document.getElementById("IntCatSearchHint").text() shouldBe "Filter by API name. There is no auto complete."
-      //test filter labels
+      // test filter labels
       testPlatformFilter(document, isChecked = false)
 
     }
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
+      val page: Html         = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("platform-filter-label").text() shouldBe "Platform"
       document.getElementById("filter-label").text() shouldBe "Search by typing a API name"
 
-      //test filter labels
+      // test filter labels
       testPlatformFilter(document, isChecked = true)
     }
 
@@ -104,7 +107,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
       when(appConfig.enableHodsFilter).thenReturn(true)
 
-      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
+      val page: Html         = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       Option(document.getElementById("backend-filter-label")).isDefined shouldBe true
@@ -114,7 +117,7 @@ class FilterApisComponentSpec extends CommonViewSpec {
 
       when(appConfig.enableHodsFilter).thenReturn(false)
 
-      val page: Html = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
+      val page: Html         = filterApisComponent.render(apiNameSearch, platformFilter, List.empty, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       Option(document.getElementById("backend-filter-label")).isDefined shouldBe false

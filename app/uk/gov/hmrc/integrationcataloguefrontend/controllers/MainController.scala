@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +17,32 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc._
-import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import scala.concurrent.Future
 
+import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
+
 @Singleton
-class MainController @Inject()(appConfig: AppConfig,
-                               mcc: MessagesControllerComponents,
-                               landingPageView: HomePage,
-                               caseStudiesView: CaseStudies,
-                               getStartedView: GetStarted,
-                               aboutView: About,
-                               accessibilityStatementView: AccessibilityStatementView,
-                               contactView: ContactView,
-                               fileTransferPattern: FileTransferPatternView)
-  extends FrontendController(mcc) {
+class MainController @Inject() (
+    appConfig: AppConfig,
+    mcc: MessagesControllerComponents,
+    landingPageView: HomePage,
+    caseStudiesView: CaseStudies,
+    getStartedView: GetStarted,
+    aboutView: About,
+    accessibilityStatementView: AccessibilityStatementView,
+    contactView: ContactView,
+    fileTransferPattern: FileTransferPatternView
+  ) extends FrontendController(mcc) {
 
   implicit val config: AppConfig = appConfig
 
@@ -48,7 +50,7 @@ class MainController @Inject()(appConfig: AppConfig,
     Future.successful(Ok(landingPageView()))
   }
 
-   def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
+  def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(aboutView()))
   }
 

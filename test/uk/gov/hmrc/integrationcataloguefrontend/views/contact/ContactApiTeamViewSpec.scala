@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,27 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.contact
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.ContactApiTeamForm
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamView
 
-
 class ContactApiTeamViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
     val contactApiTeamView = app.injector.instanceOf[ContactApiTeamView]
-    val fakeRequest = FakeRequest().withCSRFToken
+    val fakeRequest        = FakeRequest().withCSRFToken
   }
 
   "ContactApiTeamPage" should {
 
     "render as expected" in new Setup {
-      val page: Html = contactApiTeamView.render(ContactApiTeamForm.form, apiDetail0, fakeRequest, messagesProvider.messages, appConfig)
+      val page: Html         = contactApiTeamView.render(ContactApiTeamForm.form, apiDetail0, fakeRequest, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Contact the Self Assessment (MTD) team"

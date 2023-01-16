@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,14 @@
 package pages
 
 import org.openqa.selenium.By
-import play.api.Logging
 import steps.Env
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
-import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import utils.PagingHelper
+
+import play.api.Logging
+
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, IntegrationResponse}
+
+import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
 trait CommonPage extends WebPage with Logging with ApiTestData {
   val pageTitle: String
@@ -40,10 +43,11 @@ trait CommonPage extends WebPage with Logging with ApiTestData {
 }
 
 trait CommonJsPage extends CommonPage {
-  override def isCurrentPage: Boolean = if(webDriver.getTitle != pageTitle) {
+
+  override def isCurrentPage: Boolean = if (webDriver.getTitle != pageTitle) {
     logger.error(s"Page Title: ${webDriver.getTitle}, expected $pageTitle")
     false
-  }else{
+  } else {
     true
   }
   //  find(tagName("page-heading")).fold(false)({
@@ -55,13 +59,13 @@ trait CommonJsPage extends CommonPage {
 
 object CurrentPage extends CommonPage {
   override val url: String = ""
-  override val pageTitle = ""
+  override val pageTitle   = ""
 }
 
 case object DynamicSearchPage extends CommonJsPage {
 
   override val pageTitle: String = "Search results - API catalogue"
-  override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
+  override val url: String       = s"${Env.host}/api-catalogue/dynamic-search"
 
 }
 
@@ -69,19 +73,19 @@ case object DynamicSearchPageWithSearchResults extends CommonPage with PagingHel
 
   // pageTitle is populated dynamically
   override val pageTitle: String = ""
-  override val url: String = s"${Env.host}/api-catalogue/dynamic-search"
+  override val url: String       = s"${Env.host}/api-catalogue/dynamic-search"
 
   val publisherRefAndApiMap = Map(
     "marraige-allowance" -> apiDetail1,
-    "API1001" -> apiDetail2,
-    "API1002" -> apiDetail3,
-    "API1003" -> exampleApiDetail,
-    "API1004" -> exampleApiDetail2,
-    "API1005" -> apiDetail5,
-    "API1006" -> apiDetail6,
-    "API1007" -> apiDetail7,
-    "API1008" -> apiDetail8,
-    "API1009" -> apiDetail9,
+    "API1001"            -> apiDetail2,
+    "API1002"            -> apiDetail3,
+    "API1003"            -> exampleApiDetail,
+    "API1004"            -> exampleApiDetail2,
+    "API1005"            -> apiDetail5,
+    "API1006"            -> apiDetail6,
+    "API1007"            -> apiDetail7,
+    "API1008"            -> apiDetail8,
+    "API1009"            -> apiDetail9
   )
 
   val allApis = publisherRefAndApiMap.values.toList.sortBy(_.title)
@@ -91,7 +95,7 @@ case object DynamicSearchPageWithSearchResults extends CommonPage with PagingHel
     results = allApis.sortBy(_.title)
   )
 
-  def generateIntegrationResponse(apiList: List[ApiDetail], page: Int = 1, itemsPerPage: Int = 2) ={
+  def generateIntegrationResponse(apiList: List[ApiDetail], page: Int = 1, itemsPerPage: Int = 2) = {
     if (apiList.isEmpty) {
       IntegrationResponse(0, None, List.empty)
     } else {
@@ -110,6 +114,3 @@ case object DynamicSearchPageWithSearchResults extends CommonPage with PagingHel
   }
 
 }
-
-
-

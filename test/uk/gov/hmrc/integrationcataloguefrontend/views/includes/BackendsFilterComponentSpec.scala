@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,22 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 
+import scala.collection.JavaConverters._
+
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
+import uk.gov.hmrc.integrationcataloguefrontend.models.Backends
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.BackendsFilterComponent
-import scala.collection.JavaConverters._
-import uk.gov.hmrc.integrationcataloguefrontend.models.Backends
 
 class BackendsFilterComponentSpec extends CommonViewSpec {
 
   trait Setup {
     val backendsFilterComponent = app.injector.instanceOf[BackendsFilterComponent]
   }
-
 
   "BackendsFilterComponent" should {
 
@@ -65,22 +67,22 @@ class BackendsFilterComponentSpec extends CommonViewSpec {
 
     "render backend filters correctly and all checkboxes unchecked when filters are empty" in new Setup {
 
-      val page: Html = backendsFilterComponent.render(List.empty)
+      val page: Html         = backendsFilterComponent.render(List.empty)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
-      //test filter labels
+      // test filter labels
       testBackendsFilter(document, isChecked = false)
 
     }
 
     "render platform filters correctly and all checkboxes unchecked when filter contains text and platform filters" in new Setup {
 
-      val page: Html = backendsFilterComponent.render(Backends.filters.map(_.name))
+      val page: Html         = backendsFilterComponent.render(Backends.filters.map(_.name))
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("backend-filter-label").text() shouldBe "HoD"
 
-      //test filter labels
+      // test filter labels
       testBackendsFilter(document, isChecked = true)
     }
   }

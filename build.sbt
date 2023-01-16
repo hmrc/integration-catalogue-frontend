@@ -1,15 +1,29 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import bloop.integrations.sbt.BloopDefaults
-import uk.gov.hmrc.ForkedJvmPerTestSettings.oneForkedJvmPerTest
+import sbt.Tests.{Group, SubProcess}
+import sbt._
 
 val appName = "integration-catalogue-frontend"
 
 val silencerVersion = "1.7.6"
+
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+
+inThisBuild(
+  List(
+    scalaVersion := "2.12.15",
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
+  )
+)
+
 lazy val ComponentTest = config("component") extend Test
 
+inConfig(ComponentTest)(org.scalafmt.sbt.ScalafmtPlugin.scalafmtConfigSettings)
+
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     majorVersion                     := 0,
     scalaVersion                     := "2.12.15",
@@ -45,6 +59,11 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
     IntegrationTest / managedClasspath += (Assets / packageBin).value
   )
+  .settings(headerSettings(IntegrationTest) ++ automateHeaderSettings(IntegrationTest),
+    scalafixConfigSettings(IntegrationTest)
+  )
+
+
   .configs(ComponentTest)
   .settings(inConfig(ComponentTest)(Defaults.testSettings): _*)
   .settings(inConfig(ComponentTest)(BloopDefaults.configSettings))
@@ -57,7 +76,8 @@ lazy val microservice = Project(appName, file("."))
     ComponentTest / testGrouping := oneForkedJvmPerTest((ComponentTest / definedTests).value),
     ComponentTest / parallelExecution := false
   )
-
+  .settings(headerSettings(ComponentTest) ++ automateHeaderSettings(ComponentTest),
+    scalafixConfigSettings(ComponentTest))
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
 
   lazy val scoverageSettings = {
@@ -72,3 +92,14 @@ lazy val microservice = Project(appName, file("."))
       Test / parallelExecution := false
   )
 }
+
+def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
+  tests map { test =>
+    Group(
+      test.name,
+      Seq(test),
+      SubProcess(
+        ForkOptions().withRunJVMOptions(Vector(s"-Dtest.name=${test.name}"))
+      )
+    )
+  }

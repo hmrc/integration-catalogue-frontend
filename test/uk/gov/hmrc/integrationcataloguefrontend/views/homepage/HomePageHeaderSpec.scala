@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.homepage
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePageHeader
 
@@ -30,19 +32,19 @@ class HomePageHeaderSpec extends CommonViewSpec {
 
   "HomePageHeader" should {
     "render The home page correctly" in new Setup {
-       val page : Html =    landingPage.render(messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
-       document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
-       document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"
-       document.getElementById("page-title-searchlink-text").text() shouldBe "Review all APIs or check file transfer connections"
-       document.getElementById("page-title-searchlink").attr("href") shouldBe "/api-catalogue/search"
-       document.getElementById("page-title-searchlink").text() shouldBe "Review all APIs"
-       document.getElementById("page-title-ftwizard-link").attr("href") shouldBe "/api-catalogue/filetransfer/wizard/start"
-       document.getElementById("page-title-ftwizard-link").text() shouldBe "check file transfer connections"
+      val page: Html         = landingPage.render(messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+      document.getElementById("page-title").text() shouldBe "Find existing ways to access data and transfer data across HMRC"
+      document.getElementById("page-title-desc").text() shouldBe "Search available HMRC APIs"
+      document.getElementById("page-title-searchlink-text").text() shouldBe "Review all APIs or check file transfer connections"
+      document.getElementById("page-title-searchlink").attr("href") shouldBe "/api-catalogue/search"
+      document.getElementById("page-title-searchlink").text() shouldBe "Review all APIs"
+      document.getElementById("page-title-ftwizard-link").attr("href") shouldBe "/api-catalogue/filetransfer/wizard/start"
+      document.getElementById("page-title-ftwizard-link").text() shouldBe "check file transfer connections"
 
-       document.getElementById("heading-box-title").text() shouldBe "First time using this service?"
-       document.getElementById("heading-box-link").text() shouldBe "Learn about this service, including how it works and the benefits."
-       document.getElementById("heading-box-link").attr("href") shouldBe "/api-catalogue/about"
+      document.getElementById("heading-box-title").text() shouldBe "First time using this service?"
+      document.getElementById("heading-box-link").text() shouldBe "Learn about this service, including how it works and the benefits."
+      document.getElementById("heading-box-link").attr("href") shouldBe "/api-catalogue/about"
     }
   }
 }

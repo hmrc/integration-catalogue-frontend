@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package uk.gov.hmrc.integrationcataloguefrontend.test.data
 
 import java.util.UUID
 
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
-import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import uk.gov.hmrc.integrationcatalogue.models.common.Maintainer
-import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
+
+import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, Maintainer, PlatformType}
 
 trait FileTransferTestData {
 
@@ -41,8 +40,8 @@ trait FileTransferTestData {
 
   val fileTransferReviewedDate = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
 
-  val contactInfo = List(ContactInformation(Some("Services"), Some("services@example.com")))
-  val coreIfFileTransferMaintainer: Maintainer = Maintainer("Maintainer", "N/A", contactInfo)
+  val contactInfo                                      = List(ContactInformation(Some("Services"), Some("services@example.com")))
+  val coreIfFileTransferMaintainer: Maintainer         = Maintainer("Maintainer", "N/A", contactInfo)
   val apiPlatformMaintainerWithNoContacts2: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
 
   val corpToCorp: String = "Corporate to Corporate"

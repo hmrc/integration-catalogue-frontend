@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardNoConnections
 
@@ -33,7 +35,7 @@ class FileTransferWizardNoConnectionsSpec extends CommonViewSpec {
     val target = "target"
 
     "render page correctly" in new Setup {
-      val page: Html = noConnectionsPage.render(source, target, messagesProvider.messages, appConfig)
+      val page: Html         = noConnectionsPage.render(source, target, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "No file transfer connection exists -"
       document.getElementById("page-heading").text() shouldBe s"No file transfer connection exists between $source and $target"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.FileTransferTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
@@ -33,34 +35,34 @@ class FileTransferDetailViewSpec extends CommonViewSpec with FileTransferTestDat
 
     "render page with api details" in new Setup {
 
-       val page : Html =    apiDetailView.render(fileTransfer1,  messagesProvider.messages, appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html         = apiDetailView.render(fileTransfer1, messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("interrupt-box-heading").text() shouldBe fileTransfer1.title
-       document.getElementById("interrupt-box-description").text() shouldBe fileTransfer1.description
-       
-       document.getElementById("file-transfer-details-heading").text() shouldBe "File transfer details"
+      document.getElementById("interrupt-box-heading").text() shouldBe fileTransfer1.title
+      document.getElementById("interrupt-box-description").text() shouldBe fileTransfer1.description
 
-       document.getElementById("platform-heading").text() shouldBe "Platform"
-       document.getElementById("platform-value").text() shouldBe "Integration Framework (IF)"
+      document.getElementById("file-transfer-details-heading").text() shouldBe "File transfer details"
 
-       document.getElementById("updated-heading").text() shouldBe "Updated"
-       document.getElementById("updated-value").text() shouldBe "04 November 2020"
+      document.getElementById("platform-heading").text() shouldBe "Platform"
+      document.getElementById("platform-value").text() shouldBe "Integration Framework (IF)"
 
-       document.getElementById("source-system-heading").text() shouldBe "Source system"
-       document.getElementById("source-system-value").text() shouldBe "SOURCE"
+      document.getElementById("updated-heading").text() shouldBe "Updated"
+      document.getElementById("updated-value").text() shouldBe "04 November 2020"
 
-       document.getElementById("target-system-heading").text() shouldBe "Target system"
-       document.getElementById("target-system-value").text() shouldBe "TARGET"
+      document.getElementById("source-system-heading").text() shouldBe "Source system"
+      document.getElementById("source-system-value").text() shouldBe "SOURCE"
 
-       document.getElementById("development-team-heading").text() shouldBe "Development team"
-       document.getElementById("development-team-value").text() shouldBe "Maintainer"
-       
-       document.getElementById("contact-name-heading").text() shouldBe "Contact name"
-       document.getElementById("contact-name-value").text() shouldBe "Services"
-       
-       document.getElementById("contact-email-heading").text() shouldBe "Contact email"
-       document.getElementById("contact-email-value").text() shouldBe "services@example.com"
+      document.getElementById("target-system-heading").text() shouldBe "Target system"
+      document.getElementById("target-system-value").text() shouldBe "TARGET"
+
+      document.getElementById("development-team-heading").text() shouldBe "Development team"
+      document.getElementById("development-team-value").text() shouldBe "Maintainer"
+
+      document.getElementById("contact-name-heading").text() shouldBe "Contact name"
+      document.getElementById("contact-name-value").text() shouldBe "Services"
+
+      document.getElementById("contact-email-heading").text() shouldBe "Contact email"
+      document.getElementById("contact-email-value").text() shouldBe "services@example.com"
 
     }
   }

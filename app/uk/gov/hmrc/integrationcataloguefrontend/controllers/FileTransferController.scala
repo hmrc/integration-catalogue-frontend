@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,22 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+
 import cats.data.EitherT
+
 import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.{FileTransferTransportsForPlatform, PlatformContactResponse}
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
-import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FileTransferController @Inject() (
@@ -41,10 +44,10 @@ class FileTransferController @Inject() (
     wizardNoConnectionsView: FileTransferWizardNoConnections,
     integrationService: IntegrationService,
     errorTemplate: ErrorTemplate
-  )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc)
-      with FtWizardHelper
-      with WithUnsafeDefaultFormBinding {
+  )(implicit val ec: ExecutionContext
+  ) extends FrontendController(mcc)
+    with FtWizardHelper
+    with WithUnsafeDefaultFormBinding {
 
   implicit val config: AppConfig = appConfig
 
@@ -72,33 +75,32 @@ class FileTransferController @Inject() (
 
   def dataTargetAction(): Action[AnyContent] = Action.async { implicit request =>
     val form = SelectedDataTargetForm.form.bindFromRequest
-  
+
     Future.successful {
       form.fold(
         formWithErrors => Ok(wizardDataTargetView(formWithErrors, formWithErrors.data.getOrElse("dataSource", ""))),
         okForm =>
-        Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(okForm.dataSource.getOrElse(""), okForm.dataTarget.getOrElse("")))
-
+          Redirect(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.getFileTransferTransportsByPlatform(
+            okForm.dataSource.getOrElse(""),
+            okForm.dataTarget.getOrElse("")
+          ))
       )
     }
   }
 
-
-
   def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
-
-    val results = for{
-      contacts <- EitherT(integrationService.getPlatformContacts)
+    val results = for {
+      contacts  <- EitherT(integrationService.getPlatformContacts)
       transfers <- EitherT(integrationService.getFileTransferTransportsByPlatform(source, target))
     } yield (transfers, contacts)
 
     results.value.map {
-      case Right((result: List[FileTransferTransportsForPlatform], _ )) if result.isEmpty => Ok(wizardNoConnectionsView(source, target))
-      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse] )) =>
-          val platformIntersect: List[PlatformType] = result.map(_.platform).intersect(platformContacts.map(_.platformType))
+      case Right((result: List[FileTransferTransportsForPlatform], _)) if result.isEmpty                             => Ok(wizardNoConnectionsView(source, target))
+      case Right((result: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformContactResponse])) =>
+        val platformIntersect: List[PlatformType] = result.map(_.platform).intersect(platformContacts.map(_.platformType))
 
-          Ok(wizardFoundConnectionsView(source, target, result, getPlatformEmails(platformContacts, platformIntersect)))
-       case _                          => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
+        Ok(wizardFoundConnectionsView(source, target, result, getPlatformEmails(platformContacts, platformIntersect)))
+      case _                                                                                                         => InternalServerError(errorTemplate("Internal server error", "Internal server error", "Internal server error"))
     }
   }
 }

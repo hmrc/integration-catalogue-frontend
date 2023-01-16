@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,15 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 object UrlEncodingHelper {
 
-  def encodeTitle(title: String) : String = {
+  def encodeTitle(title: String): String = {
     val encodedTitle = title.trim()
-    .toLowerCase()
-    .replaceAll("[^a-z0-9\\s-]", "-")
-    .replaceAll(" ", "-")
-    .replaceAll("[-]+", "-")
+      .toLowerCase()
+      .replaceAll("[^a-z0-9\\s-]", "-")
+      .replaceAll(" ", "-")
+      .replaceAll("[-]+", "-")
 
-    if("^(.*[^-])\\-$".r.findFirstMatchIn(encodedTitle).isDefined) {
-       encodedTitle.substring(0, encodedTitle.length - 1)
+    if ("^(.*[^-])\\-$".r.findFirstMatchIn(encodedTitle).isDefined) {
+      encodedTitle.substring(0, encodedTitle.length - 1)
     } else encodedTitle
 
   }

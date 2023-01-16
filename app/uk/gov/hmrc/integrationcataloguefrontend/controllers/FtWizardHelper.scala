@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,20 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+
 import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
 
 trait FtWizardHelper {
 
-def getPlatformEmails(platformContacts: List[PlatformContactResponse], platformIntersect: List[PlatformType] ): List[PlatformEmail] = {
-     val filteredByPlatformContacts = platformContacts.filter(x => platformIntersect.contains(x.platformType))
-          val filteredByHasEmail = filteredByPlatformContacts.filter(x => x.contactInfo.isDefined && x.contactInfo.get.emailAddress.isDefined)
-       filteredByHasEmail.flatMap(x => (x.platformType, x.contactInfo) match {
-         case (platform: PlatformType, Some(contactInfo)) => contactInfo.emailAddress.map(PlatformEmail(platform, _))
-         case _ => None
-       })
+  def getPlatformEmails(platformContacts: List[PlatformContactResponse], platformIntersect: List[PlatformType]): List[PlatformEmail] = {
+    val filteredByPlatformContacts = platformContacts.filter(x => platformIntersect.contains(x.platformType))
+    val filteredByHasEmail         = filteredByPlatformContacts.filter(x => x.contactInfo.isDefined && x.contactInfo.get.emailAddress.isDefined)
+    filteredByHasEmail.flatMap(x =>
+      (x.platformType, x.contactInfo) match {
+        case (platform: PlatformType, Some(contactInfo)) => contactInfo.emailAddress.map(PlatformEmail(platform, _))
+        case _                                           => None
+      }
+    )
 
   }
 

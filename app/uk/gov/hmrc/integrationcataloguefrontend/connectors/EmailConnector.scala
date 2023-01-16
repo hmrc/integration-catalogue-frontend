@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,18 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import play.api.Logging
-import play.api.http.Status.ACCEPTED
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
-import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
-import uk.gov.hmrc.integrationcatalogue.models._
-import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
+
+import play.api.Logging
+import play.api.http.Status.ACCEPTED
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
+import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
+import uk.gov.hmrc.integrationcatalogue.models._
+
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
 @Singleton
 class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) extends Logging {
@@ -54,7 +56,8 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
     http.POST[EmailRequest, HttpResponse](url = s"$url/hmrc/email", body = emailRequest)
       .map(_.status match {
         case ACCEPTED => true
-        case _        => logger.error("Sending email has failed and it is not queued for sending.")
+        case _        =>
+          logger.error("Sending email has failed and it is not queued for sending.")
           false
       }).recover {
         case NonFatal(e) => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import play.api.Logging
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+
+import play.api.Logging
+import uk.gov.hmrc.http.HeaderCarrier
+
+import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
 
 @Singleton
 class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: ExecutionContext) extends Logging {
@@ -34,20 +35,20 @@ class EmailService @Inject() (emailConnector: EmailConnector)(implicit ec: Execu
       contactReasons: String,
       specificQuestion: String
     )(implicit hc: HeaderCarrier
-    ) : Future[Boolean] = {
+    ): Future[Boolean] = {
 
     val emailParams: Map[String, String] = Map(
-      "apiTitle" -> apiTitle,
-      "senderName" -> senderName,
-      "senderEmail" -> senderEmail,
-      "contactReasons" -> contactReasons,
+      "apiTitle"         -> apiTitle,
+      "senderName"       -> senderName,
+      "senderEmail"      -> senderEmail,
+      "contactReasons"   -> contactReasons,
       "specificQuestion" -> specificQuestion,
-      "apiEmail" -> apiEmails.mkString(";")
+      "apiEmail"         -> apiEmails.mkString(";")
     )
 
     emailConnector.sendEmailToPlatform(apiEmails, emailParams).flatMap {
       case true => emailConnector.sendConfirmationEmailToSender(senderEmail, emailParams)
-      case _ => Future.successful(false)
+      case _    => Future.successful(false)
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import play.api.mvc.PathBindable
-import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 import java.util.UUID
 import scala.util.Try
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import play.api.mvc.QueryStringBindable
+
+import play.api.mvc.{PathBindable, QueryStringBindable}
+
+import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
 
 package object binders {
 

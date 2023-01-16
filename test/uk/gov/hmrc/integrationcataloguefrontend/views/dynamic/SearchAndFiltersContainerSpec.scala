@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.dynamic
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.dynamic.components.SearchAndFiltersContainer
 
@@ -32,7 +34,7 @@ class SearchAndFiltersContainerSpec extends CommonViewSpec {
 
     "render platform filters correctly and all checkboxes unchecked when page renders" in new Setup {
 
-      val page: Html = searchAndFiltersContainer.render()
+      val page: Html         = searchAndFiltersContainer.render()
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("intCatSearch").attr("placeholder") shouldBe "Search APIs"
       document.getElementById("intCatSearchButton").text() shouldBe "Search"

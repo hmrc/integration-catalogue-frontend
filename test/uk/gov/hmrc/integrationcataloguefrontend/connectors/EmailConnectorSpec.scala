@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,28 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
+import java.net.ConnectException
+import scala.concurrent.{ExecutionContext, Future, TimeoutException}
+
 import org.mockito.stubbing.ScalaOngoingStubbing
+
 import play.api.http.Status.{ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Writes
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{HttpClient, _}
+
 import uk.gov.hmrc.integrationcatalogue.models._
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
-import java.net.ConnectException
-import scala.concurrent.{ExecutionContext, Future, TimeoutException}
-
 class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
-  private val mockHttpClient = mock[HttpClient]
-  private val mockAppConfig = mock[AppConfig]
+  private val mockHttpClient                = mock[HttpClient]
+  private val mockAppConfig                 = mock[AppConfig]
   private implicit val ec: ExecutionContext = Helpers.stubControllerComponents().executionContext
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
+  private implicit val hc: HeaderCarrier    = HeaderCarrier()
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -47,7 +50,7 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
   }
 
   trait SetUp {
-    val connector = new EmailConnector(mockHttpClient, mockAppConfig)
+    val connector    = new EmailConnector(mockHttpClient, mockAppConfig)
     val sendEmailUrl = s"/hmrc/email"
 
     def httpCallToSendEmailWithStatus(emailRequest: EmailRequest, status: Int): ScalaOngoingStubbing[Future[HttpResponse]] = {

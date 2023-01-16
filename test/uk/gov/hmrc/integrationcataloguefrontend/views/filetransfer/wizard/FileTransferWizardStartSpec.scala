@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardStart
 
@@ -31,7 +33,7 @@ class FileTransferWizardStartSpec extends CommonViewSpec {
   "FT wizard start page" should {
 
     "render start page correctly" in new Setup {
-      val page: Html = startPage.render(messagesProvider.messages, appConfig)
+      val page: Html         = startPage.render(messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "Reusing file transfer connections -"
       document.getElementById("page-heading").text() shouldBe "Reusing file transfer connections"

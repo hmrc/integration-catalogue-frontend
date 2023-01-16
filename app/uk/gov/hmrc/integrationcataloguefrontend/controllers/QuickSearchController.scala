@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,21 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+
 import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetailSummary.fromIntegrationDetail
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.{DynamicPageResponse, IntegrationFilter, JsonFormatters}
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.dynamic.DynamicListView
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class QuickSearchController @Inject() (
@@ -36,28 +38,25 @@ class QuickSearchController @Inject() (
     dynamicListView: DynamicListView,
     integrationService: IntegrationService,
     mcc: MessagesControllerComponents
-  )(implicit val ec: ExecutionContext)
-    extends FrontendController(mcc)
+  )(implicit val ec: ExecutionContext
+  ) extends FrontendController(mcc)
     with Logging
     with ListIntegrationsHelper {
 
   implicit val config: AppConfig = appConfig
 
   implicit val apisummaryFormat = JsonFormatters.formatApiDetailSummary
-  implicit val responseFormat = JsonFormatters.formatIntegrationResponse
+  implicit val responseFormat   = JsonFormatters.formatIntegrationResponse
 
   def dynamicList() = Action.async { implicit request =>
     Future.successful(Ok(dynamicListView()))
   }
 
-
-  def quickSearch(searchValue: String,
-                  platformFilter: List[PlatformType] = List.empty,
-                  currentPage: Option[Int] = None) =
+  def quickSearch(searchValue: String, platformFilter: List[PlatformType] = List.empty, currentPage: Option[Int] = None) =
     Action.async { implicit request =>
-      val itemsPerPage = appConfig.itemsPerPage
+      val itemsPerPage    = appConfig.itemsPerPage
       val currentPageCalc = currentPage.getOrElse(1)
-      val filter = IntegrationFilter(List(searchValue), platformFilter, List.empty, Option(itemsPerPage), Option(currentPageCalc))
+      val filter          = IntegrationFilter(List(searchValue), platformFilter, List.empty, Option(itemsPerPage), Option(currentPageCalc))
       integrationService.findWithFilters(filter, Option(itemsPerPage), Option(currentPageCalc))
         .map {
           case Right(response) =>
@@ -73,7 +72,7 @@ class QuickSearchController @Inject() (
               response.results.flatMap(fromIntegrationDetail)
             )))
 
-          case _               => InternalServerError("")
+          case _ => InternalServerError("")
 
         }
 

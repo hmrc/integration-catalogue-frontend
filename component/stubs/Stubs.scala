@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package stubs
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.matchers.should.Matchers
+
 import play.api.Logging
 import play.api.http.Status._
 
@@ -31,7 +32,6 @@ object Stubs extends Logging {
     )
   }
 
-  
   def setupDeleteRequest(path: String, status: Int) =
     stubFor(delete(urlEqualTo(path)).willReturn(aResponse().withStatus(status)))
 
@@ -41,7 +41,7 @@ object Stubs extends Logging {
   def setupPutRequest(path: String, status: Int, response: String) =
     stubFor(
       put(urlEqualTo(path))
-      .willReturn(aResponse().withStatus(status).withBody(response))
+        .willReturn(aResponse().withStatus(status).withBody(response))
     )
 
   def setupPostRequest(path: String, status: Int, response: String) =
@@ -60,7 +60,7 @@ object Stubs extends Logging {
 }
 
 object AuditStub extends Matchers {
-  val auditPath: String = "/write/audit"
+  val auditPath: String       = "/write/audit"
   val mergedAuditPath: String = "/write/audit/merged"
 
   def setupAudit(status: Int = NO_CONTENT, data: Option[String] = None) = {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.accessibility
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
 
@@ -31,10 +33,10 @@ class AccessibilityStatementViewSpec extends CommonViewSpec {
   "AccessibilityStatementView" should {
 
     "render accessibility statement page correctly" in new Setup {
-       val page : Html =    accessibilityStatementView.render(messagesProvider.messages,  appConfig)
-       val document: Document = Jsoup.parse(page.body)
+      val page: Html         = accessibilityStatementView.render(messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
 
-       document.getElementById("page-heading").text() shouldBe "Accessibility statement"
+      document.getElementById("page-heading").text() shouldBe "Accessibility statement"
       document.getElementById("summary-statement").text() shouldBe "This accessibility statement explains how accessible this service is," +
         " what to do if you have difficulty using it," +
         " and how to report accessibility problems with the service."

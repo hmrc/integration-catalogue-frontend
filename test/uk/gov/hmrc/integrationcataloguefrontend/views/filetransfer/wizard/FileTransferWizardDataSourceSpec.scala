@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,11 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.test.FakeRequest
+
 import play.api.test.CSRFTokenHelper.CSRFRequest
+import play.api.test.FakeRequest
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.SelectedDataSourceForm
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard.FileTransferWizardDataSource
@@ -34,12 +36,12 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
   "FT wizard data source page" should {
 
     "render page correctly" in new Setup {
-      val page: Html = dataSourcePage.render(SelectedDataSourceForm.form, FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
+      val page: Html         = dataSourcePage.render(SelectedDataSourceForm.form, FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.title shouldBe "Where is your data currently stored? -"
       document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
       Option(document.getElementById("error-link-0")) shouldBe None
-       Option(document.getElementById("file-transfer-source-error")) shouldBe None
+      Option(document.getElementById("file-transfer-source-error")) shouldBe None
 
       document.getElementById("hod-link").text shouldBe "The HoD I want isn’t listed"
       document.getElementById("hod-link").attr("href") shouldBe "/api-catalogue/contact"
@@ -50,7 +52,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
     }
 
     "render page correctly with errors" in new Setup {
-      val page: Html = dataSourcePage.render(SelectedDataSourceForm.form.withError("dataSource", "error"), FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
+      val page: Html         = dataSourcePage.render(SelectedDataSourceForm.form.withError("dataSource", "error"), FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.FileTransferInterruptBox
 
@@ -31,7 +33,7 @@ class FileTransferInterruptBoxSpec extends CommonViewSpec {
   "FileTransferInterruptBox" should {
 
     "render the blue interrupt box correctly" in new Setup {
-      val page : Html =    blueInterruptBox.render
+      val page: Html         = blueInterruptBox.render
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("ft-interrupt-heading").text() shouldBe "File transfers"

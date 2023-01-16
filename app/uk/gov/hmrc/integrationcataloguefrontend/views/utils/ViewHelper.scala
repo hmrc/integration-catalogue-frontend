@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,23 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.utils
 
-import uk.gov.hmrc.integrationcatalogue.models.IntegrationDetail
-import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail}
 
 object ViewHelper {
 
+  // scalastyle:off magic.number
   def handleDescription(integration: IntegrationDetail): String = {
     integration match {
       case api: ApiDetail                   =>
         if (api.shortDescription.isDefined) api.shortDescription.get
-        else  truncateStringAddEllipses(replaceOrRemoveInvalidChars(api.description), 180)
+        else truncateStringAddEllipses(replaceOrRemoveInvalidChars(api.description), 180)
       case fileTransfer: FileTransferDetail => fileTransfer.description
     }
   }
 
+  // scalastyle:on magic.number
   def replaceOrRemoveInvalidChars(value: String): String = {
-      value
+    value
       .replaceAll("\n", " ")
       .trim
       .replaceAll(" +", " ") // regex to find more than one space then replace with single space
@@ -42,7 +42,7 @@ object ViewHelper {
     if (value.length > max) {
       // we need to ignore /n or change to spaces....
       value
-      .slice(0, max - 3) + "..."
+        .slice(0, max - 3) + "..."
     } else {
       value
     }

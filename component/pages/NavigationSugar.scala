@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 
 package pages
 
+import org.mockito.MockitoSugar
 import org.openqa.selenium.WebDriver
+import org.scalatest.Assertions
 import org.scalatest.concurrent.Eventually
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.selenium.WebBrowser
-import org.scalatest.Assertions
-import org.mockito.MockitoSugar
-import org.scalatest.matchers.should.Matchers
+
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
 trait NavigationSugar extends WebBrowser with Eventually with Assertions with Matchers with MockitoSugar {
@@ -42,7 +43,7 @@ trait NavigationSugar extends WebBrowser with Eventually with Assertions with Ma
 
   def on(page: WebPage)(implicit webDriver: WebDriver) = {
     eventually {
-      find(tagName("body"))  //.filter(_ => page.isCurrentPage)
+      find(tagName("body")) // .filter(_ => page.isCurrentPage)
     }
     withClue(s"Currently in page: $currentUrl ") {
       assert(page.isCurrentPage, s"Page was not loaded: ${page.url}")

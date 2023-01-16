@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +19,19 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 import uk.gov.hmrc.integrationcatalogue.models.PlatformContactResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.ContactInformation
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
+
 import uk.gov.hmrc.integrationcataloguefrontend.models.PlatformEmail
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
-
 class FtWizardHelperSpec extends AsyncHmrcSpec with FtWizardHelper {
-  
+
   trait Setup {
 
-    val apiPlatformContact = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
-    val ifPlatformContact = PlatformContactResponse(CORE_IF, Some(ContactInformation(Some("Core if"), Some("coreif@email"))), true)
+    val apiPlatformContact   = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), false)
+    val ifPlatformContact    = PlatformContactResponse(CORE_IF, Some(ContactInformation(Some("Core if"), Some("coreif@email"))), true)
     val apiPlatformNoContact = PlatformContactResponse(API_PLATFORM, None, false)
-    val apiPlatformNoEmail = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("api platform"), None)), false)
-    val platforms = List(API_PLATFORM, CORE_IF, CMA)
+    val apiPlatformNoEmail   = PlatformContactResponse(API_PLATFORM, Some(ContactInformation(Some("api platform"), None)), false)
+    val platforms            = List(API_PLATFORM, CORE_IF, CMA)
   }
 
   "getPlatformEmails" should {
@@ -41,7 +41,7 @@ class FtWizardHelperSpec extends AsyncHmrcSpec with FtWizardHelper {
     // platform contacts that have contact info with no email will not be in returned list
     // empty intersect but list of contacts shouild return empty list
     // list of intersect but no contacts will return empty list
-    
+
     "return empty list when both inputs are empty lists" in new Setup {
       getPlatformEmails(List.empty, List.empty) shouldBe List.empty
     }
@@ -62,13 +62,12 @@ class FtWizardHelperSpec extends AsyncHmrcSpec with FtWizardHelper {
       getPlatformEmails(List(apiPlatformNoContact, ifPlatformContact), List(API_PLATFORM)) shouldBe List.empty
     }
 
-     "return empty list when platform contacts match platform list but has contact info with no email" in new Setup {
+    "return empty list when platform contacts match platform list but has contact info with no email" in new Setup {
       getPlatformEmails(List(apiPlatformNoEmail, ifPlatformContact), List(API_PLATFORM)) shouldBe List.empty
     }
 
-
     "return matched Contact when platform contacts match platform list" in new Setup {
-      getPlatformEmails(List(apiPlatformContact, ifPlatformContact), List(CORE_IF)) shouldBe List(PlatformEmail(CORE_IF,"coreif@email"))
+      getPlatformEmails(List(apiPlatformContact, ifPlatformContact), List(CORE_IF)) shouldBe List(PlatformEmail(CORE_IF, "coreif@email"))
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.apidetail
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+
 import play.twirl.api.Html
+
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiEndpoints
@@ -34,9 +36,8 @@ class ApiEndpointsSpec extends CommonViewSpec with ApiTestData {
     "render page with api details" in new Setup {
 
       // apiDetail0
-      val page: Html = apiEndpoints.render(endpoints)
+      val page: Html         = apiEndpoints.render(endpoints)
       val document: Document = Jsoup.parse(page.body)
-
 
       document.getElementById("endpoints-heading").text() shouldBe "Endpoints"
       document.getElementById("endpoint-path-0").text() shouldBe "/some/url/endpoint1"
