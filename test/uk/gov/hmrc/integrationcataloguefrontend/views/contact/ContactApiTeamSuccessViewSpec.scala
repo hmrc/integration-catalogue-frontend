@@ -18,9 +18,8 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.contact
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTeamSuccessView
@@ -28,13 +27,13 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactApiTea
 class ContactApiTeamSuccessViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
-    val contactApiTeamSuccessView = app.injector.instanceOf[ContactApiTeamSuccessView]
+    val contactApiTeamSuccessView: ContactApiTeamSuccessView = app.injector.instanceOf[ContactApiTeamSuccessView]
   }
 
   "ContactApiTeamSuccessPage" should {
 
     "render as expected" in new Setup {
-      val page: Html         = contactApiTeamSuccessView.render(apiDetail0, messagesProvider.messages, appConfig)
+      val page: Html         = contactApiTeamSuccessView.render(apiDetail0, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("page-heading").text() shouldBe "Contact API catalogue"

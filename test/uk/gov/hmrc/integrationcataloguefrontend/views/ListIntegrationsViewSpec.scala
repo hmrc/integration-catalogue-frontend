@@ -19,9 +19,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
+import uk.gov.hmrc.integrationcatalogue.models.IntegrationDetail
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
@@ -29,8 +29,8 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListInte
 class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with FileTransferTestData {
 
   trait Setup {
-    val listApisView: ListIntegrationsView = app.injector.instanceOf[ListIntegrationsView]
-    val integrationsList                   = apiList ++ List(fileTransfer1)
+    val listApisView: ListIntegrationsView       = app.injector.instanceOf[ListIntegrationsView]
+    val integrationsList: List[IntegrationDetail] = apiList ++ List(fileTransfer1)
   }
 
   "ListApisView" should {
@@ -50,6 +50,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         showFileTransferInterrupt = false,
+        FakeRequest(),
         messagesProvider.messages,
         appConfig
       )
@@ -78,6 +79,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         showFileTransferInterrupt = true,
+        FakeRequest(),
         messagesProvider.messages,
         appConfig
       )
@@ -102,6 +104,7 @@ class ListIntegrationsViewSpec extends CommonViewSpec with ApiTestData with File
         1,
         3,
         showFileTransferInterrupt = false,
+        FakeRequest(),
         messagesProvider.messages,
         appConfig
       )

@@ -40,7 +40,7 @@ bodyEndBlock: Option[Html] = None,
 apiNameSearch: String,
 platformFilter: List[PlatformType],
 backendsFilter: List[String]
-)(contentBlock: Html)(implicit messages: Messages, appConfig: AppConfig)
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @scripts = {
     <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>

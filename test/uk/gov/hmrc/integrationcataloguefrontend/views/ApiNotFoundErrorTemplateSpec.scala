@@ -18,9 +18,8 @@ package uk.gov.hmrc.integrationcataloguefrontend.views
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ApiNotFoundErrorTemplate
 
@@ -33,7 +32,7 @@ class ApiNotFoundErrorTemplateSpec extends CommonViewSpec {
   "ApiNotFoundErrorTemplate" should {
 
     "render api not found page correctly" in new Setup {
-      val page: Html         = apiNotFoundErrorTemplate.render(messagesProvider.messages, appConfig)
+      val page: Html         = apiNotFoundErrorTemplate.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-heading").text() shouldBe "API not found"
       document.getElementById("paragraph1").text() shouldBe "The API does not exist or has been removed from the API catalogue."

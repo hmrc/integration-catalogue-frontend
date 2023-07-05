@@ -18,22 +18,21 @@ package uk.gov.hmrc.integrationcataloguefrontend.views
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
 
 class CaseStudiesViewSpec extends CommonViewSpec {
 
   trait Setup {
-    val caseStudiesPage = app.injector.instanceOf[CaseStudies]
+    val caseStudiesPage: CaseStudies = app.injector.instanceOf[CaseStudies]
   }
 
   "CaseStudiesPage" should {
 
     "render case studies page correctly" in new Setup {
-      val page: Html         = caseStudiesPage.render(messagesProvider.messages, appConfig)
+      val page: Html         = caseStudiesPage.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-heading").text() shouldBe "Case studies"
     }

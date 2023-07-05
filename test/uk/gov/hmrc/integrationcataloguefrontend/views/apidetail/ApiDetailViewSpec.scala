@@ -18,11 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.apidetail
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, ApiStatus}
-
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
@@ -37,7 +35,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details that has status LIVE" in new Setup {
       val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE)
-      val page: Html           = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val page: Html           = apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document   = Jsoup.parse(page.body)
 
       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
@@ -69,7 +67,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
 
     "render page with api details that has status BETA" in new Setup {
       val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.BETA)
-      val page: Html           = apiDetailView.render(apiParsed, messagesProvider.messages, appConfig)
+      val page: Html           = apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document   = Jsoup.parse(page.body)
 
       document.getElementById("interrupt-box-heading").text() shouldBe apiParsed.title
