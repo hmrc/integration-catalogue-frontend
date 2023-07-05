@@ -20,6 +20,7 @@
 @import _root_.uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html._
 @import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes._
+@import views.html.helper.CSPNonce
 
 @this(
     govukTemplate: GovukTemplate,
@@ -40,9 +41,9 @@
 
 
 @scripts = {
-    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
-    <script>window.GOVUKFrontend.initAll();</script>
-    <script src='@routes.Assets.versioned("javascripts/gtm.js")'></script>
+    <script src='@controllers.routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")' @{CSPNonce.attr}></script>
+    <script @{CSPNonce.attr}>window.GOVUKFrontend.initAll();</script>
+    <script src='@routes.Assets.versioned("javascripts/gtm.js")' @{CSPNonce.attr}></script>
 }
 
 @beforeContentBlock = {

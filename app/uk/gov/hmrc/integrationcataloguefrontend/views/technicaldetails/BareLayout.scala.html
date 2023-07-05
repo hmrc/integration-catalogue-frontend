@@ -16,14 +16,14 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+@import views.html.helper.CSPNonce
 
 @this(
   govukBackLink : GovukBackLink
 )
 @(pageTitle: Option[String] = None,
   apiDetail: Option[ApiDetail] = None,
-)(contentBlock: Html)
-
+)(contentBlock: Html)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,17 +37,20 @@
     <!--[if lte IE 8]><script src='/api-catalogue/assets/javascripts/html5shiv.min.js'></script><![endif]-->
     <!--[if lte IE 8]><link href='/api-catalogue/assets/stylesheets/application-ie-8.css' rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if gt IE 8]><!--><link href='/api-catalogue/assets/stylesheets/application.css' media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
-    <script src='/api-catalogue/assets/javascripts/custom.js'></script>
-    <script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PLWQQZB"></script>
+    <script src='/api-catalogue/assets/javascripts/custom.js' @{CSPNonce.attr}></script>
+    <script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js" @{CSPNonce.attr}></script>
+    <script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PLWQQZB" @{CSPNonce.attr}></script>
   </head>
   <body>
     @govukBackLink(BackLink(
       attributes = Map("id" -> "backlink"),
-      href = "javascript:history.back()",
       content = Text("Back")
-  ))
-    
+    ))
+    <script @{CSPNonce.attr}>
+        document.getElementById("backlink").addEventListener("click", function() {
+            javascript:history.back();
+        });
+    </script>
     @contentBlock
   </body>
 </html>
