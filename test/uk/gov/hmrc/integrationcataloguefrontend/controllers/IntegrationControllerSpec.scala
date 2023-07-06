@@ -333,6 +333,13 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
       status(result) shouldBe Status.OK
     }
 
+    "return 404 when file transfer is found instead of an API" in {
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
+
+      val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
+      status(result) shouldBe Status.NOT_FOUND
+    }
+
     "return 500 when api details throw error" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
         .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
@@ -364,6 +371,15 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
       verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
       verify(mockEmailService)
         .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*)
+    }
+
+    "return 404 when api details are found" in {
+      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
+
+      val result = controller.contactApiTeamAction(fileTransfer1.id)(fakeRequestWithCsrf)
+
+      status(result) shouldBe Status.NOT_FOUND
+      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
     }
 
     "return 404 when api details throw not found exception" in {

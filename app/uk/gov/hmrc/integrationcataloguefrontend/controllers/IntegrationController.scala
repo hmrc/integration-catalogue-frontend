@@ -61,7 +61,7 @@ class IntegrationController @Inject() (
 
   implicit val config: AppConfig = appConfig
 
-  def handleUrlTitle(detail: IntegrationDetail, resultToReturn: Result, id: IntegrationId, urlEncodedTitle: String) = {
+  def handleUrlTitle(detail: IntegrationDetail, resultToReturn: Result, id: IntegrationId, urlEncodedTitle: String): Result = {
     val actualEncodedTitle = UrlEncodingHelper.encodeTitle(detail.title)
     if (urlEncodedTitle == actualEncodedTitle) resultToReturn
     else Redirect(routes.IntegrationController.getIntegrationDetail(id, actualEncodedTitle).url)
@@ -145,6 +145,7 @@ class IntegrationController @Inject() (
   def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)     => Ok(contactApiTeamView(ContactApiTeamForm.form, detail))
+      case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
       case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
       case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
       case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
@@ -153,7 +154,7 @@ class IntegrationController @Inject() (
 
   def contactApiTeamAction(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
     def validateForm(apiDetail: ApiDetail, form: Form[ContactApiTeamForm]): Future[Result] = {
-      form.bindFromRequest.fold(
+      form.bindFromRequest().fold(
         formWithErrors => {
           Future.successful(BadRequest(contactApiTeamView(formWithErrors, apiDetail)))
         },
@@ -175,6 +176,7 @@ class IntegrationController @Inject() (
 
     integrationService.findByIntegrationId(id).flatMap {
       case Right(detail: ApiDetail)     => validateForm(detail, ContactApiTeamForm.form)
+      case Right(_: FileTransferDetail) => Future.successful(NotFound(apiNotFoundErrorTemplate()))
       case Left(_: NotFoundException)   => Future.successful(NotFound(apiNotFoundErrorTemplate()))
       case Left(_: BadRequestException) => Future.successful(BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request")))
       case Left(_)                      => Future.successful(InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error")))

@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
 import uk.gov.hmrc.integrationcatalogue.models._
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
@@ -60,10 +61,9 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
           logger.error("Sending email has failed and it is not queued for sending.")
           false
       }).recover {
-        case NonFatal(e) => {
+        case NonFatal(e) =>
           logger.error(e.getMessage)
           false
-        }
       }
   }
 

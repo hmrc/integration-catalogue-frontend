@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, IntegrationType, PlatformType}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
@@ -50,7 +51,7 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
     handleResult(http.GET[IntegrationDetail](s"$externalServiceUri/integrations/${id.value.toString}"))
   }
 
-  def getPlatformContacts()(implicit hc: HeaderCarrier) = {
+  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
     handleResult(http.GET[List[PlatformContactResponse]](s"$externalServiceUri/platform/contacts"))
   }
 
