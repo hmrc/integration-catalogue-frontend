@@ -18,11 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.technicaldetails
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiTechnicalDetailsView
@@ -30,16 +28,16 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.ApiT
 class ApiTechnicalDetailsViewSpec extends CommonViewSpec with ApiTestData {
 
   trait Setup {
-    val techDetailsView = app.injector.instanceOf[ApiTechnicalDetailsView]
+    val techDetailsView: ApiTechnicalDetailsView = app.injector.instanceOf[ApiTechnicalDetailsView]
   }
 
   "ApiTechnicalDetailsView" should {
     "render" in new Setup {
       val apiParsed: ApiDetail = apiDetail0
-      val page: Html           = techDetailsView.render(apiParsed, appConfig)
+      val page: Html           = techDetailsView.render(apiParsed, FakeRequest(), appConfig)
       val document: Document   = Jsoup.parse(page.body)
       Option(document.getElementById("backlink"))
-        .map(_.attr("href")).getOrElse("") shouldBe "javascript:history.back()"
+        .map(_.attr("href")).getOrElse("") shouldBe "#"
     }
   }
 

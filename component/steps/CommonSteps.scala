@@ -30,6 +30,8 @@ import org.scalatest.matchers.should.Matchers
 import pages._
 import steps.CommonSteps.pages
 
+import scala.language.postfixOps
+
 object TableMisuseAdapters {
 
   def asListOfKV(dataTable: DataTable): Map[String, String] = {

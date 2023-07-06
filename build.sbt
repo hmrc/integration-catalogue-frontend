@@ -1,18 +1,17 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import bloop.integrations.sbt.BloopDefaults
 import sbt.Tests.{Group, SubProcess}
 import sbt._
 
 val appName = "integration-catalogue-frontend"
 
-val silencerVersion = "1.7.6"
+val silencerVersion = "1.17.13"
 
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
 inThisBuild(
   List(
-    scalaVersion := "2.12.15",
+    scalaVersion := "2.13.8",
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision
   )
@@ -26,7 +25,7 @@ lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     majorVersion                     := 0,
-    scalaVersion                     := "2.12.15",
+    scalaVersion                     := "2.13.8",
     routesImport                      += "uk.gov.hmrc.integrationcataloguefrontend.controllers.binders._",
     Test / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
@@ -46,8 +45,7 @@ lazy val microservice = Project(appName, file("."))
     )
     // ***************
   )
-  .settings(publishingSettings, 
-   scoverageSettings)
+  .settings(scoverageSettings)
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(inConfig(IntegrationTest)(BloopDefaults.configSettings))

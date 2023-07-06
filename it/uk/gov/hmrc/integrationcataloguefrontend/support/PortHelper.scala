@@ -18,6 +18,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.support
 
 import java.net.ServerSocket
 import scala.annotation.tailrec
+import scala.language.postfixOps
 
 import play.api.Logger
 

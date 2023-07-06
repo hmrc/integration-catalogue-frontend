@@ -18,22 +18,21 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.contact
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 
 class ContactViewSpec extends CommonViewSpec {
 
   trait Setup {
-    val getStartedPage = app.injector.instanceOf[ContactView]
+    val getStartedPage: ContactView = app.injector.instanceOf[ContactView]
   }
 
   "ContactPage" should {
 
     "render contact page correctly" in new Setup {
-      val page: Html         = getStartedPage.render(messagesProvider.messages, appConfig)
+      val page: Html         = getStartedPage.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-heading").text() shouldBe "Contacting the API catalogue team"
       document.getElementById("paragraph1").text() shouldBe "Email the API catalogue team at api-catalogue-g@digital.hmrc.gov.uk."

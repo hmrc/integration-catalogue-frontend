@@ -18,9 +18,8 @@ package uk.gov.hmrc.integrationcataloguefrontend.views
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import play.api.test.FakeRequest
 import play.twirl.api.Html
-
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.NotFoundErrorTemplate
 
@@ -33,7 +32,7 @@ class NotFoundErrorTemplateSpec extends CommonViewSpec {
   "NotFoundErrorTemplate" should {
 
     "render not found page correctly" in new Setup {
-      val page: Html         = notFoundErrorPage.render(messagesProvider.messages, appConfig)
+      val page: Html         = notFoundErrorPage.render(FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-heading").text() shouldBe "Page not found"
       document.getElementById("paragraph1").text() shouldBe "If you typed the web address, check it is correct."

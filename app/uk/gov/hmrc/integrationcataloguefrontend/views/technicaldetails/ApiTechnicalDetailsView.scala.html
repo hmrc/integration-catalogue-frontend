@@ -20,7 +20,7 @@
 @this(layout: BareLayout)
 
 
-@(apiDetail: ApiDetail)(implicit appConfig: AppConfig)
+@(apiDetail: ApiDetail)(implicit request: Request[_], appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
 

@@ -16,22 +16,23 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
+@import views.html.helper.CSPNonce
 
 @this(layout: BareLayout)
 
 
-@(apiDetail: ApiDetail)(implicit appConfig: AppConfig)
+@(apiDetail: ApiDetail)(implicit request: Request[_], appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"${apiDetail.title} - API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
   <div id="redoc"></div>
 
-  <script src='@controllers.routes.Assets.versioned("javascripts/redoc/redoc.standalone.js")' charset="UTF-8"> </script>
+  <script src='@controllers.routes.Assets.versioned("javascripts/redoc/redoc.standalone.js")' charset="UTF-8" @{CSPNonce.attr}> </script>
 
 @*
   To fix this issue:
   https://github.com/Redocly/redoc/issues/1108#issuecomment-585990742 
 *@
-  <script>
+  <script @{CSPNonce.attr}>
     var options = {
       hideHostname: true,
       theme: {

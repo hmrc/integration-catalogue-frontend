@@ -19,7 +19,7 @@
 @this(layout: DefaultLayout)
 
 
-@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, appConfig: AppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @layout(pageTitle = Some(pageTitle)) {
     <h1 class="govuk-heading-l" id="page-heading">@{Text(heading).asHtml}</h1>
     <p class="govuk-body">@{Text(message).asHtml}</p>

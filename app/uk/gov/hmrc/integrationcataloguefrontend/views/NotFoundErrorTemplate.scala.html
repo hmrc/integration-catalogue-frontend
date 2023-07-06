@@ -19,7 +19,7 @@
 @this(layout: DefaultLayout)
 
 
-@()(implicit messages: Messages, appConfig: AppConfig)
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 @layout(pageTitle = Some(s"Page not found -  ${appConfig.serviceName}")) {
     <h1 id="page-heading" class="govuk-heading-l">@{
         Text("Page not found").asHtml

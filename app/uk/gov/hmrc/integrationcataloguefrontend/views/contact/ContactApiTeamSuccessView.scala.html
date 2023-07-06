@@ -21,7 +21,7 @@
 
 @this(layout: DefaultLayout)
 
-@(apiDetail: ApiDetail)(implicit messages: Messages, appConfig: AppConfig)
+@(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Contact - API catalogue - ${appConfig.serviceName}"), activePage = Some("contactSuccess")) {
 

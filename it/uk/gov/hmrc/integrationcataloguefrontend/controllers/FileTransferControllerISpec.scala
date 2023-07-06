@@ -85,7 +85,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
 
   def validateRedirect(response: WSResponse, expectedLocation: String): Unit = {
     response.status mustBe SEE_OTHER
-    val mayBeLocationHeader: Option[Seq[String]] = response.headers.get(LOCATION)
+    val mayBeLocationHeader: Option[Seq[String]] = response.headers.get(LOCATION).map(_.toSeq)
     mayBeLocationHeader.fold(fail("redirect Location header missing")) { locationHeader =>
       locationHeader.head mustBe expectedLocation
     }

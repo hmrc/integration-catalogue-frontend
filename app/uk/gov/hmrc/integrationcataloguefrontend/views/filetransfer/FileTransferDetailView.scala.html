@@ -21,7 +21,7 @@
 @this(layout: FileTransferDetailLayout)
 
 
-@(fileTransferDetail: FileTransferDetail)(implicit messages: Messages, appConfig: AppConfig)
+@(fileTransferDetail: FileTransferDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @gridItem(heading:String, dataValue: String, indentifier: String, gridSize: String) = {
   <div class="govuk-grid-column-one-@gridSize">
