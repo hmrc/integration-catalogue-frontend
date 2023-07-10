@@ -96,7 +96,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result: Either[Throwable, IntegrationDetail] = await(objInTest.findByIntegrationId(exampleApiDetail.id))
         result match {
           case Right(_) => succeed
-          case _        => fail
+          case _        => fail()
         }
       }
       "return Left when any error from backend" in new Setup {
@@ -106,7 +106,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result: Either[Throwable, IntegrationDetail] = await(objInTest.findByIntegrationId(exampleApiDetail.id))
         result match {
           case Left(_) => succeed
-          case _       => fail
+          case _       => fail()
         }
       }
 
@@ -121,7 +121,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
             val integration = response.results.head
             integration.isInstanceOf[ApiDetail] mustBe true
             integration.asInstanceOf[ApiDetail].shortDescription mustBe None
-          case _               => fail
+          case _               => fail()
         }
 
       }
@@ -134,7 +134,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
             val integration = response.results.head
             integration.isInstanceOf[ApiDetail] mustBe true
             integration.asInstanceOf[ApiDetail].shortDescription mustBe None
-          case _               => fail
+          case _               => fail()
         }
 
       }
@@ -147,7 +147,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
             val integration = response.results.head
             integration.isInstanceOf[ApiDetail] mustBe true
             integration.asInstanceOf[ApiDetail].shortDescription mustBe Some("short desc")
-          case _               => fail
+          case _               => fail()
         }
 
       }
@@ -157,7 +157,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
         result match {
           case Left(_) => succeed
-          case _       => fail
+          case _       => fail()
         }
 
       }
@@ -169,7 +169,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result = await(objInTest.getPlatformContacts())
         result match {
           case Right(response) => response mustBe List(apiPlatformContact)
-          case _               => fail
+          case _               => fail()
         }
       }
 
@@ -178,7 +178,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result = await(objInTest.getPlatformContacts())
         result match {
           case Left(_) => succeed
-          case _       => fail
+          case _       => fail()
         }
       }
     }
@@ -193,7 +193,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result         = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
         result match {
           case Right(response) => response mustBe expectedResult
-          case _               => fail
+          case _               => fail()
         }
       }
 
@@ -202,7 +202,7 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
         result match {
           case Left(_) => succeed
-          case _       => fail
+          case _       => fail()
         }
       }
     }
