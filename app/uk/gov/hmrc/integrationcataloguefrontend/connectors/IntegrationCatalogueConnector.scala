@@ -75,13 +75,9 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
   }
 
   private def handleResult[A](result: Future[A]): Future[Either[Throwable, A]] = {
-    result.map(x => {
-      println("RIGHT " + x)
-      Right(x)
-    })
+    result.map(x => Right(x))
       .recover {
         case NonFatal(e) =>
-          println("NONFATAL " + e)
           logger.error(e.getMessage)
           Left(e)
       }
