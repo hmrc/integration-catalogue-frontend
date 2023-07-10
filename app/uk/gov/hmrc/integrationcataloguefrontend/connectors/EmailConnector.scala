@@ -26,7 +26,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
 import uk.gov.hmrc.integrationcatalogue.models._
-import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 

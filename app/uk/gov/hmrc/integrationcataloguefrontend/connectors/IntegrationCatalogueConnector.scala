@@ -26,7 +26,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, IntegrationType, PlatformType}
-import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
@@ -76,9 +75,13 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
   }
 
   private def handleResult[A](result: Future[A]): Future[Either[Throwable, A]] = {
-    result.map(x => Right(x))
+    result.map(x => {
+      println("RIGHT " + x)
+      Right(x)
+    })
       .recover {
         case NonFatal(e) =>
+          println("NONFATAL " + e)
           logger.error(e.getMessage)
           Left(e)
       }
