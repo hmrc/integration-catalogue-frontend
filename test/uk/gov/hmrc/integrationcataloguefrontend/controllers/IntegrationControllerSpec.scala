@@ -27,7 +27,7 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.http.{BadRequestException, NotFoundException}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -84,7 +84,6 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   val mockEmailService: EmailService             = mock[EmailService]
 
   implicit def materializer: Materializer = app.materializer
-  private implicit val hc: HeaderCarrier  = HeaderCarrier()
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
