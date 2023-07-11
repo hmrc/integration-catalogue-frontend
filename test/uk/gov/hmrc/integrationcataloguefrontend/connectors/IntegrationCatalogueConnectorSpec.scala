@@ -93,6 +93,7 @@ class IntegrationCatalogueConnectorSpec extends AsyncHmrcSpec with ApiTestData {
       result match {
         case Right(_)                     => fail()
         case Left(_: BadGatewayException) => succeed
+        case Left(_) => fail()
       }
 
     }

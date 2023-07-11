@@ -60,10 +60,9 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
           logger.error("Sending email has failed and it is not queued for sending.")
           false
       }).recover {
-        case NonFatal(e) => {
+        case NonFatal(e) =>
           logger.error(e.getMessage)
           false
-        }
       }
   }
 

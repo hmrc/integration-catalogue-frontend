@@ -262,7 +262,7 @@ class IntegrationServiceSpec
     "return Right with List of PlatformContactResponse" in new SetUp {
       when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(List(apiPlatformContactNoOverride))))
 
-      val result = await(objInTest.getPlatformContacts)
+      val result = await(objInTest.getPlatformContacts())
       result match {
         case Right(platformContacts) => platformContacts shouldBe List(apiPlatformContactNoOverride)
         case Left(_)                 => fail()
@@ -274,7 +274,7 @@ class IntegrationServiceSpec
     "return Left when error in backend" in new SetUp {
       when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
 
-      val result = await(objInTest.getPlatformContacts)
+      val result = await(objInTest.getPlatformContacts())
       result match {
         case Left(_)  => succeed
         case Right(_) => fail()
@@ -297,7 +297,7 @@ class IntegrationServiceSpec
       val result         = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
       result match {
         case Right(response) => response shouldBe expectedResult
-        case _               => fail
+        case _               => fail()
       }
 
       verify(mockIntegrationCatalogueConnector).getFileTransferTransportsByPlatform(*, *)(eqTo(hc))

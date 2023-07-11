@@ -60,7 +60,7 @@ class FileTransferController @Inject() (
   }
 
   def dataSourceAction(): Action[AnyContent] = Action.async { implicit request =>
-    val form = SelectedDataSourceForm.form.bindFromRequest
+    val form = SelectedDataSourceForm.form.bindFromRequest()
     Future.successful {
       form.fold(
         formWithErrors => Ok(wizardDataSourceView(formWithErrors)),
@@ -74,7 +74,7 @@ class FileTransferController @Inject() (
   }
 
   def dataTargetAction(): Action[AnyContent] = Action.async { implicit request =>
-    val form = SelectedDataTargetForm.form.bindFromRequest
+    val form = SelectedDataTargetForm.form.bindFromRequest()
 
     Future.successful {
       form.fold(
@@ -90,7 +90,7 @@ class FileTransferController @Inject() (
 
   def getFileTransferTransportsByPlatform(source: String, target: String): Action[AnyContent] = Action.async { implicit request =>
     val results = for {
-      contacts  <- EitherT(integrationService.getPlatformContacts)
+      contacts  <- EitherT(integrationService.getPlatformContacts())
       transfers <- EitherT(integrationService.getFileTransferTransportsByPlatform(source, target))
     } yield (transfers, contacts)
 

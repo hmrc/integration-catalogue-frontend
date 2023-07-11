@@ -50,7 +50,7 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
     handleResult(http.GET[IntegrationDetail](s"$externalServiceUri/integrations/${id.value.toString}"))
   }
 
-  def getPlatformContacts()(implicit hc: HeaderCarrier) = {
+  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
     handleResult(http.GET[List[PlatformContactResponse]](s"$externalServiceUri/platform/contacts"))
   }
 
