@@ -18,6 +18,7 @@ package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import play.api.Logging
 import play.api.http.Status.ACCEPTED
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
 import uk.gov.hmrc.integrationcatalogue.models._
@@ -58,9 +59,9 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
           false
       }).recover {
         case e: UpstreamErrorResponse =>
-          logger.error(e.getMessage)
+          logger.error(e.getMessage())
           false
-      }
+    }
   }
 
 }
