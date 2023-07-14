@@ -16,18 +16,16 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.control.NonFatal
-
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, IntegrationType, PlatformType}
-
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) extends Logging {
@@ -39,22 +37,22 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
       itemsPerPage: Option[Int],
       currentPage: Option[Int]
     )(implicit hc: HeaderCarrier
-    ): Future[Either[Throwable, IntegrationResponse]] = {
+    ): Future[Either[UpstreamErrorResponse, IntegrationResponse]] = {
     val queryParamsValues = buildQueryParams(integrationFilter, itemsPerPage: Option[Int], currentPage: Option[Int])
     handleResult(
       http.GET[IntegrationResponse](s"$externalServiceUri/integrations", queryParams = queryParamsValues)
     )
   }
 
-  def findByIntegrationId(id: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
+  def findByIntegrationId(id: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, IntegrationDetail]] = {
     handleResult(http.GET[IntegrationDetail](s"$externalServiceUri/integrations/${id.value.toString}"))
   }
 
-  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
+  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[PlatformContactResponse]]] = {
     handleResult(http.GET[List[PlatformContactResponse]](s"$externalServiceUri/platform/contacts"))
   }
 
-  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
+  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[FileTransferTransportsForPlatform]]] = {
 
     val sourceParam = if (source.isEmpty) List.empty else List(("source", source))
     val targetParam = if (target.isEmpty) List.empty else List(("target", target))
@@ -74,11 +72,12 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
     searchTerms ++ platformsFilters ++ backendsFilters ++ itemsPerPageParam ++ currentPageParam ++ integrationTypeFilter
   }
 
-  private def handleResult[A](result: Future[A]): Future[Either[Throwable, A]] = {
+  private def handleResult[A](result: Future[A]): Future[Either[UpstreamErrorResponse, A]] = {
     result.map(x => Right(x))
       .recover {
-        case NonFatal(e) =>
-          logger.error(e.getMessage)
+        case UpstreamErrorResponse.Upstream4xxResponse(e) =>
+          Left(e)
+        case UpstreamErrorResponse.Upstream5xxResponse(e) =>
           Left(e)
       }
   }

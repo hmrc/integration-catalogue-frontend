@@ -16,24 +16,15 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import java.util.UUID
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
 import akka.stream.Materializer
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.http.{BadRequestException, NotFoundException}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
-
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.integrationcatalogue.models.IntegrationResponse
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, PlatformType}
-
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
@@ -45,6 +36,12 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
+
+import java.util.UUID
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData with FileTransferTestData with WithCSRFAddToken {
 
@@ -157,7 +154,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 404 when api details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -189,7 +186,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 404 when file transfer details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -224,7 +221,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 404 when api details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.getIntegrationDetailTechnical(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -265,7 +262,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 404 when api details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.getIntegrationDetailTechnicalRedoc(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -300,7 +297,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 404 when api details are notfound" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()))(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -341,7 +338,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 500 when api details throw error" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -383,7 +380,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 404 when api details throw not found exception" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new NotFoundException("Some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("not found", NOT_FOUND))))
 
       val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
 
@@ -394,7 +391,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 400 when api details throw bad request exception" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new BadRequestException("Some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", BAD_REQUEST))))
 
       val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
 
@@ -405,7 +402,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 500 when api details throw internal server exception" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
 

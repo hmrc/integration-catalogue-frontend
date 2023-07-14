@@ -16,21 +16,20 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import java.util.UUID
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-
-import uk.gov.hmrc.http.HeaderCarrier
-
+import play.api.http.Status._
+import play.api.test.Helpers.INTERNAL_SERVER_ERROR
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, PlatformType}
-
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
+
+import java.util.UUID
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class IntegrationServiceSpec
     extends AsyncHmrcSpec
@@ -64,7 +63,7 @@ class IntegrationServiceSpec
       val id = IntegrationId(UUID.randomUUID())
       when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Right(integrationReturned)))
       if (callGetPlatformContacts) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Right(defaultPlatformContacts)))
-      if (callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
+      if (callGetPlatformContactsReturnsError) when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result: Either[Throwable, IntegrationDetail] =
         await(objInTest.findByIntegrationId(id))
@@ -100,7 +99,7 @@ class IntegrationServiceSpec
     }
 
     "return Left when error from connector" in new SetUp {
-      when(mockIntegrationCatalogueConnector.findWithFilters(*, *, *)(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+      when(mockIntegrationCatalogueConnector.findWithFilters(*, *, *)(*)).thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", BAD_REQUEST))))
       val integrationFilter = IntegrationFilter(searchText = List("search"), platforms = List.empty)
 
       val result: Either[Throwable, IntegrationResponse] =
@@ -118,7 +117,7 @@ class IntegrationServiceSpec
   "findById" should {
     "return error from connector" in new SetUp {
       val id = IntegrationId(UUID.randomUUID())
-      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Left(new RuntimeException("some error"))))
+      when(mockIntegrationCatalogueConnector.findByIntegrationId(eqTo(id))(*)).thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
 
       val result: Either[Throwable, IntegrationDetail] =
         await(objInTest.findByIntegrationId(id))
@@ -246,7 +245,7 @@ class IntegrationServiceSpec
     }
 
     "return apidetail with empty contactInfo list when api has no contacts and getPlatformContacts returns a Left from connector" in new SetUp {
-      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("error"))))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("error", INTERNAL_SERVER_ERROR))))
       validateDefaultContacts(
         integrationReturned = apiDetail0,
         expectedIntegration = apiDetail0,
@@ -272,7 +271,7 @@ class IntegrationServiceSpec
 
     }
     "return Left when error in backend" in new SetUp {
-      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
+      when(mockIntegrationCatalogueConnector.getPlatformContacts()(*)).thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some exception", INTERNAL_SERVER_ERROR))))
 
       val result = await(objInTest.getPlatformContacts())
       result match {
@@ -308,7 +307,7 @@ class IntegrationServiceSpec
     val dataSource = "SOURCE"
     val dataTarget = "TARGET"
     when(mockIntegrationCatalogueConnector.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(*))
-      .thenReturn(Future.successful(Left(new RuntimeException("some exception"))))
+      .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some exception", INTERNAL_SERVER_ERROR))))
 
     val result = await(objInTest.getFileTransferTransportsByPlatform(dataSource, dataTarget))
     result match {

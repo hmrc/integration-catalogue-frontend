@@ -16,15 +16,13 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.services
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
-
-import uk.gov.hmrc.http.HeaderCarrier
-
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, IntegrationId, Maintainer}
-
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCatalogueConnector)(implicit ec: ExecutionContext) {
@@ -34,11 +32,11 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
       itemsPerPage: Option[Int],
       currentPage: Option[Int]
     )(implicit hc: HeaderCarrier
-    ): Future[Either[Throwable, IntegrationResponse]] = {
+    ): Future[Either[UpstreamErrorResponse, IntegrationResponse]] = {
     integrationCatalogueConnector.findWithFilters(integrationFilter, itemsPerPage, currentPage)
   }
 
-  def findByIntegrationId(integrationId: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[Throwable, IntegrationDetail]] = {
+  def findByIntegrationId(integrationId: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, IntegrationDetail]] = {
 
     def handleDefaultContact(integration: IntegrationDetail): Future[IntegrationDetail] = {
 
@@ -78,11 +76,11 @@ class IntegrationService @Inject() (integrationCatalogueConnector: IntegrationCa
 
   }
 
-  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[Throwable, List[PlatformContactResponse]]] = {
+  def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[PlatformContactResponse]]] = {
     integrationCatalogueConnector.getPlatformContacts()
   }
 
-  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[Throwable, List[FileTransferTransportsForPlatform]]] = {
+  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[FileTransferTransportsForPlatform]]] = {
     integrationCatalogueConnector.getFileTransferTransportsByPlatform(source, target)
   }
 
