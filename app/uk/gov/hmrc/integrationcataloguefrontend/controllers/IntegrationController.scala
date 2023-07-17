@@ -16,19 +16,12 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
-
 import play.api.Logging
 import play.api.data.Form
 import play.api.mvc._
-import uk.gov.hmrc.http.{BadRequestException, NotFoundException}
-import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail, IntegrationFilter}
-
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
@@ -37,7 +30,11 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
+import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class IntegrationController @Inject() (
     appConfig: AppConfig,
@@ -71,9 +68,15 @@ class IntegrationController @Inject() (
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)          => handleUrlTitle(detail, Ok(apiDetailView(detail)), id, urlEncodedTitle)
       case Right(detail: FileTransferDetail) => handleUrlTitle(detail, Ok(fileTransferDetailView(detail)), id, urlEncodedTitle)
-      case Left(_: NotFoundException)        => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException)      => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                           => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
+    }
+  }
+
+  private def handleUpstream4xx(error: UpstreamErrorResponse)(implicit request: MessagesRequest[AnyContent]) = {
+    error.statusCode match {
+      case NOT_FOUND => NotFound(apiNotFoundErrorTemplate())
+      case BAD_REQUEST => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+      case _ => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
     }
   }
 
@@ -81,9 +84,7 @@ class IntegrationController @Inject() (
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)     => handleUrlTitle(detail, Ok(apiTechnicalDetailsView(detail)), id, urlEncodedTitle)
       case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
     }
   }
 
@@ -91,9 +92,7 @@ class IntegrationController @Inject() (
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)     => handleUrlTitle(detail, Ok(apiTechnicalDetailsViewRedoc(detail)), id, urlEncodedTitle)
       case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
     }
   }
 
@@ -101,9 +100,7 @@ class IntegrationController @Inject() (
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)     => Ok(detail.openApiSpecification)
       case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
     }
   }
 
@@ -136,8 +133,11 @@ class IntegrationController @Inject() (
             showFileTransferInterrupt(config.fileTransferSearchTerms.toList, keywords)
           ))
 
-        case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-        case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+        case Left(UpstreamErrorResponse.Upstream4xxResponse(e)) => e.statusCode match {
+          case BAD_REQUEST => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
+          case _ => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+        }
+        case Left(_) => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
       }
 
     }
@@ -146,9 +146,7 @@ class IntegrationController @Inject() (
     integrationService.findByIntegrationId(id).map {
       case Right(detail: ApiDetail)     => Ok(contactApiTeamView(ContactApiTeamForm.form, detail))
       case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: NotFoundException)   => NotFound(apiNotFoundErrorTemplate())
-      case Left(_: BadRequestException) => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case Left(_)                      => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
+      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
     }
   }
 
@@ -177,9 +175,7 @@ class IntegrationController @Inject() (
     integrationService.findByIntegrationId(id).flatMap {
       case Right(detail: ApiDetail)     => validateForm(detail, ContactApiTeamForm.form)
       case Right(_: FileTransferDetail) => Future.successful(NotFound(apiNotFoundErrorTemplate()))
-      case Left(_: NotFoundException)   => Future.successful(NotFound(apiNotFoundErrorTemplate()))
-      case Left(_: BadRequestException) => Future.successful(BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request")))
-      case Left(_)                      => Future.successful(InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error")))
+      case Left(error: UpstreamErrorResponse) => Future.successful(handleUpstream4xx(error))
     }
   }
 

@@ -16,21 +16,19 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import java.util.UUID
-import scala.concurrent.{ExecutionContext, Future}
-
 import org.mockito.captor.{ArgCaptor, Captor}
 import org.mockito.stubbing.ScalaOngoingStubbing
-
+import play.api.http.Status.BAD_GATEWAY
 import play.api.test.Helpers
-import uk.gov.hmrc.http.{BadGatewayException, HttpClient, _}
-
+import uk.gov.hmrc.http.{HttpClient, _}
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common._
-
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
+
+import java.util.UUID
+import scala.concurrent.{ExecutionContext, Future}
 
 class IntegrationCatalogueConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
@@ -63,13 +61,13 @@ class IntegrationCatalogueConnectorSpec extends AsyncHmrcSpec with ApiTestData {
       )(any[HttpReads[IntegrationResponse]], any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful(response))
 
-    def httpCallToFindWithFilterWillFailWithException(exception: Throwable): ScalaOngoingStubbing[Future[IntegrationResponse]] =
+    def httpCallToFindWithFilterWillFailWithStatusCode(statusCode: Int): ScalaOngoingStubbing[Future[IntegrationResponse]] =
       when(mockHttpClient.GET[IntegrationResponse](eqTo(findWithFilterlUrl), eqTo(Seq(("searchTerm", searchTerm), ("integrationType", "API"))), eqTo(Seq.empty))(
         any[HttpReads[IntegrationResponse]],
         any[HeaderCarrier],
         any[ExecutionContext]
       ))
-        .thenReturn(Future.failed(exception))
+        .thenReturn(Future.failed(UpstreamErrorResponse.apply("some exception", statusCode)))
   }
 
   "findWithFilter" should {
@@ -86,13 +84,16 @@ class IntegrationCatalogueConnectorSpec extends AsyncHmrcSpec with ApiTestData {
     }
 
     "handle exceptions" in new SetUp {
-      httpCallToFindWithFilterWillFailWithException(new BadGatewayException("some error"))
+      httpCallToFindWithFilterWillFailWithStatusCode(BAD_GATEWAY)
 
       val result: Either[Throwable, IntegrationResponse] = await(connector.findWithFilters(IntegrationFilter(searchText = List(searchTerm), platforms = List.empty), None, None))
 
       result match {
         case Right(_)                     => fail()
-        case Left(_: BadGatewayException) => succeed
+        case Left(UpstreamErrorResponse.Upstream5xxResponse(e)) => e.statusCode match {
+          case BAD_GATEWAY => succeed
+          case _ => fail()
+        }
         case Left(_) => fail()
       }
 

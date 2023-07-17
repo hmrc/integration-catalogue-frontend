@@ -16,21 +16,17 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import java.net.ConnectException
-import scala.concurrent.{ExecutionContext, Future, TimeoutException}
-
 import org.mockito.stubbing.ScalaOngoingStubbing
-
-import play.api.http.Status.{ACCEPTED, BAD_REQUEST, INTERNAL_SERVER_ERROR}
+import play.api.http.Status._
 import play.api.libs.json.Writes
 import play.api.test.Helpers
 import uk.gov.hmrc.http.{HttpClient, _}
-
 import uk.gov.hmrc.integrationcatalogue.models._
-
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
@@ -63,14 +59,14 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
         .thenReturn(Future.successful(HttpResponse(status, "")))
     }
 
-    def httpCallToSendEmailWillThrowException(emailRequest: EmailRequest, throwable: Throwable): ScalaOngoingStubbing[Future[HttpResponse]] = {
+    def httpCallToSendEmailWillThrowException(emailRequest: EmailRequest, upstreamErrorResponse: UpstreamErrorResponse): ScalaOngoingStubbing[Future[HttpResponse]] = {
       when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
         wts = any[Writes[EmailRequest]],
         rds = any[HttpReads[HttpResponse]],
         hc = any[HeaderCarrier],
         ec = any[ExecutionContext]
       ))
-        .thenReturn(Future.failed(throwable))
+        .thenReturn(Future.failed(upstreamErrorResponse))
     }
   }
 
@@ -101,7 +97,7 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
     }
 
     "handle internal server error exception" in new SetUp {
-      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, new InternalServerException("some error"))
+      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))
 
       val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
@@ -109,7 +105,7 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
     }
 
     "handle timeout exception" in new SetUp {
-      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, new TimeoutException())
+      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, UpstreamErrorResponse.apply("some error", GATEWAY_TIMEOUT))
 
       val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 
@@ -117,7 +113,7 @@ class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
     }
 
     "handle connect exception" in new SetUp {
-      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, new ConnectException())
+      httpCallToSendEmailWillThrowException(emailApiPlatformRequest, UpstreamErrorResponse.apply("some error", REQUEST_TIMEOUT))
 
       val result: Boolean = await(connector.sendEmailToPlatform(apiEmails, emailParams))
 

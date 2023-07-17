@@ -16,30 +16,28 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-
 import play.api.data.Form
 import play.api.http.Status
+import play.api.http.Status.BAD_REQUEST
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
-
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models.FileTransferTransportsForPlatform
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
-
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.ErrorTemplate
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.wizard._
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTestData
     with FileTransferTestData {
@@ -177,7 +175,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
       when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
 
       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
@@ -193,7 +191,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
       when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Left(new BadRequestException("Bad request"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("bad request", BAD_REQUEST))))
 
       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
@@ -209,7 +207,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
       when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
-        .thenReturn(Future.successful(Left(new NotFoundException("error"))))
+        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("error", NOT_FOUND))))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
 
       val result = controller.getFileTransferTransportsByPlatform(dataSource, dataTarget)(fakeRequest)
