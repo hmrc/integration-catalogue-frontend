@@ -29,10 +29,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 abstract class InternalAuthTokenInitialiser {
 
-  sealed trait Done
-  case object Done extends Done
-
-  val initialised: Future[Done]
+  val initialised: Future[Unit]
 
 }
 
@@ -46,7 +43,7 @@ object InternalAuthTokenInitialiser {
 
 @Singleton
 class NoOpInternalAuthTokenInitialiser @Inject() () extends InternalAuthTokenInitialiser {
-  override val initialised: Future[Done] = Future.successful(Done)
+  override val initialised: Future[Unit] = Future.successful(())
 }
 
 @Singleton
@@ -66,23 +63,23 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   private val appName: String =
     configuration.get[String]("appName")
 
-  override val initialised: Future[Done] =
+  override val initialised: Future[Unit] =
     ensureAuthToken()
 
   Await.result(initialised, 30.seconds)
 
-  private def ensureAuthToken(): Future[Done] = {
+  private def ensureAuthToken(): Future[Unit] = {
     authTokenIsValid.flatMap { isValid =>
       if (isValid) {
         logger.info("Auth token is already valid")
-        Future.successful(Done)
+        Future.successful(())
       } else {
         createClientAuthToken()
       }
     }
   }
 
-  private def createClientAuthToken(): Future[Done] = {
+  private def createClientAuthToken(): Future[Unit] = {
     logger.info("Initialising auth token")
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -103,7 +100,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
     ) flatMap { response =>
       if (response.status == 201) {
         logger.info("Auth token initialised")
-        Future.successful(Done)
+        Future.successful(())
       } else {
         Future.failed(new RuntimeException("Unable to initialise internal-auth token"))
       }
