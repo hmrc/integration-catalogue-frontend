@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.integrationcataloguefrontend.config
-
+package uk.gov.hmrc.integrationcatalogue.models
 
 import play.api.{ConfigLoader, Configuration}
 

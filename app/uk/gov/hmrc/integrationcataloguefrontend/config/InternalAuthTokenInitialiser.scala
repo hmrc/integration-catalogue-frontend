@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.{Configuration, Logging}
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.integrationcatalogue.models.Service
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
@@ -35,6 +36,14 @@ abstract class InternalAuthTokenInitialiser {
 
 }
 
+object InternalAuthTokenInitialiser {
+
+  val resourceType: String = "integration-catalogue"
+  val resourceLocation: String = "*"
+  val actions: Seq[String] = List("READ", "WRITE", "DELETE")
+
+}
+
 @Singleton
 class NoOpInternalAuthTokenInitialiser @Inject() () extends InternalAuthTokenInitialiser {
   override val initialised: Future[Done] = Future.successful(Done)
@@ -46,9 +55,7 @@ class InternalAuthTokenInitialiserImpl @Inject() (
   http: HttpClient
 )(implicit ec: ExecutionContext) extends InternalAuthTokenInitialiser with Logging {
 
-  private val resourceType = "api-hub-applications"
-  private val resourceLocation = "*"
-  private val actions = List("READ","WRITE","DELETE")
+  import InternalAuthTokenInitialiser._
 
   private val internalAuthService: Service =
     configuration.get[Service]("microservice.services.internal-auth")

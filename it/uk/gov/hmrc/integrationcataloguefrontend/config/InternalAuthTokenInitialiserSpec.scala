@@ -17,21 +17,17 @@
 package uk.gov.hmrc.integrationcataloguefrontend.config
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import org.scalatest.concurrent.Eventually.eventually
-import org.scalatest.concurrent.PatienceConfiguration.Timeout
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import com.google.inject.CreationException
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.time.{Seconds, Span}
 import play.api.http.Status.{CREATED, NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers.AUTHORIZATION
 import uk.gov.hmrc.http.test.WireMockSupport
+import uk.gov.hmrc.integrationcataloguefrontend.config.InternalAuthTokenInitialiser._
 
-import scala.util.Try
-
-class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with WireMockSupport {
+class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with WireMockSupport {
 
   "when configured to run" - {
 
@@ -45,9 +41,9 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
         "principal" -> appName,
         "permissions" -> Seq(
           Json.obj(
-            "resourceType" -> "api-hub-applications",
-            "resourceLocation" -> "*",
-            "actions" -> List("READ","WRITE","DELETE")
+            "resourceType" -> resourceType,
+            "resourceLocation" -> resourceLocation,
+            "actions" -> actions
           )
         )
       )
@@ -71,17 +67,16 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
         )
         .build()
 
-      eventually(Timeout(Span(30, Seconds))) {
-        verify(1,
-          getRequestedFor(urlMatching("/test-only/token"))
-            .withHeader(AUTHORIZATION, equalTo(authToken))
-        )
-        verify(1,
-          postRequestedFor(urlMatching("/test-only/token"))
-            .withRequestBody(equalToJson(Json.stringify(Json.toJson(expectedRequest))))
-        )
-      }
-      
+      verify(1,
+        getRequestedFor(urlMatching("/test-only/token"))
+          .withHeader(AUTHORIZATION, equalTo(authToken))
+      )
+
+      verify(1,
+        postRequestedFor(urlMatching("/test-only/token"))
+          .withRequestBody(equalToJson(Json.stringify(Json.toJson(expectedRequest))))
+      )
+
     }
 
     "must return an exception if the internal auth service responds to create with a different status" in {
@@ -94,14 +89,9 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
         "principal" -> appName,
         "permissions" -> Seq(
           Json.obj(
-            "resourceType" -> "digital-disclosure-service",
-            "resourceLocation" -> "*",
-            "actions" -> List("WRITE")
-          ),
-          Json.obj(
-            "resourceType" -> "digital-disclosure-service-store",
-            "resourceLocation" -> "*",
-            "actions" -> List("WRITE")
+            "resourceType" -> resourceType,
+            "resourceLocation" -> resourceLocation,
+            "actions" -> actions
           )
         )
       )
@@ -116,7 +106,7 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
           .willReturn(aResponse().withStatus(NOT_FOUND))
       )
 
-      val appTry = Try{
+      a[CreationException] mustBe thrownBy {
         GuiceApplicationBuilder()
           .configure(
             "microservice.services.internal-auth.port" -> wireMockPort,
@@ -125,20 +115,17 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
             "internal-auth.token" -> authToken
           )
           .build()
-
-        eventually(Timeout(Span(30, Seconds))) {
-          verify(1,
-            getRequestedFor(urlMatching("/test-only/token"))
-              .withHeader(AUTHORIZATION, equalTo(authToken))
-          )
-          verify(1,
-            postRequestedFor(urlMatching("/test-only/token"))
-              .withRequestBody(equalToJson(Json.stringify(Json.toJson(expectedRequest))))
-          )
-        }
       }
 
-      appTry.failed
+      verify(1,
+        getRequestedFor(urlMatching("/test-only/token"))
+          .withHeader(AUTHORIZATION, equalTo(authToken))
+      )
+
+      verify(1,
+        postRequestedFor(urlMatching("/test-only/token"))
+          .withRequestBody(equalToJson(Json.stringify(Json.toJson(expectedRequest))))
+      )
     }
 
     "must not initialise the internal-auth token if it is already initialised" in {
@@ -156,7 +143,7 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
           .willReturn(aResponse().withStatus(CREATED))
       )
 
-      val app = GuiceApplicationBuilder()
+      GuiceApplicationBuilder()
         .configure(
           "microservice.services.internal-auth.port" -> wireMockPort,
           "appName" -> appName,
@@ -165,12 +152,11 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
         )
         .build()
 
-      app.injector.instanceOf[InternalAuthTokenInitialiser].initialised.futureValue
-
       verify(1,
         getRequestedFor(urlMatching("/test-only/token"))
           .withHeader(AUTHORIZATION, equalTo(authToken))
       )
+
       verify(0,
         postRequestedFor(urlMatching("/test-only/token"))
       )
@@ -194,7 +180,7 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
           .willReturn(aResponse().withStatus(CREATED))
       )
 
-      val app = GuiceApplicationBuilder()
+      GuiceApplicationBuilder()
         .configure(
           "microservice.services.internal-auth.port" -> wireMockPort,
           "appName" -> appName,
@@ -203,11 +189,10 @@ class InternalAuthTokenInitialiserSpec extends AnyFreeSpec with Matchers with Sc
         )
         .build()
 
-      app.injector.instanceOf[InternalAuthTokenInitialiser].initialised.futureValue
-
       verify(0,
         getRequestedFor(urlMatching("/test-only/token"))
       )
+
       verify(0,
         postRequestedFor(urlMatching("/test-only/token"))
       )
