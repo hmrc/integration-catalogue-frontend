@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
+import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.Logging
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
@@ -40,24 +41,43 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
     ): Future[Either[UpstreamErrorResponse, IntegrationResponse]] = {
     val queryParamsValues = buildQueryParams(integrationFilter, itemsPerPage: Option[Int], currentPage: Option[Int])
     handleResult(
-      http.GET[IntegrationResponse](s"$externalServiceUri/integrations", queryParams = queryParamsValues)
+      http.GET[IntegrationResponse](
+        url = s"$externalServiceUri/integrations",
+        queryParams = queryParamsValues,
+        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
+      )
     )
   }
 
   def findByIntegrationId(id: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, IntegrationDetail]] = {
-    handleResult(http.GET[IntegrationDetail](s"$externalServiceUri/integrations/${id.value.toString}"))
+    handleResult(
+      http.GET[IntegrationDetail](
+        url = s"$externalServiceUri/integrations/${id.value.toString}",
+        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
+      )
+    )
   }
 
   def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[PlatformContactResponse]]] = {
-    handleResult(http.GET[List[PlatformContactResponse]](s"$externalServiceUri/platform/contacts"))
+    handleResult(
+      http.GET[List[PlatformContactResponse]](
+        url = s"$externalServiceUri/platform/contacts",
+        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
+      )
+    )
   }
 
-  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[FileTransferTransportsForPlatform]]] = {
+  def getFileTransferTransportsByPlatform(source: String, target: String)(implicit hc: HeaderCarrier):
+      Future[Either[UpstreamErrorResponse, List[FileTransferTransportsForPlatform]]] = {
 
     val sourceParam = if (source.isEmpty) List.empty else List(("source", source))
     val targetParam = if (target.isEmpty) List.empty else List(("target", target))
     handleResult(
-      http.GET[List[FileTransferTransportsForPlatform]](s"$externalServiceUri/filetransfers/platform/transports", queryParams = sourceParam ++ targetParam)
+      http.GET[List[FileTransferTransportsForPlatform]](
+        url = s"$externalServiceUri/filetransfers/platform/transports",
+        queryParams = sourceParam ++ targetParam,
+        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
+      )
     )
   }
 

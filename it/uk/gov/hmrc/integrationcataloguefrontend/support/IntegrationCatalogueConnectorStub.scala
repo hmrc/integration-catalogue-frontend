@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.support
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalTo, get, stubFor, urlEqualTo}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-
-import play.api.test.Helpers.BAD_REQUEST
-
+import play.api.test.Helpers.{AUTHORIZATION, BAD_REQUEST}
 import uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId
 
 trait IntegrationCatalogueConnectorStub {
@@ -30,9 +28,12 @@ trait IntegrationCatalogueConnectorStub {
   def getIntegrationByIdUrl(id: String)                      = s"/integration-catalogue/integrations/$id"
   def findWithFiltersUrl(searchTerm: String)                 = s"/integration-catalogue/integrations$searchTerm"
 
-  def primeIntegrationCatalogueServiceFindWithFilterWithBadRequest(searchTerm: String) = {
+  private val internalAuthToken = "A dummy token unique to integration-catalogue-frontend only used when running local."
+
+  def primeIntegrationCatalogueServiceFindWithFilterWithBadRequest(searchTerm: String): StubMapping = {
 
     stubFor(get(urlEqualTo(findWithFiltersUrl(searchTerm)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(BAD_REQUEST)
@@ -43,6 +44,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceFindWithFilterReturnsError(searchTerm: String, exceptionCode: Int): StubMapping = {
 
     stubFor(get(urlEqualTo(findWithFiltersUrl(searchTerm)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
@@ -53,6 +55,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceFindWithFilterWithBody(status: Int, responseBody: String, searchTerm: String): StubMapping = {
 
     stubFor(get(urlEqualTo(findWithFiltersUrl(searchTerm)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(status)
@@ -61,9 +64,10 @@ trait IntegrationCatalogueConnectorStub {
       ))
   }
 
-  def primeIntegrationCatalogueServiceGetByIdReturnsBadRequest(id: IntegrationId) = {
+  def primeIntegrationCatalogueServiceGetByIdReturnsBadRequest(id: IntegrationId): StubMapping = {
 
     stubFor(get(urlEqualTo(getIntegrationByIdUrl(id.value.toString)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(BAD_REQUEST)
@@ -74,6 +78,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetByIdWithBody(status: Int, responseBody: String, id: IntegrationId): StubMapping = {
 
     stubFor(get(urlEqualTo(getIntegrationByIdUrl(id.value.toString)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(status)
@@ -85,6 +90,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetByIdReturnsError(id: IntegrationId, exceptionCode: Int): StubMapping = {
 
     stubFor(get(urlEqualTo(getIntegrationByIdUrl(id.value.toString)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
@@ -95,6 +101,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetWithBody(status: Int, responseBody: String): StubMapping = {
 
     stubFor(get(urlEqualTo(getApisUrl))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(status)
@@ -106,6 +113,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetPlatformContactsWithBody(status: Int, responseBody: String): StubMapping = {
 
     stubFor(get(urlEqualTo(getPlatformContactsUrl))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(status)
@@ -117,6 +125,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetPlatformContactsReturnsError(exceptionCode: Int): StubMapping = {
 
     stubFor(get(urlEqualTo(getPlatformContactsUrl))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
@@ -127,6 +136,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody(params: String, status: Int, responseBody: String): StubMapping = {
 
     stubFor(get(urlEqualTo(getFileTransferTransportsByPlatformUrl(params)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(status)
@@ -138,6 +148,7 @@ trait IntegrationCatalogueConnectorStub {
   def primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError(params: String, exceptionCode: Int): StubMapping = {
 
     stubFor(get(urlEqualTo(getFileTransferTransportsByPlatformUrl(params)))
+      .withHeader(AUTHORIZATION, equalTo(internalAuthToken))
       .willReturn(
         aResponse()
           .withStatus(exceptionCode)
