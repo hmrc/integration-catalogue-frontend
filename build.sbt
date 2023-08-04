@@ -55,6 +55,7 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / parallelExecution := false,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     IntegrationTest / unmanagedSourceDirectories += baseDirectory(_ / "it").value,
+    IntegrationTest / unmanagedResourceDirectories += baseDirectory(_ / "it" / "resources").value,
     IntegrationTest / managedClasspath += (Assets / packageBin).value
   )
   .settings(headerSettings(IntegrationTest) ++ automateHeaderSettings(IntegrationTest),

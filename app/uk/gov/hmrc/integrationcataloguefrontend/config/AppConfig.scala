@@ -23,16 +23,20 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig) {
+
   val footerLinkItems: Seq[String] = config.getOptional[Seq[String]]("footerLinkItems").getOrElse(Seq())
   val getSurveyUrl: String         = config.getOptional[String]("survey.link").getOrElse("")
   val itemsPerPage: Int            = config.getOptional[Int]("itemsPerPage.default").getOrElse(0)
 
-  val integrationCatalogueUrl = servicesConfig.baseUrl("integration-catalogue")
-  val emailServiceUrl         = servicesConfig.baseUrl("email")
+  val integrationCatalogueUrl: String = servicesConfig.baseUrl("integration-catalogue")
+  val emailServiceUrl: String = servicesConfig.baseUrl("email")
 
   val serviceName: String = config.getOptional[String]("service-name").getOrElse("API catalogue")
 
   val fileTransferSearchTerms: Seq[String] = config.getOptional[Seq[String]]("search.fileTransferTerms").getOrElse(Seq.empty)
 
   val enableHodsFilter: Boolean = config.getOptional[Boolean]("filter.hods.enabled").getOrElse(false)
+
+  val internalAuthToken: String = config.get[String]("internal-auth.token")
+
 }

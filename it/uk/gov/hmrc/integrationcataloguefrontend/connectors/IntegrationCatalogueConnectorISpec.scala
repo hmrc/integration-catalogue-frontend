@@ -16,29 +16,26 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import java.util.UUID
-
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.scalatest.BeforeAndAfterEach
-
+import org.scalatest.{BeforeAndAfterEach, EitherValues}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
-
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
 import uk.gov.hmrc.integrationcatalogue.models.common._
-
-import uk.gov.hmrc.integrationcataloguefrontend.connectors.IntegrationCatalogueConnector
 import uk.gov.hmrc.integrationcataloguefrontend.support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
+import java.util.UUID
+
 @SuppressWarnings(Array("DisableSyntax.asInstanceOf", "DisableSyntax.isInstanceOf"))
-class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestData with BeforeAndAfterEach with IntegrationCatalogueConnectorStub {
+class IntegrationCatalogueConnectorISpec
+  extends ServerBaseISpec with ApiTestData with BeforeAndAfterEach with IntegrationCatalogueConnectorStub with EitherValues {
 
   protected override def appBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
@@ -81,7 +78,12 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
 
     val objInTest: IntegrationCatalogueConnector = app.injector.instanceOf[IntegrationCatalogueConnector]
 
-    val apiPlatformContact = PlatformContactResponse(PlatformType.API_PLATFORM, Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))), true)
+    val apiPlatformContact: PlatformContactResponse
+      = PlatformContactResponse(
+        platformType = PlatformType.API_PLATFORM,
+        contactInfo = Some(ContactInformation(Some("ApiPlatform"), Some("api.platform@email"))),
+        overrideOasContacts = true
+      )
 
   }
 
@@ -94,20 +96,16 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
 
         val result: Either[Throwable, IntegrationDetail] = await(objInTest.findByIntegrationId(exampleApiDetail.id))
-        result match {
-          case Right(_) => succeed
-          case _        => fail()
-        }
+        result mustBe Right(exampleApiDetail)
       }
+
       "return Left when any error from backend" in new Setup {
 
         primeIntegrationCatalogueServiceGetByIdReturnsBadRequest(exampleApiDetail.id)
 
         val result: Either[Throwable, IntegrationDetail] = await(objInTest.findByIntegrationId(exampleApiDetail.id))
-        result match {
-          case Left(_) => succeed
-          case _       => fail()
-        }
+
+        result.left.value mustBe a[UpstreamErrorResponse]
       }
 
     }
@@ -115,71 +113,59 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
     "findWithFilter" should {
       "return Right with IntegrationResponse when searchTerm=API1689" in new Setup {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponse).toString(), "?searchTerm=API1689&integrationType=API")
-        val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
-        result match {
-          case Right(response) =>
-            val integration = response.results.head
-            integration.isInstanceOf[ApiDetail] mustBe true
-            integration.asInstanceOf[ApiDetail].shortDescription mustBe None
-          case _               => fail()
-        }
 
+        val result: Either[Throwable, IntegrationResponse]
+          = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
+
+        result mustBe Right(integrationResponse)
       }
 
       "return Right with IntegrationResponse when filtering by backends" in new Setup {
         primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponse).toString(), "?backendsFilter=ETMP&integrationType=API")
-        val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(backendsFilter = List("ETMP")), None, None))
-        result match {
-          case Right(response) =>
-            val integration = response.results.head
-            integration.isInstanceOf[ApiDetail] mustBe true
-            integration.asInstanceOf[ApiDetail].shortDescription mustBe None
-          case _               => fail()
-        }
 
+        val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(backendsFilter = List("ETMP")), None, None))
+
+        result mustBe Right(integrationResponse)
       }
 
       "return Right with IntegrationResponse when short desc is in the json " in new Setup {
-        primeIntegrationCatalogueServiceFindWithFilterWithBody(OK, Json.toJson(integrationResponseWithShortDesc).toString(), "?searchTerm=API1689&integrationType=API")
-        val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
-        result match {
-          case Right(response) =>
-            val integration = response.results.head
-            integration.isInstanceOf[ApiDetail] mustBe true
-            integration.asInstanceOf[ApiDetail].shortDescription mustBe Some("short desc")
-          case _               => fail()
-        }
+        primeIntegrationCatalogueServiceFindWithFilterWithBody(
+          OK,
+          Json.toJson(integrationResponseWithShortDesc).toString(),
+          "?searchTerm=API1689&integrationType=API"
+        )
 
+        val result: Either[UpstreamErrorResponse, IntegrationResponse]
+          = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
+
+        result mustBe Right(integrationResponseWithShortDesc)
       }
 
       "return Left with Bad Request " in new Setup {
         primeIntegrationCatalogueServiceFindWithFilterWithBadRequest("?searchTerm=API1689&integrationType=API")
-        val result: Either[Throwable, IntegrationResponse] = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
-        result match {
-          case Left(_) => succeed
-          case _       => fail()
-        }
 
+        val result: Either[Throwable, IntegrationResponse]
+          = await(objInTest.findWithFilters(IntegrationFilter(searchText = List("API1689"), platforms = List.empty), None, None))
+
+        result.left.value mustBe a[UpstreamErrorResponse]
       }
     }
 
     "getPlatformContacts" should {
       "return Right with List of PlatformContactResponse" in new Setup {
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(apiPlatformContact)).toString())
-        val result = await(objInTest.getPlatformContacts())
-        result match {
-          case Right(response) => response mustBe List(apiPlatformContact)
-          case _               => fail()
-        }
+
+        val result: Either[UpstreamErrorResponse, List[PlatformContactResponse]] = await(objInTest.getPlatformContacts())
+
+        result mustBe Right(List(apiPlatformContact))
       }
 
       "return Left with Bad Request" in new Setup {
         primeIntegrationCatalogueServiceGetPlatformContactsReturnsError(BAD_REQUEST)
-        val result = await(objInTest.getPlatformContacts())
-        result match {
-          case Left(_) => succeed
-          case _       => fail()
-        }
+
+        val result: Either[UpstreamErrorResponse, List[PlatformContactResponse]] = await(objInTest.getPlatformContacts())
+
+        result.left.value mustBe a[UpstreamErrorResponse]
       }
     }
 
@@ -189,21 +175,22 @@ class IntegrationCatalogueConnectorISpec extends ServerBaseISpec with ApiTestDat
           FileTransferTransportsForPlatform(API_PLATFORM, List("S3", "WTM")),
           FileTransferTransportsForPlatform(CORE_IF, List("UTM"))
         )
+
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformWithBody("?source=CESA&target=DPS", OK, Json.toJson(expectedResult).toString())
-        val result         = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
-        result match {
-          case Right(response) => response mustBe expectedResult
-          case _               => fail()
-        }
+
+        val result: Either[UpstreamErrorResponse, List[FileTransferTransportsForPlatform]]
+          = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
+
+        result mustBe Right(expectedResult)
       }
 
       "return Left with Bad Request" in new Setup {
         primeIntegrationCatalogueServiceGetFileTransferTransportsByPlatformReturnsError("?source=CESA&target=DPS", BAD_REQUEST)
-        val result = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
-        result match {
-          case Left(_) => succeed
-          case _       => fail()
-        }
+
+        val result: Either[UpstreamErrorResponse, List[FileTransferTransportsForPlatform]]
+          = await(objInTest.getFileTransferTransportsByPlatform(source = "CESA", target = "DPS"))
+
+        result.left.value mustBe a[UpstreamErrorResponse]
       }
     }
   }
