@@ -23,7 +23,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{Authorization, HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{API_PLATFORM, CORE_IF}
@@ -49,7 +49,7 @@ class IntegrationCatalogueConnectorISpec
         "microservice.services.integration-catalogue.port" -> wireMockPort
       )
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier(authorization = Some(Authorization("test-inbound-token")))
   val url                        = s"http://localhost:$port/integration-catalogue-admin-frontend"
 
   val wsClient: WSClient = app.injector.instanceOf[WSClient]

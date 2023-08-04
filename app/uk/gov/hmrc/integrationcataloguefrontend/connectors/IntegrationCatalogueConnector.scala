@@ -45,7 +45,7 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
         url = s"$externalServiceUri/integrations",
         queryParams = queryParamsValues,
         headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )
+      )(implicitly, treatHeaderCarrier(hc), implicitly)
     )
   }
 
@@ -54,7 +54,7 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
       http.GET[IntegrationDetail](
         url = s"$externalServiceUri/integrations/${id.value.toString}",
         headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )
+      )(implicitly, treatHeaderCarrier(hc), implicitly)
     )
   }
 
@@ -63,7 +63,7 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
       http.GET[List[PlatformContactResponse]](
         url = s"$externalServiceUri/platform/contacts",
         headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )
+      )(implicitly, treatHeaderCarrier(hc), implicitly)
     )
   }
 
@@ -77,7 +77,7 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
         url = s"$externalServiceUri/filetransfers/platform/transports",
         queryParams = sourceParam ++ targetParam,
         headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )
+      )(implicitly, treatHeaderCarrier(hc), implicitly)
     )
   }
 
@@ -100,6 +100,10 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
         case UpstreamErrorResponse.Upstream5xxResponse(e) =>
           Left(e)
       }
+  }
+
+  private def treatHeaderCarrier(hc: HeaderCarrier): HeaderCarrier = {
+    hc.copy(authorization = None)
   }
 
 }
