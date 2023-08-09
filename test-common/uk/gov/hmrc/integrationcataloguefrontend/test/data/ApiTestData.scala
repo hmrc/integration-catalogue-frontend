@@ -110,8 +110,8 @@ trait ApiTestData {
       examples = List(exampleResponse1)
     )
 
-  val endpointGetMethod: EndpointMethod = EndpointMethod("GET", Some("operationId"), Some("GET summary"), Some("some description"), None, List(response))
-  val endpointPutMethod: EndpointMethod = EndpointMethod("PUT", Some("operationId2"), Some("PUT summary"), Some("some description"), Some(request), List.empty)
+  val endpointGetMethod: EndpointMethod = EndpointMethod("GET", Some("some description"))
+  val endpointPutMethod: EndpointMethod = EndpointMethod("PUT", Some("some description"))
 
   val endpoint1: Endpoint = Endpoint("/some/url/endpoint1", List(endpointGetMethod, endpointPutMethod))
 

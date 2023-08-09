@@ -138,8 +138,6 @@ case class Parameter(
     schema: Option[Schema] = None
   )
 
-//case class Components(schemas: List[Schema], headers: List[Header], parameters: List[Parameter] = List.empty)
-
 case class Request(description: Option[String], schema: Option[Schema], mediaType: Option[String], examples: List[Example] = List.empty)
 
 //TODO response object needs fleshing out with headers, example errors, schema etc
@@ -156,12 +154,7 @@ case class Endpoint(path: String, methods: List[EndpointMethod])
 
 case class EndpointMethod(
     httpMethod: String,
-    operationId: Option[String],
-    summary: Option[String],
-    description: Option[String],
-    request: Option[Request],
-    responses: List[Response],
-    parameters: List[Parameter] = List.empty
+    description: Option[String]
   )
 
 sealed abstract class ApiStatus(val displayName: String, val shortName: String) extends EnumEntry
