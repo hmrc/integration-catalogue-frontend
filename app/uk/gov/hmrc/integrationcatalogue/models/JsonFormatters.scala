@@ -43,7 +43,6 @@ object JsonFormatters {
   implicit val formatArraySchema: Format[ArraySchema]           = Json.format[ArraySchema]
   implicit val formatHeaders: OFormat[Header]                   = Json.format[Header]
   implicit val formatParameters: OFormat[Parameter]             = Json.format[Parameter]
-  implicit val formatComponents: OFormat[Components]            = Json.format[Components]
 
   implicit val formatRequest: OFormat[Request]    = Json.format[Request]
   implicit val formatsResponse: OFormat[Response] = Json.format[Response]

@@ -138,7 +138,7 @@ case class Parameter(
     schema: Option[Schema] = None
   )
 
-case class Components(schemas: List[Schema], headers: List[Header], parameters: List[Parameter] = List.empty)
+//case class Components(schemas: List[Schema], headers: List[Header], parameters: List[Parameter] = List.empty)
 
 case class Request(description: Option[String], schema: Option[Schema], mediaType: Option[String], examples: List[Example] = List.empty)
 
@@ -168,7 +168,7 @@ sealed abstract class ApiStatus(val displayName: String, val shortName: String) 
 
 object ApiStatus extends Enum[ApiStatus] with PlayJsonEnum[ApiStatus] {
 
-  val values = findValues
+  val values: IndexedSeq[ApiStatus] = findValues
 
   case object ALPHA      extends ApiStatus("Alpha – not ready to use (documentation only and could change)", "ALPHA")
   case object BETA       extends ApiStatus("Beta – early stage of development and may be available (expect breaking changes)", "BETA")
@@ -189,7 +189,6 @@ case class ApiDetail(
     version: String,
     specificationType: SpecificationType,
     endpoints: List[Endpoint],
-    components: Components,
     shortDescription: Option[String],
     openApiSpecification: String,
     apiStatus: ApiStatus
@@ -209,14 +208,14 @@ case class ApiDetailSummary(
 
 object ApiDetailSummary {
 
-  def fromIntegrationDetail(detail: IntegrationDetail) = {
+  def fromIntegrationDetail(detail: IntegrationDetail): Option[ApiDetailSummary] = {
     detail match {
       case apiDetail: ApiDetail => Option(fromApiDetail(apiDetail))
       case _                    => None
     }
   }
 
-  def fromApiDetail(apiDetail: ApiDetail) = {
+  def fromApiDetail(apiDetail: ApiDetail): ApiDetailSummary = {
     ApiDetailSummary(
       apiDetail.id,
       apiDetail.publisherReference,
