@@ -33,7 +33,7 @@ trait ApiTestData {
   val uuid: UUID   = UUID.fromString("28c0bd67-4176-42c7-be13-53be98a4db58")
 
   val dateValue: DateTime = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
-  val reviewedDate        = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
+  val reviewedDate: DateTime = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
 
   val coreIfPlatform: PlatformType = PlatformType.CORE_IF
   val apiPlatform: PlatformType    = PlatformType.API_PLATFORM
@@ -43,7 +43,7 @@ trait ApiTestData {
   val apiPlatformMaintainerWithNoContacts: Maintainer = Maintainer("Api Platform Team", "#team-api-platform-sup")
   val apiPlatformMaintainerWithOnlyEmail: Maintainer  = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(None, Some("email"))))
   val apiPlatformMaintainerWithOnlyName: Maintainer   = Maintainer("Api Platform Team", "#team-api-platform-sup", List(ContactInformation(Some("name"), None)))
-  val coreIfMaintainer: Maintainer                    = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation(Some("name"), Some("email"))))
+  val coreIfMaintainer: Maintainer = Maintainer("Core IF Team", "**core-if-slack-channel**", List(ContactInformation(Some("name"), Some("email"))))
 
   val selfassessmentApiId: IntegrationId = IntegrationId(UUID.fromString("b7c649e6-e10b-4815-8a2c-706317ec484d"))
 
@@ -94,13 +94,24 @@ trait ApiTestData {
   )
 
   val request: Request =
-    Request(description = Some("request"), schema = Some(schema1), mediaType = Some(jsonMediaType.toString), examples = List(exampleRequest1))
+    Request(
+      description = Some("request"),
+      schema = Some(schema1),
+      mediaType = Some(jsonMediaType.toString),
+      examples = List(exampleRequest1)
+    )
 
   val response: Response =
-    Response(statusCode = "200", description = Some("response"), schema = Some(schema2), mediaType = Some("application/json"), examples = List(exampleResponse1))
+    Response(
+      statusCode = "200",
+      description = Some("response"),
+      schema = Some(schema2),
+      mediaType = Some("application/json"),
+      examples = List(exampleResponse1)
+    )
 
-  val endpointGetMethod: EndpointMethod = EndpointMethod("GET", Some("operationId"), Some("GET summary"), Some("some description"), None, List(response))
-  val endpointPutMethod: EndpointMethod = EndpointMethod("PUT", Some("operationId2"), Some("PUT summary"), Some("some description"), Some(request), List.empty)
+  val endpointGetMethod: EndpointMethod = EndpointMethod("GET", Some("some description"))
+  val endpointPutMethod: EndpointMethod = EndpointMethod("PUT", Some("some description"))
 
   val endpoint1: Endpoint = Endpoint("/some/url/endpoint1", List(endpointGetMethod, endpointPutMethod))
 
@@ -117,7 +128,6 @@ trait ApiTestData {
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List(schema2), List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content for Self Assessment (MTD)",
     apiStatus = ApiStatus.LIVE,
@@ -135,7 +145,6 @@ trait ApiTestData {
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     shortDescription = Some("I am a short description"),
     openApiSpecification = "OAS Content for Marriage Allowance",
     apiStatus = ApiStatus.LIVE,
@@ -154,7 +163,6 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
     hods = List.empty,
-    components = Components(List.empty, List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content for Title 1",
     apiStatus = ApiStatus.LIVE,
@@ -172,7 +180,6 @@ trait ApiTestData {
     version = "1.1.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 2",
@@ -191,7 +198,6 @@ trait ApiTestData {
     version = "1.1.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 2",
@@ -210,7 +216,6 @@ trait ApiTestData {
     version = "1.1.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 2",
@@ -229,7 +234,6 @@ trait ApiTestData {
     version = "1.1.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 2",
@@ -248,7 +252,6 @@ trait ApiTestData {
     version = "1.1.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 2",
@@ -267,7 +270,6 @@ trait ApiTestData {
     version = "1.1.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     hods = List("ETMP"),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 2",
@@ -287,7 +289,6 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 3",
     apiStatus = ApiStatus.LIVE,
@@ -306,7 +307,6 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     shortDescription = Some("short desc"),
     openApiSpecification = "OAS Content  for Title 4",
     apiStatus = ApiStatus.LIVE,
@@ -325,7 +325,6 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content  for Title 4",
     apiStatus = ApiStatus.LIVE,
@@ -344,7 +343,6 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List.empty, List.empty),
     shortDescription = Some("I am a short description"),
     openApiSpecification = "OAS Content  for Title 4",
     apiStatus = ApiStatus.LIVE,
@@ -363,7 +361,6 @@ trait ApiTestData {
     specificationType = SpecificationType.OAS_V3,
     hods = List("ETMP"),
     endpoints = endpoints,
-    components = Components(List(schema2), List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content for Self Assessment (MTD)",
     apiStatus = ApiStatus.LIVE,
@@ -381,7 +378,6 @@ trait ApiTestData {
     version = "2.0",
     specificationType = SpecificationType.OAS_V3,
     endpoints = endpoints,
-    components = Components(List(schema2), List.empty),
     shortDescription = None,
     openApiSpecification = "OAS Content for Self Assessment (MTD)",
     apiStatus = ApiStatus.LIVE,
@@ -396,7 +392,7 @@ trait ApiTestData {
     "I need more information, like schemas or examples"
   )
 
-  val contactReasons = contactReasonList.mkString("|")
+  val contactReasons: String = contactReasonList.mkString("|")
 
   val apiEmails                           = Seq("api.platform.team@example.com")
   val senderName                          = "Joe Bloggs"
@@ -419,7 +415,7 @@ trait ApiTestData {
     "apiEmail"         -> apiEmails.mkString(";")
   )
 
-  def getEmailRequestForTemplate(templateId: String) = {
+  def getEmailRequestForTemplate(templateId: String): EmailRequest = {
     EmailRequest(
       to = apiEmails,
       templateId = templateId,
@@ -428,6 +424,7 @@ trait ApiTestData {
     )
   }
 
-  val emailApiPlatformRequest          = getEmailRequestForTemplate(platformContactTemplate)
-  val emailConfirmationToSenderRequest = getEmailRequestForTemplate(platformContactConfirmationTemplate)
+  val emailApiPlatformRequest: EmailRequest = getEmailRequestForTemplate(platformContactTemplate)
+  val emailConfirmationToSenderRequest: EmailRequest = getEmailRequestForTemplate(platformContactConfirmationTemplate)
+
 }
