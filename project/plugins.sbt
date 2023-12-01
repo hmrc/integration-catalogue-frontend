@@ -11,8 +11,6 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.19")
 
 addSbtPlugin("io.github.irundaia" % "sbt-sassify" % "1.5.2")
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
-
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
@@ -20,3 +18,5 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.2")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "1.4.3")
+
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.4")

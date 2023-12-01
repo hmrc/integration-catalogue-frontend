@@ -23,7 +23,7 @@
 )
 @(pageTitle: Option[String] = None,
   apiDetail: Option[ApiDetail] = None,
-)(contentBlock: Html)(implicit request: Request[_])
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 <!DOCTYPE html>
 <html lang="en">
