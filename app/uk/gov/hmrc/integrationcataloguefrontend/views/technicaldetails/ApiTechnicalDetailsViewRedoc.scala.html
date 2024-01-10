@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  *@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+@import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.HIP
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 @import views.html.helper.CSPNonce
 
 @this(layout: BareLayout)
-
 
 @(apiDetail: ApiDetail)(implicit request: Request[_], appConfig: AppConfig)
 
@@ -34,7 +34,7 @@
 *@
   <script @{CSPNonce.attr}>
     var options = {
-      hideHostname: true,
+      hideHostname: @{apiDetail.platform != HIP},
       theme: {
         spacing: {
           sectionVertical: '35px',
