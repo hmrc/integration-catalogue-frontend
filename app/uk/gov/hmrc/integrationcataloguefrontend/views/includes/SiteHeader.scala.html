@@ -16,12 +16,12 @@
 
 @this(navLinks: HeaderNavigationLinks, hmrcInternalHeader: HmrcInternalHeader)
 
-@(activePage: Option[String] = None, includeSearch: Boolean = false)(implicit messages: Messages, appConfig: AppConfig)
+@(activePage: Option[String] = None, includeSearch: Boolean = false)(implicit messages: Messages)
 
 @hmrcInternalHeader(InternalHeader(
     homepageUrl = "https://www.gov.uk/government/organisations/hm-revenue-customs",
     serviceName = Some(messages("service.name")),
-    serviceUrl = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage.url
+    serviceUrl = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.landingPage().url
 ))
 
 @navLinks(activePage, includeSearch)

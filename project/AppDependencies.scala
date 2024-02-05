@@ -4,17 +4,15 @@ import sbt.Keys.libraryDependencies
 import sbt._
 
 object AppDependencies {
-  lazy val scalaCheckVersion = "1.14.0"
-  lazy val enumeratumVersion = "1.6.3"
-  lazy val jacksonVersion = "2.12.2"
-  lazy val bootstrapVersion = "7.15.0"
-  lazy val playFrontendVersion = "7.7.0-play-28"
-  lazy val cucumberVersion = "6.2.2"
-  lazy val seleniumVersion = "2.53.1"
+  lazy val scalaCheckVersion = "1.17.0"
+  lazy val enumeratumVersion = "1.8.0"
+  lazy val jacksonVersion = "2.16.1"
+  lazy val bootstrapVersion = "8.4.0"
+  lazy val playFrontendVersion = "8.3.0"
 
   val compile = Seq(
-    "uk.gov.hmrc"                       %% "bootstrap-frontend-play-28"     % bootstrapVersion,
-    "uk.gov.hmrc"                       %% "play-frontend-hmrc"             % playFrontendVersion,
+    "uk.gov.hmrc"                       %% "bootstrap-frontend-play-30"     % bootstrapVersion,
+    "uk.gov.hmrc"                       %% "play-frontend-hmrc-play-30"     % playFrontendVersion excludeAll(ExclusionRule("uk.gov.hmrc","url-builder_2.12")),
     "com.fasterxml.jackson.module"      %% "jackson-module-scala"           % jacksonVersion,
     "com.fasterxml.jackson.core"        % "jackson-annotations"             % jacksonVersion,
     "com.fasterxml.jackson.core"        % "jackson-databind"                % jacksonVersion,
@@ -22,23 +20,15 @@ object AppDependencies {
     "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-yaml"         % jacksonVersion,
     "com.beachape"                      %% "enumeratum-play-json"           % enumeratumVersion,
     "com.typesafe.play"                 %% "play-json-joda"                 % "2.9.2",
-    "org.typelevel"                     %% "cats-core"                      % "2.4.2"
+    "org.typelevel"                     %% "cats-core"                      % "2.10.0"
   )
 
   val test = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-test-play-28"   % bootstrapVersion        % "test, it",
-    "org.pegdown"             %  "pegdown"                  % "1.6.0"                 % "test, it",
-    "org.jsoup"               %  "jsoup"                    % "1.10.2"                % "test, component",
-    "org.mockito"             %% "mockito-scala-scalatest"  % "1.7.1"                 % "test, it",
-    "com.vladsch.flexmark"    %  "flexmark-all"             % "0.35.10"               % "test, it",
-    "com.github.tomakehurst"  % "wiremock-jre8-standalone"  % "2.27.1"                % "test, it",
-    "org.scalacheck"          %% "scalacheck"               % scalaCheckVersion       % "test, it"
-  ) ++
-    Seq(
-      "io.cucumber"                 %% "cucumber-scala"                 % cucumberVersion,
-      "io.cucumber"                 %  "cucumber-junit"                 % cucumberVersion,
-      "io.cucumber"                 %  "cucumber-java8"                 % cucumberVersion,
-      "org.seleniumhq.selenium"     %  "selenium-java"                  % seleniumVersion,
-      "com.assertthat"              %  "selenium-shutterbug"            % "0.2"
-    ).map(_ % "component")
+    "uk.gov.hmrc"             %% "bootstrap-test-play-30"   % bootstrapVersion        % Test,
+    "org.mockito"             %% "mockito-scala-scalatest"  % "1.17.30"                 % Test,
+    "org.scalacheck"          %% "scalacheck"               % scalaCheckVersion       % Test
+  )
+
+  val it = Seq.empty
+
 }

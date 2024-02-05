@@ -21,7 +21,7 @@
 @this(layout: BareLayout)
 
 
-@(apiDetail: ApiDetail)(implicit request: Request[_], appConfig: AppConfig)
+@(apiDetail: ApiDetail)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
 @layout(pageTitle = Some(s"API details - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
 

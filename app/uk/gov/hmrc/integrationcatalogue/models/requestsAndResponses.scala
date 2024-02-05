@@ -37,8 +37,8 @@ case class DynamicPageResponse(
   )
 
 object DynamicPageResponse {
-  implicit val detailFormat = Json.format[ApiDetailSummary]
-  implicit val format       = Json.format[DynamicPageResponse]
+  implicit val detailFormat: OFormat[ApiDetailSummary] = Json.format[ApiDetailSummary]
+  implicit val format: OFormat[DynamicPageResponse] = Json.format[DynamicPageResponse]
 }
 
 // Integration Catalogue File Transfer Sepcification

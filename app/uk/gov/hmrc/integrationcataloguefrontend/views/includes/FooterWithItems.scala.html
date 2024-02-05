@@ -27,9 +27,9 @@
 @footerlinkItems()  = @{
     Seq( FooterItem(
         Some(messages("footer.links.accessibility.text")),
-        Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.accessibilityStatementPage.url)
+        Some(uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.accessibilityStatementPage().url)
     ))
 }
 
 
-@footer(new Footer(meta = Some(Meta(items = Some(footerlinkItems)))))
+@footer(new Footer(meta = Some(Meta(items = Some(footerlinkItems())))))

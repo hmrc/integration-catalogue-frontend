@@ -2,13 +2,13 @@
 ->         /hmrc-frontend                      hmrcfrontend.Routes
 
 #Static pages
-GET        /                                          uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.landingPage
-GET        /about                                     uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.aboutPage
-GET        /accessibility-statement                   uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.accessibilityStatementPage
-GET        /contact                                   uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.contactPage
-GET        /get-started                               uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.getStartedPage
-GET        /case-studies                              uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.caseStudiesPage
-GET        /file-transfer-patterns                    uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.fileTransferPatternsPage
+GET        /                                          uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.landingPage()
+GET        /about                                     uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.aboutPage()
+GET        /accessibility-statement                   uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.accessibilityStatementPage()
+GET        /contact                                   uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.contactPage()
+GET        /get-started                               uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.getStartedPage()
+GET        /case-studies                              uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.caseStudiesPage()
+GET        /file-transfer-patterns                    uk.gov.hmrc.integrationcataloguefrontend.controllers.MainController.fileTransferPatternsPage()
 
 #dynamic pages
 GET        /search                                    uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.listIntegrations(keywords: Option[String], platformFilter: List[uk.gov.hmrc.integrationcatalogue.models.common.PlatformType], backendsFilter: List[String], itemsPerPage: Option[Int], currentPage: Option[Int])
@@ -19,9 +19,9 @@ GET        /integrations/:id/:title                   uk.gov.hmrc.integrationcat
 GET        /integrations/:id/:title/technical         uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetailTechnical(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
 GET        /integrations/:id/:title/redoc             uk.gov.hmrc.integrationcataloguefrontend.controllers.IntegrationController.getIntegrationDetailTechnicalRedoc(id: uk.gov.hmrc.integrationcatalogue.models.common.IntegrationId, title: String)
 
-GET        /filetransfer/wizard/start                 uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.wizardStart
-GET        /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceView
-POST       /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceAction
+GET        /filetransfer/wizard/start                 uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.wizardStart()
+GET        /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceView()
+POST       /filetransfer/wizard/data-source           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataSourceAction()
 GET        /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataTargetView(source: String)
 POST       /filetransfer/wizard/data-target           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.dataTargetAction()
 GET        /filetransfer/wizard/connections           uk.gov.hmrc.integrationcataloguefrontend.controllers.FileTransferController.getFileTransferTransportsByPlatform(source: String, target: String)

@@ -33,7 +33,7 @@ class SiteHeaderSpec extends CommonViewSpec {
   "SiteHeader" should {
 
     "render The main header correctly" in new Setup {
-      val page: Html         = siteHeader.render(None, includeSearch = false, messagesProvider.messages, appConfig)
+      val page: Html         = siteHeader.render(None, includeSearch = false, messagesProvider.messages)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementsByClass("hmrc-internal-header__logo-text").first().text() shouldBe "HM Revenue & Customs"
