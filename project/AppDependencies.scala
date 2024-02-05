@@ -26,16 +26,11 @@ object AppDependencies {
   )
 
   val test = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-test-play-30"   % bootstrapVersion        % "test, it",
-    "org.mockito"             %% "mockito-scala-scalatest"  % "1.17.30"                 % "test, it",
-    "org.scalacheck"          %% "scalacheck"               % scalaCheckVersion       % "test, it"
+    "uk.gov.hmrc"             %% "bootstrap-test-play-30"   % bootstrapVersion        % Test,
+    "org.mockito"             %% "mockito-scala-scalatest"  % "1.17.30"                 % Test,
+    "org.scalacheck"          %% "scalacheck"               % scalaCheckVersion       % Test
   )
-//  ) ++
-//    Seq(
-//      "io.cucumber"                 %% "cucumber-scala"                 % cucumberVersion,
-//      "io.cucumber"                 %  "cucumber-junit"                 % cucumberVersion,
-//      "io.cucumber"                 %  "cucumber-java8"                 % cucumberVersion,
-//      "org.seleniumhq.selenium"     %  "selenium-java"                  % seleniumVersion,
-//      "com.assertthat"              %  "selenium-shutterbug"            % "0.2"
-//    ).map(_ % "component")
+
+  val it = Seq.empty
+
 }
