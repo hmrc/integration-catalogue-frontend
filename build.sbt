@@ -9,7 +9,7 @@ lazy val root = (project in file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     name := appName,
-    scalaVersion := "2.13.12",
+//    scalaVersion := "2.13.12",
     routesImport                      += "uk.gov.hmrc.integrationcataloguefrontend.controllers.binders._",
     Test / unmanagedSourceDirectories += baseDirectory(_ / "test-common").value,
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
