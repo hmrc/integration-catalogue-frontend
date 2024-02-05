@@ -9,8 +9,6 @@ object AppDependencies {
   lazy val jacksonVersion = "2.16.1"
   lazy val bootstrapVersion = "8.4.0"
   lazy val playFrontendVersion = "8.3.0"
-  lazy val cucumberVersion = "6.2.2"
-  lazy val seleniumVersion = "2.53.1"
 
   val compile = Seq(
     "uk.gov.hmrc"                       %% "bootstrap-frontend-play-30"     % bootstrapVersion,
