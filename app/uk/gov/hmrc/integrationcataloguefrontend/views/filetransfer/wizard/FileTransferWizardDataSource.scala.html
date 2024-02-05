@@ -35,7 +35,7 @@
           Where is your data currently stored?
         </span>
       </legend>
-      @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceAction, 'class -> "form", 'id -> "selectedDataSourceForm") {
+      @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataSourceAction(), Symbol("class") -> "form", Symbol("id") -> "selectedDataSourceForm") {
         @helper.CSRF.formField
         <span id="dataSource"></span>
         @if(form.hasErrors) {
@@ -59,7 +59,7 @@
     </fieldset>
   </div>
 
-  <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage" class="govuk-link govuk-link--no-visited-state govuk-body-m">
+  <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
     The HoD I want isn’t listed
   </a>
 }

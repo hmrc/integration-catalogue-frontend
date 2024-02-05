@@ -34,7 +34,7 @@
           Where do you want to send your data?
         </span>
       </legend>
-      @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), 'class -> "form", 'id -> "selectedDataTargetForm") {
+      @helper.form(action = uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.dataTargetAction(), Symbol("class") -> "form", Symbol("id") -> "selectedDataTargetForm") {
         @helper.CSRF.formField
         <span id="dataTarget"></span>
         @if(form.hasErrors){
@@ -58,7 +58,7 @@
       }
     </fieldset>
   </div>
-  <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage" class="govuk-link govuk-link--no-visited-state govuk-body-m">
+  <a id="hod-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.contactPage()" class="govuk-link govuk-link--no-visited-state govuk-body-m">
     The HoD I want isn’t listed
   </a>
 }

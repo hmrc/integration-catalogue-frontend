@@ -3,12 +3,7 @@
 ->         /api-catalogue             app.Routes
 ->         /                          health.Routes
 
-
 GET        /integration-catalogue                  controllers.Default.redirect(to = "/api-catalogue")
 GET        /integration-catalogue/integrations     controllers.Default.redirect(to = "/api-catalogue/integrations")
-
-GET        /admin/metrics                           com.kenshoo.play.metrics.MetricsController.metrics
-
-
 
 GET        /api-catalogue/assets/*file              controllers.Assets.versioned(path = "/public", file: Asset)

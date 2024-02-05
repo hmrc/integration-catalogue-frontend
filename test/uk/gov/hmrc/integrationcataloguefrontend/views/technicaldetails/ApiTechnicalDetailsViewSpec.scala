@@ -34,7 +34,7 @@ class ApiTechnicalDetailsViewSpec extends CommonViewSpec with ApiTestData {
   "ApiTechnicalDetailsView" should {
     "render" in new Setup {
       val apiParsed: ApiDetail = apiDetail0
-      val page: Html           = techDetailsView.render(apiParsed, FakeRequest(), appConfig)
+      val page: Html           = techDetailsView.render(apiParsed, FakeRequest(), appConfig, messagesProvider.messages)
       val document: Document   = Jsoup.parse(page.body)
       Option(document.getElementById("backlink"))
         .map(_.attr("href")).getOrElse("") shouldBe "#"

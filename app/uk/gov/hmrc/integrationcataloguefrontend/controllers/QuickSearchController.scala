@@ -18,16 +18,13 @@ package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-
 import play.api.Logging
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import uk.gov.hmrc.integrationcatalogue.models.ApiDetailSummary.fromIntegrationDetail
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
-import uk.gov.hmrc.integrationcatalogue.models.{DynamicPageResponse, IntegrationFilter, JsonFormatters}
-
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetailSummary, DynamicPageResponse, IntegrationFilter, IntegrationResponse, JsonFormatters}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.IntegrationService
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.dynamic.DynamicListView
@@ -45,8 +42,8 @@ class QuickSearchController @Inject() (
 
   implicit val config: AppConfig = appConfig
 
-  implicit val apisummaryFormat = JsonFormatters.formatApiDetailSummary
-  implicit val responseFormat   = JsonFormatters.formatIntegrationResponse
+  implicit val apisummaryFormat: Format[ApiDetailSummary] = JsonFormatters.formatApiDetailSummary
+  implicit val responseFormat: Format[IntegrationResponse] = JsonFormatters.formatIntegrationResponse
 
   def dynamicList() = Action.async { implicit request =>
     Future.successful(Ok(dynamicListView()))
