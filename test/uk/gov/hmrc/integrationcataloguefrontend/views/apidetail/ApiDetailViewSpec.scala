@@ -20,6 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.{CDS_CLASSIC, HIP}
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, ApiStatus}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
@@ -87,5 +88,23 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
       document.getElementById("status-value").text() shouldBe "Beta – early stage of development and may be available (expect breaking changes)"
 
     }
+
+    "render page with link to api hub api details page for HIP platform" in new Setup {
+      val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE, platform = HIP)
+      val page: Html = apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+
+      document.getElementById("api-hub-api-details-link").attr("href") shouldBe "some/test/link/2f0c9fc4-7773-433b-b4cf-15d4cb932e36"
+    }
+
+    "not render page with link to api hub api details page for non-HIP platforms" in new Setup {
+      val apiParsed: ApiDetail = apiDetail1.copy(apiStatus = ApiStatus.LIVE, platform = CDS_CLASSIC)
+      val page: Html = apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages, appConfig)
+      val document: Document = Jsoup.parse(page.body)
+
+      document.getElementById("api-hub-api-details-link") shouldBe null
+
+    }
+
   }
 }

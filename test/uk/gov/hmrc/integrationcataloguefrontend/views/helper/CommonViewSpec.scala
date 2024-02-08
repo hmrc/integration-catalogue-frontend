@@ -40,11 +40,14 @@ trait CommonViewSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   implicit val appConfig: AppConfig               = mock[AppConfig]
 
   when(appConfig.footerLinkItems).thenReturn(Seq("govukHelp"))
+  when(appConfig.apiHubApiDetailsUrl).thenReturn("some/test/link/")
 
-  override def fakeApplication(): Application =
+  override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
       .configure(("metrics.jvm", false))
+      .configure(("urls.apiHub.apiDetails", "some/test/link/"))
       .build()
+  }
 
   def testPlatformFilter(document: Document, isChecked: Boolean): Assertion = {
     testPlatformFilterLabels(document)
