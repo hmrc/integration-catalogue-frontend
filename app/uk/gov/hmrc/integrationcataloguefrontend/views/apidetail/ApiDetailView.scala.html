@@ -18,6 +18,8 @@
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
 @import org.joda.time.format.DateTimeFormat
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
+@import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.HIP
+@import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 
 @this(layout: ApiDetailLayout)
 
@@ -35,6 +37,20 @@
         <p class="govuk-body  govuk-!-display-inline-block" id="@indentifier-value">@dataValue</p>
     }
     </div>
+}
+
+@selfServiceLink(platformType: PlatformType) = {
+@if(platformType.equals(HIP)) {
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-6" />
+    <h2 class="govuk-heading-m">This API is available for self service</h2>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <p class="govuk-body govuk-!-display-inline-block">Self service of this API including generation of credentials can be done via <br><a href="@{appConfig.apiHubApiDetailsUrl + apiDetail.id.value}" class="govuk-link--no-visited-state">The API Hub</a>.
+                </p>
+            </div>
+        </div>
+        <p></p>
+    }
 }
 
 @layout(pageTitle = Some(s"${apiDetail.title} - API summary - ${appConfig.serviceName}"), apiDetail = Some(apiDetail)) {
@@ -57,6 +73,8 @@
         @gridItem("Platform", apiDetail.platform.displayName, "platform")
         @gridItem("Status", apiDetail.apiStatus.displayName, "status")
     </div>
+
+    @selfServiceLink(apiDetail.platform)
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1" />
     <h2 class="govuk-heading-m" id="contact-heading">Contact</h2>
