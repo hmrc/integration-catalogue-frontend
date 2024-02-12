@@ -99,8 +99,6 @@ class DateTimeFormattersTest extends AnyWordSpec with DateTimeFormatters {
 
       val expected = OffsetDateTime.of(2024, 2, 9, 10, 13, 21, 0, ZoneOffset.UTC).toInstant
 
-      expected.toString must be(candidate)
-
       val actual = Instant.from(dateAndOptionalTimeFormatter.parse(candidate))
 
       actual must be(expected)
