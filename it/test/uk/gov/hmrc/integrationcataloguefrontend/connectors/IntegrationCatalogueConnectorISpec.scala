@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import org.scalatest.{BeforeAndAfterEach, EitherValues}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
