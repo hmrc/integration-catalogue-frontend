@@ -31,6 +31,7 @@ import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcataloguefrontend.support.{IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 
+import java.time.Instant
 import java.util.UUID
 
 @SuppressWarnings(Array("DisableSyntax.asInstanceOf", "DisableSyntax.isInstanceOf"))
@@ -58,7 +59,7 @@ class IntegrationCatalogueConnectorISpec
     val integrationId: IntegrationId = IntegrationId(UUID.fromString("b4e0c3ca-c19e-4c88-adf9-0e4af361076e"))
     val publisherReference           = "BVD-DPS-PCPMonthly-pull"
 
-    val dateValue: DateTime = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
+    val dateValue: Instant = Instant.parse("2020-11-04T20:27:05Z")
 
     val fileTransferPublishRequestObj: FileTransferPublishRequest = FileTransferPublishRequest(
       fileTransferSpecificationVersion = "1.0",

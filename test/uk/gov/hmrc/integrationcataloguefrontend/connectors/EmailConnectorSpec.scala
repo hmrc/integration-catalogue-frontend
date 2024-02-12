@@ -20,7 +20,7 @@ import org.mockito.stubbing.ScalaOngoingStubbing
 import play.api.http.Status._
 import play.api.libs.json.Writes
 import play.api.test.Helpers
-import uk.gov.hmrc.http.{HttpClient, _}
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
