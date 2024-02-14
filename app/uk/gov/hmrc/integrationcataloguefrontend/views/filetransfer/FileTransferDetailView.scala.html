@@ -16,10 +16,11 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcatalogue.models.FileTransferDetail
-@import org.joda.time.format.DateTimeFormat
+@import java.time.format.DateTimeFormatter
+@import java.time.OffsetDateTime
+@import java.time.ZoneId
 
 @this(layout: FileTransferDetailLayout)
-
 
 @(fileTransferDetail: FileTransferDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -41,7 +42,8 @@
 
   <div class="govuk-grid-row">
     @gridItem("Platform", fileTransferDetail.platform.displayName, "platform", "quarter")
-    @gridItem("Updated", DateTimeFormat.forPattern("dd MMMM yyyy").print(fileTransferDetail.lastUpdated), "updated", "quarter")
+    @gridItem("Updated", OffsetDateTime.ofInstant(fileTransferDetail.lastUpdated, ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("dd MMMM yyyy")), "updated", "quarter")
+
   </div>
 
   <div class="govuk-grid-row">

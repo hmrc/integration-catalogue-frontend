@@ -16,10 +16,12 @@
 
 @import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 @import uk.gov.hmrc.integrationcatalogue.models.ApiDetail
-@import org.joda.time.format.DateTimeFormat
 @import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper._
 @import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.HIP
 @import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
+@import java.time.format.DateTimeFormatter
+@import java.time.ZoneId
+@import java.time.OffsetDateTime
 
 @this(layout: ApiDetailLayout)
 
@@ -58,7 +60,7 @@
     <br />
 
     <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-5" id="page-reviewed-date">
-        Page reviewed @DateTimeFormat.forPattern("d MMMM yyyy").print(apiDetail.reviewedDate)
+        Page reviewed @OffsetDateTime.ofInstant(apiDetail.reviewedDate, ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
     </p>
 
     <h2 class="govuk-heading-m" id="api-summary-heading">

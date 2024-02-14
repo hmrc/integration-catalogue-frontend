@@ -17,12 +17,11 @@
 package uk.gov.hmrc.integrationcatalogue.models
 
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
-import org.joda.time.DateTime
-
 import uk.gov.hmrc.integrationcatalogue.models.common._
-
 import uk.gov.hmrc.integrationcataloguefrontend.controllers.UrlEncodingHelper
 import uk.gov.hmrc.integrationcataloguefrontend.views.utils.ViewHelper
+
+import java.time.Instant
 
 sealed trait IntegrationDetail {
   def id: IntegrationId
@@ -30,8 +29,8 @@ sealed trait IntegrationDetail {
   def title: String
   def description: String
   def platform: PlatformType
-  def lastUpdated: DateTime
-  def reviewedDate: DateTime
+  def lastUpdated: Instant
+  def reviewedDate: Instant
   def maintainer: Maintainer
   def integrationType: IntegrationType
 }
@@ -176,8 +175,8 @@ case class ApiDetail(
     description: String,
     platform: PlatformType,
     hods: List[String] = List.empty,
-    lastUpdated: DateTime,
-    reviewedDate: DateTime,
+    lastUpdated: Instant,
+    reviewedDate: Instant,
     maintainer: Maintainer,
     version: String,
     specificationType: SpecificationType,
@@ -228,8 +227,8 @@ case class FileTransferDetail(
     title: String,
     description: String,
     platform: PlatformType,                   // Split this to Platform and type
-    lastUpdated: DateTime,
-    reviewedDate: DateTime,
+    lastUpdated: Instant,
+    reviewedDate: Instant,
     maintainer: Maintainer,
     sourceSystem: List[String],
     targetSystem: List[String],

@@ -16,15 +16,12 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.test.data
 
-import java.util.UUID
-
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-
 import play.api.http.MediaType
-
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common._
+
+import java.time.Instant
+import java.util.UUID
 
 trait ApiTestData {
 
@@ -32,8 +29,8 @@ trait ApiTestData {
   val fileContents = "{}"
   val uuid: UUID   = UUID.fromString("28c0bd67-4176-42c7-be13-53be98a4db58")
 
-  val dateValue: DateTime = DateTime.parse("04/11/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
-  val reviewedDate: DateTime = DateTime.parse("04/12/2020 20:27:05", DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"))
+  val dateValue: Instant = Instant.parse("2020-11-04T20:27:05Z")
+  val reviewedDate: Instant = Instant.parse("2020-12-04T20:27:05Z")
 
   val coreIfPlatform: PlatformType = PlatformType.CORE_IF
   val apiPlatform: PlatformType    = PlatformType.API_PLATFORM

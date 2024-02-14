@@ -19,7 +19,6 @@ object AppDependencies {
     "com.fasterxml.jackson.core"        % "jackson-core"                    % jacksonVersion,
     "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-yaml"         % jacksonVersion,
     "com.beachape"                      %% "enumeratum-play-json"           % enumeratumVersion,
-    "com.typesafe.play"                 %% "play-json-joda"                 % "2.9.2",
     "org.typelevel"                     %% "cats-core"                      % "2.10.0"
   )
 

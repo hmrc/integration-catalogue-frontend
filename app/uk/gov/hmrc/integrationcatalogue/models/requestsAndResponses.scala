@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.integrationcatalogue.models
 
-import org.joda.time.DateTime
-
 import play.api.libs.json._
-
 import uk.gov.hmrc.integrationcatalogue.models.common.{ContactInformation, PlatformType}
+
+import java.time.Instant
 
 case class IntegrationResponse(count: Int, pagedCount: Option[Int] = None, results: List[IntegrationDetail])
 
@@ -49,7 +48,7 @@ case class FileTransferPublishRequest(
     title: String,
     description: String,
     platformType: PlatformType,               // Split this to Platform and type. TBD
-    lastUpdated: DateTime,
+    lastUpdated: Instant,
     contact: ContactInformation,              // (single name + email)
     sourceSystem: List[String],               // One or many
     targetSystem: List[String],
