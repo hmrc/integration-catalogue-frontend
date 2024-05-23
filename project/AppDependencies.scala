@@ -4,11 +4,11 @@ import sbt.Keys.libraryDependencies
 import sbt._
 
 object AppDependencies {
-  lazy val scalaCheckVersion = "1.17.0"
+  lazy val scalaCheckVersion = "1.18.0"
   lazy val enumeratumVersion = "1.8.0"
-  lazy val jacksonVersion = "2.16.1"
-  lazy val bootstrapVersion = "8.5.0"
-  lazy val playFrontendVersion = "9.4.0"
+  lazy val jacksonVersion = "2.17.1"
+  lazy val bootstrapVersion = "8.6.0"
+  lazy val playFrontendVersion = "9.11.0"
 
   val compile = Seq(
     "uk.gov.hmrc"                       %% "bootstrap-frontend-play-30"     % bootstrapVersion,
