@@ -45,7 +45,7 @@ class HeaderNavigationLinksSpec extends CommonViewSpec {
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("nav-apis-link").text() shouldBe "APIs"
-      document.getElementById("nav-apis-link").attr("href") shouldBe "http://localhost:15018/api-hub/apis"
+      document.getElementById("nav-apis-link").attr("href") shouldBe "http://localhost:15018/integration-hub/apis"
 
       document.getElementById("nav-file-transfers-link").text() shouldBe "File transfers"
       document.getElementById("nav-file-transfers-link").attr("href") shouldBe "/api-catalogue/filetransfer/wizard/start"
