@@ -14,10 +14,12 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+
 @this(searchBox: SearchBox)
 
 
-@(activePage: Option[String], includeSearch: Boolean)
+@(activePage: Option[String], includeSearch: Boolean)(implicit config: AppConfig)
 
 @handleLinkClasses(expectedPage: String)= @{
     val activeClass = "govuk-sub-nav-link govuk-sub-nav-link--active"
@@ -37,7 +39,11 @@
         <div class="two">
             <ul id="navigation" class="govuk-sub-nav-links" aria-label="Navigation links">
                 <li class='@handleLinkClasses("list-apis")'>
-                    <a id="nav-apis-link" href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None)" class="govuk-header__link">APIs</a>
+                    <a id="nav-get-started-link" href="@config.apiHubGetStartedUrl" class="govuk-header__link">Get started</a>
+                </li>
+                          
+                <li class='@handleLinkClasses("list-apis")'>
+                    <a id="nav-apis-link" href="@config.apiHubAPIsUrl" class="govuk-header__link">APIs</a>
                 </li>
 
                 <li class='@handleLinkClasses("list-apis")'>

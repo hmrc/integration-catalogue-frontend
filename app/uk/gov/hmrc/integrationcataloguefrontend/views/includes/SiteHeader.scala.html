@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
+
 @this(navLinks: HeaderNavigationLinks, hmrcInternalHeader: HmrcInternalHeader)
 
-@(activePage: Option[String] = None, includeSearch: Boolean = false)(implicit messages: Messages)
+@(activePage: Option[String] = None, includeSearch: Boolean = false)(implicit messages: Messages, appConfig: AppConfig)
 
 @hmrcInternalHeader(InternalHeader(
     homepageUrl = "https://www.gov.uk/government/organisations/hm-revenue-customs",
