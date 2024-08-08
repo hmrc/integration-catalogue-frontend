@@ -25,53 +25,16 @@
 
 @siteHeader()
 <!-- Notification Banner -->
-<div class="govuk-width-container">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            @feedbackBanner2()
-        </div>
-    </div>
-</div>
+
 <div class="govuk-notification-banner-spacing">
 </div>
 <div class="govuk-find-api">
     <div class="govuk-width-container govuk-find-api-padding">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h1 class="govuk-heading-xl govuk-find-api-title" id="page-title">Find existing ways to access data and
-                    transfer data across HMRC</h1>
-                <p class="govuk-body-l govuk-find-api-description" id="page-title-desc">Search available HMRC APIs</p>
-                <div>
-                    @searchBox("govuk-int-search-black", "Search APIs")
-                </div>
-                <br />
-                <p class="govuk-body govuk-find-api-filter-text" id="page-title-searchlink-text">
-                    <a class="govuk-find-api-filter"
-                        href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.IntegrationController.listIntegrations(None, List.empty, List.empty, None, None)"
-                        id="page-title-searchlink"> Review all APIs</a>
-                    <span class="white"> or </span>
-                    <a class="govuk-find-api-filter"
-                        href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart().url"
-                        id="page-title-ftwizard-link"> check file transfer connections </a>
-                </p>
-            </div>
-            <div class="govuk-grid-column-one-third govuk-find-api-black-box-padding">
-                <div class="govuk-find-api-black-box">
-                    <p class="govuk-body-l govuk-find-api-links-title" id="heading-box-title">
-                        First time using this service?
-                    </p>
-                    <ul class="govuk-find-api-links">
-                        <li>
-                            <p class="govuk-body">
-                                <a class="govuk-find-api-link"
-                                    href="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.MainController.aboutPage()"
-                                    id="heading-box-link">
-                                    Learn about this service, including how it works and the benefits.
-                                </a>
-                            </p>
-                        </li>
-                    </ul>
-                </div>
+                <h1 class="govuk-heading-xl govuk-find-api-title" id="page-title">
+                    This service has been migrated. To find existing ways to access data and transfer data across HMRC, visit the <a id="integration-hub-link" href="/integration-hub">Integration Hub</a>.
+                </h1>
             </div>
         </div>
     </div>

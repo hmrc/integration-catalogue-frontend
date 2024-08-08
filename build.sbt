@@ -6,7 +6,7 @@ ThisBuild / scalaVersion := "2.13.12"
 ThisBuild / majorVersion := 0
 
 lazy val root = (project in file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
     name := appName,
     routesImport                      += "uk.gov.hmrc.integrationcataloguefrontend.controllers.binders._",
