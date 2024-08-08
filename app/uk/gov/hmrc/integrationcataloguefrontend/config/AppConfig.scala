@@ -40,5 +40,6 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val internalAuthToken: String = config.get[String]("internal-auth.token")
 
   val apiHubApiDetailsUrl: String = config.get[String]("urls.apiHub.apiDetails")
+  val apiHubAPIsUrl: String = config.get[String]("urls.apiHub.apis")
 
 }
