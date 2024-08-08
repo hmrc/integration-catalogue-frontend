@@ -19,10 +19,13 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
+import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.HeaderNavigationLinks
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class HeaderNavigationLinksSpec extends CommonViewSpec {
 
@@ -33,11 +36,16 @@ class HeaderNavigationLinksSpec extends CommonViewSpec {
   "HeaderNavigationLinks" should {
 
     "render the Navigation Links component correctly No SearchBar" in new Setup {
-      val page: Html         = navLinks.render(None, includeSearch = false)
+      val env                = Environment.simple()
+      val configuration      = Configuration.load(env)
+
+      val serviceConfig      = new ServicesConfig(configuration)
+      val appConfig          = new AppConfig(configuration, serviceConfig)
+      val page: Html         = navLinks.render(None, includeSearch = false, config = appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementById("nav-apis-link").text() shouldBe "APIs"
-      document.getElementById("nav-apis-link").attr("href") shouldBe "/api-catalogue/search"
+      document.getElementById("nav-apis-link").attr("href") shouldBe "http://localhost:15018/api-hub/apis"
 
       document.getElementById("nav-file-transfers-link").text() shouldBe "File transfers"
       document.getElementById("nav-file-transfers-link").attr("href") shouldBe "/api-catalogue/filetransfer/wizard/start"

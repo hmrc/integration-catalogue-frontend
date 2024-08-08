@@ -19,10 +19,13 @@ package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
+import play.api.{Configuration, Environment}
 import play.twirl.api.Html
 
+import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.views.helper.CommonViewSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.SiteHeader
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class SiteHeaderSpec extends CommonViewSpec {
 
@@ -33,7 +36,12 @@ class SiteHeaderSpec extends CommonViewSpec {
   "SiteHeader" should {
 
     "render The main header correctly" in new Setup {
-      val page: Html         = siteHeader.render(None, includeSearch = false, messagesProvider.messages)
+      val env                = Environment.simple()
+      val configuration      = Configuration.load(env)
+
+      val serviceConfig      = new ServicesConfig(configuration)
+      val appConfig          = new AppConfig(configuration, serviceConfig)
+      val page: Html         = siteHeader.render(None, includeSearch = false, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
       document.getElementsByClass("hmrc-internal-header__logo-text").first().text() shouldBe "HM Revenue & Customs"
