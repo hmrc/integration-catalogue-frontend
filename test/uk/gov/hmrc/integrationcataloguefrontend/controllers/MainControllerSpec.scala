@@ -25,7 +25,6 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
@@ -51,7 +50,6 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   val caseStudiesPage: CaseStudies                           = app.injector.instanceOf[CaseStudies]
   val getStartedPage: GetStarted                             = app.injector.instanceOf[GetStarted]
   val contactPage: ContactView                               = app.injector.instanceOf[ContactView]
-  val aboutPage: About                                       = app.injector.instanceOf[About]
   val accessibilityStatementView: AccessibilityStatementView = app.injector.instanceOf[AccessibilityStatementView]
   val fileTransferPatternPage: FileTransferPatternView       = app.injector.instanceOf[FileTransferPatternView]
 
@@ -61,7 +59,6 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
     homePage,
     caseStudiesPage,
     getStartedPage,
-    aboutPage,
     accessibilityStatementView,
     contactPage,
     fileTransferPatternPage
@@ -81,28 +78,18 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   }
 
   "GET /case-studies" should {
-    "return 200" in {
+    "redirect to the integration-hub" in {
       val result = controller.caseStudiesPage()(caseStudiesPageRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return HTML" in {
-      val result = controller.caseStudiesPage()(caseStudiesPageRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/")
     }
   }
 
   "GET /get-started" should {
-    "return 200" in {
+    "redirect to the integration-hub" in {
       val result = controller.getStartedPage()(getStartedPageRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return HTML" in {
-      val result = controller.getStartedPage()(getStartedPageRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/")
     }
   }
 
@@ -120,15 +107,10 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   }
 
   "GET /about" should {
-    "return 200" in {
+    "redirect to the integration-hub" in {
       val result = controller.aboutPage()(aboutPageRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return HTML" in {
-      val result = controller.aboutPage()(aboutPageRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/")
     }
   }
 
@@ -145,15 +127,10 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
     }
   }
   "GET /contacts" should {
-    "return 200" in {
+    "redirect to the integration-hub" in {
       val result = controller.contactPage()(contactViewPageRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return HTML" in {
-      val result = controller.contactPage()(contactViewPageRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/get-support")
     }
   }
 

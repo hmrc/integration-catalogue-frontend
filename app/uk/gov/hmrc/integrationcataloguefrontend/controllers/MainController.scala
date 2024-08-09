@@ -23,7 +23,6 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
@@ -38,7 +37,6 @@ class MainController @Inject() (
     landingPageView: HomePage,
     caseStudiesView: CaseStudies,
     getStartedView: GetStarted,
-    aboutView: About,
     accessibilityStatementView: AccessibilityStatementView,
     contactView: ContactView,
     fileTransferPattern: FileTransferPatternView
@@ -50,24 +48,24 @@ class MainController @Inject() (
     Future.successful(Ok(landingPageView()))
   }
 
-  def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(aboutView()))
+  def aboutPage(): Action[AnyContent] = Action { _ =>
+    SeeOther(config.apiHubAboutUrl)
   }
 
   def accessibilityStatementPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(accessibilityStatementView()))
   }
 
-  def contactPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(contactView()))
+  def contactPage(): Action[AnyContent] = Action { _ =>
+    SeeOther(config.apiHubContactUrl)
   }
 
-  def getStartedPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(getStartedView()))
+  def getStartedPage(): Action[AnyContent] = Action { _ =>
+    SeeOther(config.apiHubGetStartedUrl)
   }
 
-  def caseStudiesPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(caseStudiesView()))
+  def caseStudiesPage(): Action[AnyContent] = Action { _ =>
+    SeeOther(config.apiHubCaseStudiesUrl)
   }
 
   def fileTransferPatternsPage(): Action[AnyContent] = Action.async { implicit request =>

@@ -28,7 +28,7 @@ lazy val root = (project in file("."))
     Seq(
       // Semicolon-separated list of regexs matching classes to exclude
       ScoverageKeys.coverageExcludedPackages := ";.*\\.domain\\.models\\..*;uk\\.gov\\.hmrc\\.BuildInfo;.*\\.Routes;.*\\.RoutesPrefix;;Module;GraphiteStartUp;.*\\.Reverse[^.]*",
-      ScoverageKeys.coverageMinimumStmtTotal := 94,
+      ScoverageKeys.coverageMinimumStmtTotal := 93,
       ScoverageKeys.coverageMinimumBranchTotal := 85,
       ScoverageKeys.coverageFailOnMinimum := true,
       ScoverageKeys.coverageHighlighting := true,

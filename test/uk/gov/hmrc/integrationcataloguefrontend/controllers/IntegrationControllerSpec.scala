@@ -105,26 +105,25 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   )
 
   "GET /" should {
-    "return 200 when Some(ApiId) is Sent" in {
+    "return 303 when Some(ApiId) is Sent" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"))(fakeRequest)
-      status(result) shouldBe Status.OK
+      status(result) shouldBe Status.SEE_OTHER
     }
 
-    "return HTML" in {
+    "redirect to the integration hub APIs page" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(None)(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/apis")
     }
 
-    "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
+    "return 303 when Some(ApiId) and valid platform Filters are Sent" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"), List(PlatformType.CORE_IF, PlatformType.API_PLATFORM))(fakeRequest)
-      status(result) shouldBe Status.OK
+      status(result) shouldBe Status.SEE_OTHER
     }
   }
 

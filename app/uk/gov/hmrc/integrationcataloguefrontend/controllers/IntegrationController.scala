@@ -21,7 +21,7 @@ import play.api.data.Form
 import play.api.mvc._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.integrationcatalogue.models.common._
-import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail, IntegrationFilter}
+import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.services.{EmailService, IntegrationService}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailView
@@ -111,35 +111,8 @@ class IntegrationController @Inject() (
       itemsPerPage: Option[Int] = None,
       currentPage: Option[Int] = None
     ): Action[AnyContent] =
-    Action.async { implicit request =>
-      val itemsPerPageCalc = if (itemsPerPage.isDefined) itemsPerPage.get else appConfig.itemsPerPage
-      val currentPageCalc  = currentPage.getOrElse(1)
-      integrationService.findWithFilters(IntegrationFilter(List(keywords.getOrElse("")), platformFilter, backendsFilter), Some(itemsPerPageCalc), currentPage).map {
-        case Right(response) =>
-          // are keywords in list? Boolean
-          Ok(listIntegrationsView(
-            response.results,
-            keywords.getOrElse(""),
-            platformFilter,
-            backendsFilter,
-            itemsPerPageCalc,
-            response.count,
-            currentPageCalc,
-            calculateNumberOfPages(response.count, itemsPerPageCalc),
-            calculateFromResults(currentPageCalc, itemsPerPageCalc),
-            calculateToResults(currentPageCalc, itemsPerPageCalc),
-            calculateFirstPageLink(currentPageCalc),
-            calculateLastPageLink(currentPageCalc, calculateNumberOfPages(response.count, itemsPerPageCalc)),
-            showFileTransferInterrupt(config.fileTransferSearchTerms.toList, keywords)
-          ))
-
-        case Left(UpstreamErrorResponse.Upstream4xxResponse(e)) => e.statusCode match {
-          case BAD_REQUEST => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-          case _ => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
-        }
-        case Left(_) => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
-      }
-
+    Action { _ =>
+      SeeOther(config.apiHubAPIsUrl)
     }
 
   def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
