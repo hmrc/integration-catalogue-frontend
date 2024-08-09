@@ -87,8 +87,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         )
 
         val result = callGetEndpoint(s"$url/search", List.empty)
-        result.status mustBe 303
-        result.header("Location") mustBe Some("http://localhost:15018/integration-hub/apis")
+        result.status mustBe OK
       }
     }
 

@@ -65,7 +65,7 @@
 @govukTemplate(
     pageTitle = pageTitle,
     headBlock = Some(head(headBlock)),
-    headerBlock = siteHeader(),
+    headerBlock = siteHeader(link = appConfig.apiHubBaseUrl),
     mainClasses = None,
     footerBlock = footerBlock,
     beforeContentBlock = None,

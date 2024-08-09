@@ -36,6 +36,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTran
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.migration.MigrationView
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -68,11 +69,15 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   private val serviceConfig = new ServicesConfig(configuration)
   private val appConfig     = new AppConfig(configuration, serviceConfig)
 
+  private val messagesApi = stubMessagesControllerComponents()
+  private val messages    = messagesApi.messagesApi.preferred(fakeRequest)
+
   val listApisView: ListIntegrationsView         = app.injector.instanceOf[ListIntegrationsView]
   private val apiDetailView                      = app.injector.instanceOf[ApiDetailView]
   private val apiTechnicalDetailsView            = app.injector.instanceOf[ApiTechnicalDetailsView]
   private val apiTechnicalDetailsViewRedoc       = app.injector.instanceOf[ApiTechnicalDetailsViewRedoc]
   private val fileTransferDetailView             = app.injector.instanceOf[FileTransferDetailView]
+  private val migrationView                      = app.injector.instanceOf[MigrationView]
   private val errorTemplate                      = app.injector.instanceOf[ErrorTemplate]
   private val apiNotFoundErrorTemplate           = app.injector.instanceOf[ApiNotFoundErrorTemplate]
   private val contactApiTeamView                 = app.injector.instanceOf[ContactApiTeamView]
@@ -90,13 +95,14 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
   private val controller = new IntegrationController(
     appConfig,
-    stubMessagesControllerComponents(),
+    messagesApi,
     mockIntegrationService,
     listApisView,
     apiDetailView,
     fileTransferDetailView,
     apiTechnicalDetailsView,
     apiTechnicalDetailsViewRedoc,
+    migrationView,
     errorTemplate,
     apiNotFoundErrorTemplate,
     contactApiTeamView,
@@ -105,25 +111,25 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   )
 
   "GET /" should {
-    "return 303 when Some(ApiId) is Sent" in {
+    "return 200 when Some(ApiId) is Sent" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"))(fakeRequest)
-      status(result) shouldBe Status.SEE_OTHER
+      status(result) shouldBe Status.OK
     }
 
-    "redirect to the integration hub APIs page" in {
+    "return migration page" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(None)(fakeRequest)
-      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/apis")
+      contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/apis", "APIs")(fakeRequest, messages, appConfig).toString
     }
 
-    "return 303 when Some(ApiId) and valid platform Filters are Sent" in {
+    "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"), List(PlatformType.CORE_IF, PlatformType.API_PLATFORM))(fakeRequest)
-      status(result) shouldBe Status.SEE_OTHER
+      status(result) shouldBe Status.OK
     }
   }
 

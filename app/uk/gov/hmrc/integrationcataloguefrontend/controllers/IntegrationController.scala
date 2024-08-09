@@ -28,6 +28,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailVi
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTeamSuccessView, ContactApiTeamView}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.migration.MigrationView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
@@ -45,6 +46,7 @@ class IntegrationController @Inject() (
     fileTransferDetailView: FileTransferDetailView,
     apiTechnicalDetailsView: ApiTechnicalDetailsView,
     apiTechnicalDetailsViewRedoc: ApiTechnicalDetailsViewRedoc,
+    migrationView: MigrationView,
     errorTemplate: ErrorTemplate,
     apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate,
     contactApiTeamView: ContactApiTeamView,
@@ -111,8 +113,8 @@ class IntegrationController @Inject() (
       itemsPerPage: Option[Int] = None,
       currentPage: Option[Int] = None
     ): Action[AnyContent] =
-    Action { _ =>
-      SeeOther(config.apiHubAPIsUrl)
+    Action { implicit request =>
+      Ok(migrationView(config.apiHubAPIsUrl, "APIs"))
     }
 
   def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>

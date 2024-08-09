@@ -32,10 +32,11 @@ class HomePageHeaderSpec extends CommonViewSpec {
 
   "HomePageHeader" should {
     "render The home page correctly" in new Setup {
-      val page: Html         = landingPage.render(messagesProvider.messages, appConfig)
+      val link: String       = "/integration-hub"
+      val page: Html         = landingPage.render(link, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
       document.getElementById("page-title").text() shouldBe "This service has been migrated. To find existing ways to access data and transfer data across HMRC, visit the Integration Hub."
-      document.getElementById("integration-hub-link").attr("href") shouldBe "/integration-hub"
+      document.getElementById("integration-hub-link").attr("href") shouldBe link
     }
   }
 }

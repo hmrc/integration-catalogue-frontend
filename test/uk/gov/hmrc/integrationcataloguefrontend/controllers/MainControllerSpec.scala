@@ -26,11 +26,9 @@ import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.migration.MigrationView
 
 class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   private val landingPageRequest             = FakeRequest("GET", "/")
@@ -46,21 +44,20 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   private val serviceConfig = new ServicesConfig(configuration)
   private val appConfig     = new AppConfig(configuration, serviceConfig)
 
+  private val messagesApi = stubMessagesControllerComponents()
+  private val messages    = messagesApi.messagesApi.preferred(FakeRequest())
+
   val homePage: HomePage                                     = app.injector.instanceOf[HomePage]
-  val caseStudiesPage: CaseStudies                           = app.injector.instanceOf[CaseStudies]
-  val getStartedPage: GetStarted                             = app.injector.instanceOf[GetStarted]
-  val contactPage: ContactView                               = app.injector.instanceOf[ContactView]
+  val migrationView: MigrationView                           = app.injector.instanceOf[MigrationView]
   val accessibilityStatementView: AccessibilityStatementView = app.injector.instanceOf[AccessibilityStatementView]
   val fileTransferPatternPage: FileTransferPatternView       = app.injector.instanceOf[FileTransferPatternView]
 
   private val controller = new MainController(
     appConfig,
-    stubMessagesControllerComponents(),
+    messagesApi,
     homePage,
-    caseStudiesPage,
-    getStartedPage,
+    migrationView,
     accessibilityStatementView,
-    contactPage,
     fileTransferPatternPage
   )
 
@@ -78,18 +75,18 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   }
 
   "GET /case-studies" should {
-    "redirect to the integration-hub" in {
+    "return migration page" in {
       val result = controller.caseStudiesPage()(caseStudiesPageRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/")
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/", "Case studies")(caseStudiesPageRequest, messages, appConfig).toString
     }
   }
 
   "GET /get-started" should {
-    "redirect to the integration-hub" in {
+    "return migration page" in {
       val result = controller.getStartedPage()(getStartedPageRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/")
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/", "Get Started")(getStartedPageRequest, messages, appConfig).toString
     }
   }
 
@@ -107,10 +104,10 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
   }
 
   "GET /about" should {
-    "redirect to the integration-hub" in {
+    "return migration page" in {
       val result = controller.aboutPage()(aboutPageRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/")
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/", "About")(aboutPageRequest, messages, appConfig).toString
     }
   }
 
@@ -126,11 +123,12 @@ class MainControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
       charset(result) shouldBe Some("utf-8")
     }
   }
+
   "GET /contacts" should {
-    "redirect to the integration-hub" in {
+    "return migration page" in {
       val result = controller.contactPage()(contactViewPageRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      redirectLocation(result) shouldBe Some("http://localhost:15018/integration-hub/get-support")
+      status(result) shouldBe Status.OK
+      contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/get-support", "Contacting the API catalogue team")(contactViewPageRequest, messages, appConfig).toString
     }
   }
 
