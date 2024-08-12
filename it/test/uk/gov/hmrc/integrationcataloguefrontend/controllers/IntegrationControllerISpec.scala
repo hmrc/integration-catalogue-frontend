@@ -92,112 +92,34 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
     }
 
     "GET /integrations/{apiId}/{encodedTitle}" should {
-      "respond with 200 and render correctly when title in url matches integration title when encoded" in {
+      "redirect to the integration hub" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", validHeaders)
-        result.status mustBe OK
-
-      }
-
-      "respond with 303 and render correctly when title in url does not match encoded title from integration" in {
-        primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
-        primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/incorrect-title", validHeaders)
-        result.status mustBe 303
-
-      }
-
-      "respond with 400 and when backend returns returns Bad Request" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 400 and non UUID provided in path" in {
-        val result = callGetEndpoint(s"$url/integrations/NOTAUUID/title-3", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 404 and when backend returns returns Not Found" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", List.empty)
-        result.status mustBe NOT_FOUND
-
-      }
-
-      "respond with 500 and when backend returns returns any other downstream error" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_ACCEPTABLE)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3", List.empty)
-        result.status mustBe INTERNAL_SERVER_ERROR
-
-      }
-
-      "respond with 404 and render errorTemplate Correctly when path invalid" in {
-
-        val result = callGetEndpoint(s"$url/unknown-path", List.empty)
-        result.status mustBe NOT_FOUND
+        result.status mustBe SEE_OTHER
 
       }
     }
 
     "GET /integrations/:id/:title/technical" should {
-      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+      "redirect to the integration hub" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
-        result.status mustBe OK
-
-      }
-
-      "respond with 400 and when backend returns returns Bad Request" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 404 and when backend returns returns Not Found" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/title-3/technical", List.empty)
-        result.status mustBe NOT_FOUND
+        result.status mustBe SEE_OTHER
 
       }
     }
 
     "GET /integrations/:id/files/oas" should {
-      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+      "redirect to the integration hub" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
-        result.status mustBe OK
-
-      }
-
-      "respond with 400 and when backend returns returns Bad Request" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 404 and when backend returns returns Not Found" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/files/oas", List.empty)
-        result.status mustBe NOT_FOUND
+        result.status mustBe SEE_OTHER
 
       }
     }
@@ -208,89 +130,32 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${fileTransfer1.id.value.toString}/xx-sas-yyyyydaily-pull", validHeaders)
-        result.status mustBe OK
-
-      }
-
-      "respond with 404 and render errorTemplate Correctly when path invalid" in {
-
-        val result = callGetEndpoint(s"$url/unknown-path", List.empty)
-        result.status mustBe NOT_FOUND
+        result.status mustBe SEE_OTHER
 
       }
     }
 
     "GET /integrations/:id/contact" should {
 
-      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+      "redirect to the integration hub" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
 
         val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
-        result.status mustBe OK
+        result.status mustBe SEE_OTHER
 
-      }
-
-      "respond with 400 and when backend returns Bad Request" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 404 and when backend returns Not Found" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
-        result.status mustBe NOT_FOUND
-      }
-
-      "respond with 500 and when backend returns Internal Server Error" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, INTERNAL_SERVER_ERROR)
-
-        val result = callGetEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", List.empty)
-        result.status mustBe INTERNAL_SERVER_ERROR
       }
     }
 
     "POST /integrations/:id/contact" should {
 
-      "respond with 200 and render correctly when backend returns IntegrationResponse" in {
+      "redirect to the integration hub" in {
         primeIntegrationCatalogueServiceGetByIdWithBody(OK, Json.toJson(exampleApiDetail.asInstanceOf[IntegrationDetail]).toString, exampleApiDetail.id)
         primeIntegrationCatalogueServiceGetPlatformContactsWithBody(OK, Json.toJson(List(PlatformContactResponse(PlatformType.CORE_IF, None, false))).toString)
         primeEmailServiceWithStatus(ACCEPTED)
 
         val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
-        result.status mustBe OK
-
-        val document: Document = Jsoup.parse(result.body)
-
-        document.getElementById("page-heading").text() mustBe "Contact API catalogue"
-        document.getElementById("message-sent-panel").text() mustBe "Message sent"
-        document.getElementById("paragraph1").text() mustBe s"Message sent to the ${exampleApiDetail.title} team."
-      }
-
-      "respond with 400 and when backend returns Bad Request" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, BAD_REQUEST)
-
-        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
-        result.status mustBe BAD_REQUEST
-
-      }
-
-      "respond with 404 and when backend returns Not Found" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, NOT_FOUND)
-
-        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
-        result.status mustBe NOT_FOUND
-      }
-
-      "respond with 500 and when backend returns Internal Server Error" in {
-        primeIntegrationCatalogueServiceGetByIdReturnsError(exampleApiDetail.id, INTERNAL_SERVER_ERROR)
-
-        val result = callPostEndpoint(s"$url/integrations/${exampleApiDetail.id.value.toString}/contact", validPostHeaders, formData)
-        result.status mustBe INTERNAL_SERVER_ERROR
+        result.status mustBe SEE_OTHER
       }
     }
   }

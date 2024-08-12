@@ -17,9 +17,7 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import play.api.Logging
-import play.api.data.Form
 import play.api.mvc._
-import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.integrationcatalogue.models.common._
 import uk.gov.hmrc.integrationcatalogue.models.{ApiDetail, FileTransferDetail, IntegrationDetail}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
@@ -29,13 +27,12 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTe
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.migration.MigrationView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.controller.WithUnsafeDefaultFormBinding
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 @Singleton
 class IntegrationController @Inject() (
     appConfig: AppConfig,
@@ -44,8 +41,6 @@ class IntegrationController @Inject() (
     listIntegrationsView: ListIntegrationsView,
     apiDetailView: ApiDetailView,
     fileTransferDetailView: FileTransferDetailView,
-    apiTechnicalDetailsView: ApiTechnicalDetailsView,
-    apiTechnicalDetailsViewRedoc: ApiTechnicalDetailsViewRedoc,
     migrationView: MigrationView,
     errorTemplate: ErrorTemplate,
     apiNotFoundErrorTemplate: ApiNotFoundErrorTemplate,
@@ -60,50 +55,20 @@ class IntegrationController @Inject() (
 
   implicit val config: AppConfig = appConfig
 
-  def handleUrlTitle(detail: IntegrationDetail, resultToReturn: Result, id: IntegrationId, urlEncodedTitle: String): Result = {
-    val actualEncodedTitle = UrlEncodingHelper.encodeTitle(detail.title)
-    if (urlEncodedTitle == actualEncodedTitle) resultToReturn
-    else Redirect(routes.IntegrationController.getIntegrationDetail(id, actualEncodedTitle).url)
+  def getIntegrationDetail(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action { _ =>
+    SeeOther(s"${appConfig.apiHubApiDetailsUrl}${id.value}")
   }
 
-  def getIntegrationDetail(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
-    integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)          => handleUrlTitle(detail, Ok(apiDetailView(detail)), id, urlEncodedTitle)
-      case Right(detail: FileTransferDetail) => handleUrlTitle(detail, Ok(fileTransferDetailView(detail)), id, urlEncodedTitle)
-      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
-    }
+  def getIntegrationDetailTechnical(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action { _ =>
+    SeeOther(s"${appConfig.apiHubApiDetailsUrl}${id.value}")
   }
 
-  private def handleUpstream4xx(error: UpstreamErrorResponse)(implicit request: MessagesRequest[AnyContent]) = {
-    error.statusCode match {
-      case NOT_FOUND => NotFound(apiNotFoundErrorTemplate())
-      case BAD_REQUEST => BadRequest(errorTemplate("Bad Request", "Bad Request", "Bad Request"))
-      case _ => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
-    }
+  def getIntegrationDetailTechnicalRedoc(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action { _ =>
+    SeeOther(s"${appConfig.apiHubApiDetailsUrl}${id.value}")
   }
 
-  def getIntegrationDetailTechnical(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
-    integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)     => handleUrlTitle(detail, Ok(apiTechnicalDetailsView(detail)), id, urlEncodedTitle)
-      case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
-    }
-  }
-
-  def getIntegrationDetailTechnicalRedoc(id: IntegrationId, urlEncodedTitle: String): Action[AnyContent] = Action.async { implicit request =>
-    integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)     => handleUrlTitle(detail, Ok(apiTechnicalDetailsViewRedoc(detail)), id, urlEncodedTitle)
-      case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
-    }
-  }
-
-  def getIntegrationOas(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
-    integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)     => Ok(detail.openApiSpecification)
-      case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
-    }
+  def getIntegrationOas(id: IntegrationId): Action[AnyContent] = Action { _ =>
+    SeeOther(s"${appConfig.apiHubApiDetailsUrl}${id.value}")
   }
 
   def listIntegrations(
@@ -117,41 +82,12 @@ class IntegrationController @Inject() (
       Ok(migrationView(config.apiHubAPIsUrl, "APIs"))
     }
 
-  def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
-    integrationService.findByIntegrationId(id).map {
-      case Right(detail: ApiDetail)     => Ok(contactApiTeamView(ContactApiTeamForm.form, detail))
-      case Right(_: FileTransferDetail) => NotFound(apiNotFoundErrorTemplate())
-      case Left(error: UpstreamErrorResponse) => handleUpstream4xx(error)
-    }
+  def contactApiTeamPage(id: IntegrationId): Action[AnyContent] = Action { _  =>
+    SeeOther(s"${appConfig.apiHubApiDetailsUrl}${id.value}")
   }
 
-  def contactApiTeamAction(id: IntegrationId): Action[AnyContent] = Action.async { implicit request =>
-    def validateForm(apiDetail: ApiDetail, form: Form[ContactApiTeamForm]): Future[Result] = {
-      form.bindFromRequest().fold(
-        formWithErrors => {
-          Future.successful(BadRequest(contactApiTeamView(formWithErrors, apiDetail)))
-        },
-        formData => {
-          emailService.send(
-            apiDetail.title,
-            extractEmailAddresses(apiDetail),
-            formData.fullName,
-            formData.emailAddress,
-            extractReasons(formData),
-            formData.specificQuestion.getOrElse("")
-          ).map {
-            case true => Ok(contactApiTeamSuccessView(apiDetail))
-            case _    => InternalServerError(errorTemplate("Internal Server Error", "Internal Server Error", "Internal Server Error"))
-          }
-        }
-      )
-    }
-
-    integrationService.findByIntegrationId(id).flatMap {
-      case Right(detail: ApiDetail)     => validateForm(detail, ContactApiTeamForm.form)
-      case Right(_: FileTransferDetail) => Future.successful(NotFound(apiNotFoundErrorTemplate()))
-      case Left(error: UpstreamErrorResponse) => Future.successful(handleUpstream4xx(error))
-    }
+  def contactApiTeamAction(id: IntegrationId): Action[AnyContent] = Action { _ =>
+    SeeOther(s"${appConfig.apiHubApiDetailsUrl}${id.value}")
   }
 
   private def extractEmailAddresses(apiDetail: ApiDetail) = {
