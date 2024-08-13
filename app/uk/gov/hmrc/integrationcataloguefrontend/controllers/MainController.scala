@@ -23,24 +23,18 @@ import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.about.About
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.accessibility.AccessibilityStatementView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.casestudies.CaseStudies
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.ContactView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferPatternView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.getstarted.GetStarted
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.homepage.HomePage
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.migration.MigrationView
 
 @Singleton
 class MainController @Inject() (
     appConfig: AppConfig,
     mcc: MessagesControllerComponents,
     landingPageView: HomePage,
-    caseStudiesView: CaseStudies,
-    getStartedView: GetStarted,
-    aboutView: About,
+    migrationView: MigrationView,
     accessibilityStatementView: AccessibilityStatementView,
-    contactView: ContactView,
     fileTransferPattern: FileTransferPatternView
   ) extends FrontendController(mcc) {
 
@@ -50,24 +44,24 @@ class MainController @Inject() (
     Future.successful(Ok(landingPageView()))
   }
 
-  def aboutPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(aboutView()))
+  def aboutPage(): Action[AnyContent] = Action { implicit request =>
+    Ok(migrationView(config.apiHubAboutUrl, "About"))
   }
 
   def accessibilityStatementPage(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(accessibilityStatementView()))
   }
 
-  def contactPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(contactView()))
+  def contactPage(): Action[AnyContent] = Action { implicit request =>
+    Ok(migrationView(config.apiHubContactUrl, "Contacting the API catalogue team"))
   }
 
-  def getStartedPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(getStartedView()))
+  def getStartedPage(): Action[AnyContent] = Action { implicit request =>
+    Ok(migrationView(config.apiHubGetStartedUrl, "Get Started"))
   }
 
-  def caseStudiesPage(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(caseStudiesView()))
+  def caseStudiesPage(): Action[AnyContent] = Action { implicit request =>
+    Ok(migrationView(config.apiHubCaseStudiesUrl, "Case studies"))
   }
 
   def fileTransferPatternsPage(): Action[AnyContent] = Action.async { implicit request =>

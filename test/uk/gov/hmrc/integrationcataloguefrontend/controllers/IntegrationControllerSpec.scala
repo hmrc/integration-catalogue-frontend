@@ -34,8 +34,8 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.apidetail.ApiDetailVi
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.contact.{ContactApiTeamSuccessView, ContactApiTeamView}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.filetransfer.FileTransferDetailView
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.integrations.ListIntegrationsView
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.technicaldetails.{ApiTechnicalDetailsView, ApiTechnicalDetailsViewRedoc}
 import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ApiNotFoundErrorTemplate, ErrorTemplate}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.migration.MigrationView
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -68,11 +68,13 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   private val serviceConfig = new ServicesConfig(configuration)
   private val appConfig     = new AppConfig(configuration, serviceConfig)
 
+  private val messagesApi = stubMessagesControllerComponents()
+  private val messages    = messagesApi.messagesApi.preferred(fakeRequest)
+
   val listApisView: ListIntegrationsView         = app.injector.instanceOf[ListIntegrationsView]
   private val apiDetailView                      = app.injector.instanceOf[ApiDetailView]
-  private val apiTechnicalDetailsView            = app.injector.instanceOf[ApiTechnicalDetailsView]
-  private val apiTechnicalDetailsViewRedoc       = app.injector.instanceOf[ApiTechnicalDetailsViewRedoc]
   private val fileTransferDetailView             = app.injector.instanceOf[FileTransferDetailView]
+  private val migrationView                      = app.injector.instanceOf[MigrationView]
   private val errorTemplate                      = app.injector.instanceOf[ErrorTemplate]
   private val apiNotFoundErrorTemplate           = app.injector.instanceOf[ApiNotFoundErrorTemplate]
   private val contactApiTeamView                 = app.injector.instanceOf[ContactApiTeamView]
@@ -90,13 +92,12 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
   private val controller = new IntegrationController(
     appConfig,
-    stubMessagesControllerComponents(),
+    messagesApi,
     mockIntegrationService,
     listApisView,
     apiDetailView,
     fileTransferDetailView,
-    apiTechnicalDetailsView,
-    apiTechnicalDetailsViewRedoc,
+    migrationView,
     errorTemplate,
     apiNotFoundErrorTemplate,
     contactApiTeamView,
@@ -112,12 +113,11 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
       status(result) shouldBe Status.OK
     }
 
-    "return HTML" in {
+    "return migration page" in {
       when(mockIntegrationService.findWithFilters(*, *, *)(*))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(None)(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/apis", "APIs")(fakeRequest, messages, appConfig).toString
     }
 
     "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
@@ -128,69 +128,15 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     }
   }
 
-  "findByIntegrationId" should {
+  "getIntegrationDetail" should {
 
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return 303 when api details are found but the encoded title does not match the actual url encoded title" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment")(fakeRequest)
+      val integrationId = IntegrationId(UUID.randomUUID())
+      val result = controller.getIntegrationDetail(integrationId, "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.SEE_OTHER
-    }
-
-    "return HTML" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }
-
-    "return 404 when api details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
-
-    "return 200 when file transfers are found" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
-      status(result) shouldBe Status.OK
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-    }
-
-    "return 303 when file transfers are found but encoded title url value does not match" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyy")(fakeRequest)
-      status(result) shouldBe Status.SEE_OTHER
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-    }
-
-    "return HTML for file transfer" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }
-
-    "return 404 when file transfer details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.getIntegrationDetail(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      redirectLocation(result) shouldBe Some(s"http://localhost:15018/integration-hub/apis/details/${integrationId.value}")
     }
 
   }
@@ -199,40 +145,11 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetailTechnical(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return 303 when api details are found but the encoded title does not match the actual url encoded title" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetailTechnical(IntegrationId(UUID.randomUUID()), "self-assessment")(fakeRequest)
+      
+      val integrationId = IntegrationId(UUID.randomUUID())
+      val result = controller.getIntegrationDetailTechnical(integrationId, "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.SEE_OTHER
-    }
-
-    "return HTML" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetailTechnical(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }
-
-    "return 404 when api details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.getIntegrationDetailTechnical(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
-
-    "return 404 when file transfers are found" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationDetailTechnical(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
-      status(result) shouldBe Status.NOT_FOUND
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      redirectLocation(result) shouldBe Some(s"http://localhost:15018/integration-hub/apis/details/${integrationId.value}")
     }
   }
 
@@ -241,198 +158,44 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
     "return 200 when api details are found" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationDetailTechnicalRedoc(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return 303 when api details are found but the encoded title does not match the actual url encoded title" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetailTechnicalRedoc(IntegrationId(UUID.randomUUID()), "self-assessment")(fakeRequest)
+      val integrationId = IntegrationId(UUID.randomUUID())
+      val result = controller.getIntegrationDetailTechnicalRedoc(integrationId, "self-assessment-mtd")(fakeRequest)
       status(result) shouldBe Status.SEE_OTHER
-    }
-
-    "return HTML" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationDetailTechnicalRedoc(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }
-
-    "return 404 when api details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.getIntegrationDetailTechnicalRedoc(IntegrationId(UUID.randomUUID()), "self-assessment-mtd")(fakeRequest)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
-
-    "return 404 when file transfers are found" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationDetailTechnicalRedoc(IntegrationId(UUID.randomUUID()), "xx-sas-yyyyydaily-pull")(fakeRequest)
-      status(result) shouldBe Status.NOT_FOUND
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
+      redirectLocation(result) shouldBe Some(s"http://localhost:15018/integration-hub/apis/details/${integrationId.value}")
     }
   }
 
   "getIntegrationOas" should {
 
-    "return 200 when api details are found" in {
+    "redirect to the APIs details screen on integration hub" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()))(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-
-    "return OAS" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()))(fakeRequest)
-      contentType(result) shouldBe Some("text/plain")
-      charset(result) shouldBe Some("utf-8")
-      contentAsString(result) shouldBe apiDetail0.openApiSpecification
-    }
-
-    "return 404 when api details are notfound" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()))(fakeRequest)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
-
-    "return 404 for file transfers" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()))(fakeRequest)
-      status(result) shouldBe Status.NOT_FOUND
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-    }
-
-    "return HTML for file transfer" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.getIntegrationOas(IntegrationId(UUID.randomUUID()))(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      val integrationId = IntegrationId(UUID.randomUUID())
+      val result = controller.getIntegrationOas(integrationId)(fakeRequest)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(s"http://localhost:15018/integration-hub/apis/details/${integrationId.value}")
     }
   }
 
   "contactApiTeamPage" should {
 
-    "return 200 when api details are found" in {
+    "redirect to the APIs details screen on integration hub" in {
       when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
 
-      val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-      status(result) shouldBe Status.OK
-    }
-
-    "return 404 when file transfer is found instead of an API" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-      status(result) shouldBe Status.NOT_FOUND
-    }
-
-    "return 500 when api details throw error" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-    }
-
-    "return HTML" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
-
-      val result = controller.contactApiTeamPage(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+      val integrationId = IntegrationId(UUID.randomUUID())
+      val result = controller.contactApiTeamPage(integrationId)(fakeRequestWithCsrf)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(s"http://localhost:15018/integration-hub/apis/details/${integrationId.value}")
     }
   }
 
   "contactApiTeamAction" should {
 
-    "return 200 when api details are found" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail1)))
-      when(mockEmailService
-        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*))
-        .thenReturn(Future.successful(true))
-
+    "redirect to the APIs details screen on integration hub" in {
       val result = controller.contactApiTeamAction(apiDetail1.id)(fakeRequestWithCsrf)
 
-      status(result) shouldBe Status.OK
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-      verify(mockEmailService)
-        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*)
-    }
-
-    "return 404 when api details are found" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(fileTransfer1)))
-
-      val result = controller.contactApiTeamAction(fileTransfer1.id)(fakeRequestWithCsrf)
-
-      status(result) shouldBe Status.NOT_FOUND
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-    }
-
-    "return 404 when api details throw not found exception" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("not found", NOT_FOUND))))
-
-      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-
-      status(result) shouldBe Status.NOT_FOUND
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-      verifyZeroInteractions(mockEmailService)
-    }
-
-    "return 400 when api details throw bad request exception" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", BAD_REQUEST))))
-
-      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-
-      status(result) shouldBe Status.BAD_REQUEST
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-      verifyZeroInteractions(mockEmailService)
-    }
-
-    "return 500 when api details throw internal server exception" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*))
-        .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
-
-      val result = controller.contactApiTeamAction(IntegrationId(UUID.randomUUID()))(fakeRequestWithCsrf)
-
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-      verifyZeroInteractions(mockEmailService)
-    }
-
-    "return 400 and error template when form data is invalid" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail1)))
-
-      val result = controller.contactApiTeamAction(apiDetail1.id)(fakeRequestWithInvalidForm)
-
-      status(result) shouldBe Status.BAD_REQUEST
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-      verifyZeroInteractions(mockEmailService)
-    }
-
-    "return 500 when email service returns false" in {
-      when(mockIntegrationService.findByIntegrationId(*[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail1)))
-      when(mockEmailService
-        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*))
-        .thenReturn(Future.successful(false))
-
-      val result = controller.contactApiTeamAction(apiDetail1.id)(fakeRequestWithCsrf)
-
-      status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-      verify(mockIntegrationService).findByIntegrationId(*[IntegrationId])(*)
-      verify(mockEmailService)
-        .send(eqTo(apiTitle), eqTo(apiEmails), eqTo(senderName), eqTo(senderEmail), eqTo(contactReasons), eqTo(specificQuestion))(*)
+      status(result) shouldBe Status.SEE_OTHER
+      redirectLocation(result) shouldBe Some(s"http://localhost:15018/integration-hub/apis/details/${apiDetail1.id.value}")
     }
   }
 
