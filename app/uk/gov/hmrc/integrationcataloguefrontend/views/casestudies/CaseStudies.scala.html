@@ -20,7 +20,7 @@
 @this(layout: DefaultLayout)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Case studies - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
     <h1 class="govuk-heading-l" id="page-heading">Case studies</h1>

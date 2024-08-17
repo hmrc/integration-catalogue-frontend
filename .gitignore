@@ -34,5 +34,4 @@ tmp
 .idea_modules
 bin
 /project/metals.sbt
-/scalastyle-config.xml
 /app/assets/node_modules/

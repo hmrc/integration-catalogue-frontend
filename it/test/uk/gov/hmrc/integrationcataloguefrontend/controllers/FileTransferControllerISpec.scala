@@ -22,6 +22,7 @@ import org.scalatest.{Assertion, BeforeAndAfterEach}
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import play.api.libs.ws.DefaultBodyWritables.writeableOf_String
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.test.Helpers._
 
@@ -59,7 +60,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .withFollowRedirects(false)
       .get()
       .futureValue
@@ -68,7 +69,7 @@ class FileTransferControllerISpec extends ServerBaseISpec with BeforeAndAfterEac
     wsClient
       .url(url)
       .withFollowRedirects(true)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .post(body)
       .futureValue
   }

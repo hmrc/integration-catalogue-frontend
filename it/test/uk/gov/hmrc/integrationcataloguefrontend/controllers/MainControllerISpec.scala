@@ -44,7 +44,7 @@ class MainControllerISpec extends ServerBaseISpec with BeforeAndAfterEach {
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .withFollowRedirects(false)
       .get()
       .futureValue

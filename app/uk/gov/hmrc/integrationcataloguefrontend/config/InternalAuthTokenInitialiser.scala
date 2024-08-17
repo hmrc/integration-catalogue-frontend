@@ -19,10 +19,15 @@ package uk.gov.hmrc.integrationcataloguefrontend.config
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.libs.json.{JsValue, Json}
 import play.api.{Configuration, Logging}
+import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.integrationcatalogue.models.Service
 
+import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -49,7 +54,7 @@ class NoOpInternalAuthTokenInitialiser @Inject() () extends InternalAuthTokenIni
 @Singleton
 class InternalAuthTokenInitialiserImpl @Inject() (
   configuration: Configuration,
-  http: HttpClient
+  http: HttpClientV2
 )(implicit ec: ExecutionContext) extends InternalAuthTokenInitialiser with Logging {
 
   import InternalAuthTokenInitialiser._
@@ -84,9 +89,9 @@ class InternalAuthTokenInitialiserImpl @Inject() (
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    http.POST[JsValue, HttpResponse](
-      url = s"${internalAuthService.baseUrl}/test-only/token",
-      body = Json.obj(
+    http.post(
+      URL(s"${internalAuthService.baseUrl}/test-only/token")
+    ).withBody[JsValue](Json.obj(
         "token" -> authToken,
         "principal" -> appName,
         "permissions" -> Seq(
@@ -97,7 +102,8 @@ class InternalAuthTokenInitialiserImpl @Inject() (
           )
         )
       )
-    ) flatMap { response =>
+    ).execute[HttpResponse]
+    .flatMap { response =>
       if (response.status == 201) {
         logger.info("Auth token initialised")
         Future.successful(())
@@ -112,10 +118,11 @@ class InternalAuthTokenInitialiserImpl @Inject() (
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    http.GET[HttpResponse](
-      url = s"${internalAuthService.baseUrl}/test-only/token",
-      headers = Seq((AUTHORIZATION, authToken))
-    ).map(_.status == 200)
+    http.get(
+      URL(s"${internalAuthService.baseUrl}/test-only/token")
+    ).setHeader(
+      (AUTHORIZATION, authToken)
+    ).execute[HttpResponse].map(_.status == 200)
   }
 
 }

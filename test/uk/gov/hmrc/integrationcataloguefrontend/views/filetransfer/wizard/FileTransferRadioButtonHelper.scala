@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.filetransfer.wizard
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.*
 
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.should.Matchers

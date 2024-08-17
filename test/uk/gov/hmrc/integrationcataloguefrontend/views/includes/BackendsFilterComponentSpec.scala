@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.*
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -30,7 +30,7 @@ import uk.gov.hmrc.integrationcataloguefrontend.views.html.includes.BackendsFilt
 class BackendsFilterComponentSpec extends CommonViewSpec {
 
   trait Setup {
-    val backendsFilterComponent = app.injector.instanceOf[BackendsFilterComponent]
+    val backendsFilterComponent: BackendsFilterComponent = app.injector.instanceOf[BackendsFilterComponent]
   }
 
   "BackendsFilterComponent" should {

@@ -31,7 +31,7 @@
     scriptsBlock: Option[Html] = None,
     activePage: Option[String] = None,
     bodyEndBlock: Option[Html] = None
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 @mainContentDefault = {
     <noscript>
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLWQQZB" height="0" width="0" style="display:none;visibility:hidden"></iframe>

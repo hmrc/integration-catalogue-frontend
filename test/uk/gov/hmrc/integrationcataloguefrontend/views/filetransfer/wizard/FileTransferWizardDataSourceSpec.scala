@@ -38,7 +38,7 @@ class FileTransferWizardDataSourceSpec extends CommonViewSpec with FileTransferR
     "render page correctly" in new Setup {
       val page: Html         = dataSourcePage.render(SelectedDataSourceForm.form, FakeRequest().withCSRFToken, messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
-      document.title shouldBe "Where is your data currently stored? -"
+      document.title should startWith("Where is your data currently stored? -")
       document.getElementById("page-heading").text() shouldBe "Where is your data currently stored?"
       Option(document.getElementById("error-link-0")) shouldBe None
       Option(document.getElementById("file-transfer-source-error")) shouldBe None

@@ -18,17 +18,21 @@ package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import play.api.Logging
 import play.api.http.Status.ACCEPTED
+import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.formatEmailRequest
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
+import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) extends Logging {
+class EmailConnector @Inject() (http: HttpClientV2, appConfig: AppConfig)(implicit ec: ExecutionContext) extends Logging {
 
   private lazy val url = s"${appConfig.emailServiceUrl}"
 
@@ -51,7 +55,9 @@ class EmailConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit
       tags = tags
     )
 
-    http.POST[EmailRequest, HttpResponse](url = s"$url/hmrc/email", body = emailRequest)
+    http.post(URL(s"$url/hmrc/email"))
+    .withBody(Json.toJson(emailRequest))
+    .execute[HttpResponse]
       .map(_.status match {
         case ACCEPTED => true
         case _        =>

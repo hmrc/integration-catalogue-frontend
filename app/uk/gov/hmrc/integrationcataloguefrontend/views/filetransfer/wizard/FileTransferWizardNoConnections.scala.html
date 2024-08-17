@@ -19,7 +19,7 @@
 @this(layout: FileTransferWizardLayout)
 
 
-@(source: String, target: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(source: String, target: String)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"No file transfer connection exists - ${appConfig.serviceName}"), activePage=Some("contact")) {
   <h1 id="page-heading"  class="govuk-heading-l">

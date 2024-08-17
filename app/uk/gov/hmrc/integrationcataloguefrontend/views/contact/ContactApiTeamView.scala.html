@@ -23,7 +23,7 @@
 
 
 @this(layout: DefaultLayout)
-@(form: Form[ContactApiTeamForm], apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[ContactApiTeamForm], apiDetail: ApiDetail)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Contacting the API catalogue team - ${appConfig.serviceName}"), activePage = Some("contactApiTeam")) {
     <div class="govuk-form-group">
