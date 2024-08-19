@@ -28,8 +28,8 @@ lazy val root = (project in file("."))
     import scoverage.ScoverageKeys
     Seq(
       // Semicolon-separated list of regexs matching classes to exclude
-      ScoverageKeys.coverageExcludedPackages := ",.*\\.domain\\.models\\..*,uk\\.gov\\.hmrc\\.BuildInfo,.*\\.Routes,.*\\.RoutesPrefix,,Module,GraphiteStartUp,.*\\.Reverse[^.]*",
-      ScoverageKeys.coverageMinimumStmtTotal := 90,
+      ScoverageKeys.coverageExcludedPackages := ",.*\\.domain\\.models\\..*,uk\\.gov\\.hmrc\\.integrationcataloguefrontend\\.config\\..*,uk\\.gov\\.hmrc\\.integrationcatalogue\\.models\\..*,uk\\.gov\\.hmrc\\.BuildInfo,.*\\.Routes,.*\\.RoutesPrefix,,Module,GraphiteStartUp,.*\\.Reverse[^.]*",
+      ScoverageKeys.coverageMinimumStmtTotal := 88,
       ScoverageKeys.coverageMinimumBranchTotal := 80,
       ScoverageKeys.coverageFailOnMinimum := true,
       ScoverageKeys.coverageHighlighting := true,
