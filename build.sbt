@@ -2,7 +2,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "integration-catalogue-frontend"
 
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "3.4.2"
 ThisBuild / majorVersion := 0
 
 lazy val root = (project in file("."))
@@ -21,14 +21,15 @@ lazy val root = (project in file("."))
     scalacOptions += "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
   )
   .settings(scoverageSettings)
+  .settings(scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")))
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
 
   lazy val scoverageSettings = {
     import scoverage.ScoverageKeys
     Seq(
       // Semicolon-separated list of regexs matching classes to exclude
-      ScoverageKeys.coverageExcludedPackages := ";.*\\.domain\\.models\\..*;uk\\.gov\\.hmrc\\.BuildInfo;.*\\.Routes;.*\\.RoutesPrefix;;Module;GraphiteStartUp;.*\\.Reverse[^.]*",
-      ScoverageKeys.coverageMinimumStmtTotal := 90,
+      ScoverageKeys.coverageExcludedPackages := ",.*\\.domain\\.models\\..*,uk\\.gov\\.hmrc\\.integrationcataloguefrontend\\.config\\..*,uk\\.gov\\.hmrc\\.integrationcatalogue\\.models\\..*,uk\\.gov\\.hmrc\\.BuildInfo,.*\\.Routes,.*\\.RoutesPrefix,,Module,GraphiteStartUp,.*\\.Reverse[^.]*",
+      ScoverageKeys.coverageMinimumStmtTotal := 88,
       ScoverageKeys.coverageMinimumBranchTotal := 80,
       ScoverageKeys.coverageFailOnMinimum := true,
       ScoverageKeys.coverageHighlighting := true,

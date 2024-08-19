@@ -17,35 +17,32 @@
 package uk.gov.hmrc.integrationcataloguefrontend.views.helper
 
 import java.util.Locale
-import scala.collection.JavaConverters.asScalaBufferConverter
-
+import scala.jdk.CollectionConverters.*
 import org.jsoup.nodes.Document
+import org.mockito.Mockito.when
 import org.scalatest.Assertion
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-
 import play.api.Application
-import play.api.i18n.{Lang, MessagesImpl, MessagesProvider}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
-
-import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType._
-
+import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType.*
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
 trait CommonViewSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite {
-  val mcc                                         = app.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi                                 = mcc.messagesApi
+  val mcc: MessagesControllerComponents           = app.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi: MessagesApi                    = mcc.messagesApi
   implicit val messagesProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
   implicit val appConfig: AppConfig               = mock[AppConfig]
 
   when(appConfig.footerLinkItems).thenReturn(Seq("govukHelp"))
-  when(appConfig.apiHubApiDetailsUrl).thenReturn("some/test/link/")
+  when(appConfig.apiHubApiDetailsUrl).thenReturn("http://some/test/link/")
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
       .configure(("metrics.jvm", false))
-      .configure(("urls.apiHub.apiDetails", "some/test/link/"))
+      .configure(("urls.apiHub.apiDetails", "http://some/test/link/"))
       .build()
   }
 

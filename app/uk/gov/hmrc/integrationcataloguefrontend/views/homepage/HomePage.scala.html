@@ -20,7 +20,7 @@
 @this(layout: LayoutHomePage, blueInterruptBox: BlueInterruptBox)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(appConfig.serviceName)) {
 

@@ -16,20 +16,16 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.scalatest.BeforeAndAfterEach
-
 import play.api.http.HeaderNames.CONTENT_TYPE
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import play.api.libs.ws.DefaultBodyWritables.writeableOf_String
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.test.Helpers._
-
-import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
+import play.api.test.Helpers.*
+import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters.*
 import uk.gov.hmrc.integrationcatalogue.models.common.PlatformType
 import uk.gov.hmrc.integrationcatalogue.models.{IntegrationDetail, IntegrationResponse, PlatformContactResponse}
-
 import uk.gov.hmrc.integrationcataloguefrontend.support.{EmailConnectorStub, IntegrationCatalogueConnectorStub, ServerBaseISpec}
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.{ApiTestData, FileTransferTestData}
 
@@ -63,7 +59,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
   def callGetEndpoint(url: String, headers: List[(String, String)]): WSResponse =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .withFollowRedirects(false)
       .get()
       .futureValue
@@ -71,7 +67,7 @@ class IntegrationControllerISpec extends ServerBaseISpec with BeforeAndAfterEach
   def callPostEndpoint(url: String, headers: List[(String, String)], body: String): WSResponse =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .withFollowRedirects(false)
       .post(body)
       .futureValue

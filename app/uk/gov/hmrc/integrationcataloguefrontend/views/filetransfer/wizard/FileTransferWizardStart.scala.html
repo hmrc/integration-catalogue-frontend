@@ -19,7 +19,7 @@
 @this(layout: FileTransferWizardLayout)
 
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@()(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Reusing file transfer connections - ${appConfig.serviceName}"), activePage=Some("contact")) {
   <form name="Go to data source" action="@uk.gov.hmrc.integrationcataloguefrontend.controllers.routes.FileTransferController.wizardStart()" method="get">

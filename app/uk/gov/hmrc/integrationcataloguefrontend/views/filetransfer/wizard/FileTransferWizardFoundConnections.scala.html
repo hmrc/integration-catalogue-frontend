@@ -21,7 +21,7 @@
 @this(layout: FileTransferWizardLayout)
 
 
-@(source: String, target: String, connections: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformEmail])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(source: String, target: String, connections: List[FileTransferTransportsForPlatform], platformContacts: List[PlatformEmail])(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @getConnectionsText(transports: List[String]) = @{
   if(!transports.isEmpty){

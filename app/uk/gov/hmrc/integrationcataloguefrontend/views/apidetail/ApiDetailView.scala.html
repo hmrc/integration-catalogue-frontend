@@ -25,7 +25,7 @@
 
 @this(layout: ApiDetailLayout)
 
-@(apiDetail: ApiDetail)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(apiDetail: ApiDetail)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @gridItem(heading: String, dataValue: String, indentifier: String, isMailto: Boolean = false) = {
     <div class="govuk-grid-column-one-quarter">

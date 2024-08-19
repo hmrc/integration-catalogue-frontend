@@ -94,7 +94,7 @@ class ApiDetailViewSpec extends CommonViewSpec with ApiTestData {
       val page: Html = apiDetailView.render(apiParsed, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
 
-      document.getElementById("api-hub-api-details-link").attr("href") shouldBe "some/test/link/2f0c9fc4-7773-433b-b4cf-15d4cb932e36"
+      document.getElementById("api-hub-api-details-link").attr("href") shouldBe "http://some/test/link/2f0c9fc4-7773-433b-b4cf-15d4cb932e36"
     }
 
     "not render page with link to api hub api details page for non-HIP platforms" in new Setup {

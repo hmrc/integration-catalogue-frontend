@@ -16,15 +16,14 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.utils
 
-import org.mockito.ArgumentMatchersSugar
-import org.mockito.scalatest.MockitoSugar
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.WsScalaTestClient
 
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 
-abstract class HmrcSpec extends AnyWordSpec with Matchers with OptionValues with WsScalaTestClient with MockitoSugar with ArgumentMatchersSugar
+abstract class HmrcSpec extends AnyWordSpec with Matchers with OptionValues with WsScalaTestClient with MockitoSugar
 
 abstract class AsyncHmrcSpec extends HmrcSpec with DefaultAwaitTimeout with FutureAwaits with BeforeAndAfterEach {}

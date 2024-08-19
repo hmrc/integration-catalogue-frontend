@@ -16,23 +16,23 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.config
 
-import javax.inject.{Inject, Singleton}
-
 import play.api.i18n.MessagesApi
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ErrorTemplate, NotFoundErrorTemplate}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
-import uk.gov.hmrc.integrationcataloguefrontend.views.html.{ErrorTemplate, NotFoundErrorTemplate}
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ErrorHandler @Inject() (errorViewTemplate: ErrorTemplate, notFoundErrorTemplate: NotFoundErrorTemplate, val messagesApi: MessagesApi)(implicit appConfig: AppConfig)
+class ErrorHandler @Inject() (errorViewTemplate: ErrorTemplate, notFoundErrorTemplate: NotFoundErrorTemplate, val messagesApi: MessagesApi)(implicit appConfig: AppConfig, protected val ec: ExecutionContext)
     extends FrontendErrorHandler {
-
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): HtmlFormat.Appendable = {
-    errorViewTemplate(pageTitle, heading, message)
+  
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader): Future[HtmlFormat.Appendable] = {
+    Future.successful(errorViewTemplate(pageTitle, heading, message))
   }
 
-  override implicit def notFoundTemplate(implicit request: Request[_]): Html = notFoundErrorTemplate()
+  override implicit def notFoundTemplate(implicit request: RequestHeader): Future[Html] = Future.successful(notFoundErrorTemplate())
 
 }

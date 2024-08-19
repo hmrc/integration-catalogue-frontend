@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.*
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Form
 import play.api.http.Status
@@ -86,28 +88,28 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
   "GET  /filetransfer/wizard/start" should {
     "return 200 and have correct view when called" in {
-      when(mockWizardStartView.apply()(*, *, *)).thenReturn(HtmlFormat.raw("some HTML"))
+      when(mockWizardStartView.apply()(any, any, any)).thenReturn(HtmlFormat.raw("some HTML"))
 
       val result = controller.wizardStart()(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "some HTML"
 
-      verify(mockWizardStartView).apply()(*, *, *)
-      verifyZeroInteractions(mockIntegrationService)
+      verify(mockWizardStartView).apply()(any, any, any)
+      verifyNoInteractions(mockIntegrationService)
     }
 
   }
 
   "GET  /filetransfer/wizard/data-source" should {
     "return 200 and have correct view when called" in {
-      when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(*, *, *)).thenReturn(HtmlFormat.raw("more HTML"))
+      when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(any, any, any)).thenReturn(HtmlFormat.raw("more HTML"))
 
       val result = controller.dataSourceView()(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "more HTML"
 
-      verify(mockWizardDataSourceView).apply(any[Form[SelectedDataSourceForm]])(*, *, *)
-      verifyZeroInteractions(mockIntegrationService)
+      verify(mockWizardDataSourceView).apply(any[Form[SelectedDataSourceForm]])(any, any, any)
+      verifyNoInteractions(mockIntegrationService)
     }
 
   }
@@ -115,14 +117,14 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
   "GET  /filetransfer/wizard/data-target" should {
     "return 200 and have correct view when called" in {
       val dataSource = "BMC"
-      when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)).thenReturn(HtmlFormat.raw("more HTML"))
+      when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(any, any, any)).thenReturn(HtmlFormat.raw("more HTML"))
 
       val result = controller.dataTargetView(dataSource)(fakeRequest)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "more HTML"
 
-      verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)
-      verifyZeroInteractions(mockIntegrationService)
+      verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(any, any, any)
+      verifyNoInteractions(mockIntegrationService)
     }
     // check if source is empty AND/OR null????
   }
@@ -139,7 +141,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
     "return 200 when connections found and have correct view when called" in {
 
-      when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *))
+      when(mockWizardFoundConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), any)(any, any, any))
         .thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Right(fileTransferTransportsForPlatforms)))
@@ -150,13 +152,13 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe htmlVal
 
-      verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), *)(*, *, *)
+      verify(mockWizardFoundConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget), eqTo(fileTransferTransportsForPlatforms), any)(any, any, any)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
     "return 200 when no connections found and have correct view when called" in {
 
-      when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *))
+      when(mockWizardNoConnectionsView.apply(eqTo(dataSource), eqTo(dataTarget))(any, any, any))
         .thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Right(List.empty)))
@@ -166,14 +168,14 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe htmlVal
 
-      verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(*, *, *)
-      verifyZeroInteractions(mockWizardFoundConnectionsView)
+      verify(mockWizardNoConnectionsView).apply(eqTo(dataSource), eqTo(dataTarget))(any, any, any)
+      verifyNoInteractions(mockWizardFoundConnectionsView)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
     "return 500 when service call to get transports returns BadRequest Exception" in {
 
-      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockErrorTemplate.apply(any, any, any)(any, any, any)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("some error", INTERNAL_SERVER_ERROR))))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
@@ -182,14 +184,14 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       contentAsString(result) shouldBe htmlVal
 
-      verifyZeroInteractions(mockWizardFoundConnectionsView)
-      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verifyNoInteractions(mockWizardFoundConnectionsView)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(any, any, any)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
     "return 500 when service call to get contacts BadRequest Exception" in {
 
-      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockErrorTemplate.apply(any, any, any)(any, any, any)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("bad request", BAD_REQUEST))))
 
@@ -197,15 +199,15 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       contentAsString(result) shouldBe htmlVal
 
-      verifyZeroInteractions(mockWizardFoundConnectionsView)
-      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verifyNoInteractions(mockWizardFoundConnectionsView)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(any, any, any)
       verify(mockIntegrationService, times(0)).getFileTransferTransportsByPlatform(any[String], any[String])(any[HeaderCarrier])
       verify(mockIntegrationService).getPlatformContacts()(any[HeaderCarrier])
     }
 
     "return 500 when service returns NotFound Exception" in {
 
-      when(mockErrorTemplate.apply(*, *, *)(*, *, *)).thenReturn(HtmlFormat.raw(htmlVal))
+      when(mockErrorTemplate.apply(any, any, any)(any, any, any)).thenReturn(HtmlFormat.raw(htmlVal))
       when(mockIntegrationService.getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier]))
         .thenReturn(Future.successful(Left(UpstreamErrorResponse.apply("error", NOT_FOUND))))
       when(mockIntegrationService.getPlatformContacts()(any[HeaderCarrier])).thenReturn(Future.successful(Right(List.empty)))
@@ -214,8 +216,8 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
       status(result) shouldBe Status.INTERNAL_SERVER_ERROR
       contentAsString(result) shouldBe htmlVal
 
-      verifyZeroInteractions(mockWizardFoundConnectionsView)
-      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(*, *, *)
+      verifyNoInteractions(mockWizardFoundConnectionsView)
+      verify(mockErrorTemplate).apply(eqTo("Internal server error"), eqTo("Internal server error"), eqTo("Internal server error"))(any, any, any)
       verify(mockIntegrationService).getFileTransferTransportsByPlatform(eqTo(dataSource), eqTo(dataTarget))(any[HeaderCarrier])
     }
 
@@ -233,7 +235,7 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
 
     "show error page when form is invalid" in {
       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", ""))
-      when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
+      when(mockWizardDataSourceView.apply(any[Form[SelectedDataSourceForm]])(any, any, any)).thenReturn(HtmlFormat.raw("htmlVal"))
       val result          = controller.dataSourceAction()(requestWithForm)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "htmlVal"
@@ -255,17 +257,17 @@ class FileTransferControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite 
         dataTarget
       ).url)
 
-      verifyZeroInteractions(mockWizardDataTargetView)
+      verifyNoInteractions(mockWizardDataTargetView)
     }
 
     "show error page when form is invalid" in {
       val requestWithForm = fakeRequest.withFormUrlEncodedBody(("dataSource", dataSource), ("dataTarget", ""))
-      when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], any[String])(*, *, *)).thenReturn(HtmlFormat.raw("htmlVal"))
+      when(mockWizardDataTargetView.apply(any[Form[SelectedDataTargetForm]], any[String])(any, any, any)).thenReturn(HtmlFormat.raw("htmlVal"))
       val result          = controller.dataTargetAction()(requestWithForm)
       status(result) shouldBe Status.OK
       contentAsString(result) shouldBe "htmlVal"
 
-      verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(*, *, *)
+      verify(mockWizardDataTargetView).apply(any[Form[SelectedDataTargetForm]], eqTo(dataSource))(any, any, any)
     }
 
   }

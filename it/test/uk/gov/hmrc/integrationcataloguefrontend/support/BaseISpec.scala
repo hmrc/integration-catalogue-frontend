@@ -19,14 +19,10 @@ package uk.gov.hmrc.integrationcataloguefrontend.support
 import org.apache.pekko.stream.Materializer
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.play.PlaySpec
-
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 abstract class BaseISpec
     extends PlaySpec with WireMockSupport with MetricsTestSupport with Matchers {
@@ -45,6 +41,4 @@ abstract class BaseISpec
 
   protected def htmlEscapedMessage(key: String): String = HtmlFormat.escape(Messages(key)).toString
 
-  implicit def hc(implicit request: FakeRequest[_]): HeaderCarrier =
-    HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 }

@@ -18,18 +18,22 @@ package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.Logging
+import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.integrationcatalogue.models.JsonFormatters._
 import uk.gov.hmrc.integrationcatalogue.models._
 import uk.gov.hmrc.integrationcatalogue.models.common.{IntegrationId, IntegrationType, PlatformType}
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 
+import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) extends Logging {
+class IntegrationCatalogueConnector @Inject() (http: HttpClientV2, appConfig: AppConfig)(implicit ec: ExecutionContext) extends Logging {
 
   private lazy val externalServiceUri = s"${appConfig.integrationCatalogueUrl}/integration-catalogue"
 
@@ -41,29 +45,34 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
     ): Future[Either[UpstreamErrorResponse, IntegrationResponse]] = {
     val queryParamsValues = buildQueryParams(integrationFilter, itemsPerPage: Option[Int], currentPage: Option[Int])
     handleResult(
-      http.GET[IntegrationResponse](
-        url = s"$externalServiceUri/integrations",
-        queryParams = queryParamsValues,
-        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )(implicitly, treatHeaderCarrier(hc), implicitly)
+      http.get(
+        URL(s"$externalServiceUri/integrations")
+      )(treatHeaderCarrier(hc)).transform(_.withQueryStringParameters(queryParamsValues*))
+      .setHeader(
+        (AUTHORIZATION, appConfig.internalAuthToken)
+      ).execute[IntegrationResponse]
     )
   }
 
   def findByIntegrationId(id: IntegrationId)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, IntegrationDetail]] = {
     handleResult(
-      http.GET[IntegrationDetail](
-        url = s"$externalServiceUri/integrations/${id.value.toString}",
-        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )(implicitly, treatHeaderCarrier(hc), implicitly)
+      http.get(
+        URL(s"$externalServiceUri/integrations/${id.value.toString}")
+      )(treatHeaderCarrier(hc))
+      .setHeader(
+        (AUTHORIZATION, appConfig.internalAuthToken)
+      ).execute[IntegrationDetail]
     )
   }
 
   def getPlatformContacts()(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, List[PlatformContactResponse]]] = {
     handleResult(
-      http.GET[List[PlatformContactResponse]](
-        url = s"$externalServiceUri/platform/contacts",
-        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )(implicitly, treatHeaderCarrier(hc), implicitly)
+      http.get(
+        URL(s"$externalServiceUri/platform/contacts"),
+      )(treatHeaderCarrier(hc))
+      .setHeader(
+        (AUTHORIZATION, appConfig.internalAuthToken)
+      ).execute[List[PlatformContactResponse]]
     )
   }
 
@@ -73,11 +82,12 @@ class IntegrationCatalogueConnector @Inject() (http: HttpClient, appConfig: AppC
     val sourceParam = if (source.isEmpty) List.empty else List(("source", source))
     val targetParam = if (target.isEmpty) List.empty else List(("target", target))
     handleResult(
-      http.GET[List[FileTransferTransportsForPlatform]](
-        url = s"$externalServiceUri/filetransfers/platform/transports",
-        queryParams = sourceParam ++ targetParam,
-        headers = Seq((AUTHORIZATION, appConfig.internalAuthToken))
-      )(implicitly, treatHeaderCarrier(hc), implicitly)
+      http.get(
+        URL(s"$externalServiceUri/filetransfers/platform/transports"),
+      )(treatHeaderCarrier(hc)).transform(_.withQueryStringParameters((sourceParam ++ targetParam)*))
+      .setHeader(
+        (AUTHORIZATION, appConfig.internalAuthToken)
+      ).execute[List[FileTransferTransportsForPlatform]]
     )
   }
 

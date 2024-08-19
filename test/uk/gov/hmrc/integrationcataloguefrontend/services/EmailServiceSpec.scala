@@ -18,6 +18,9 @@ package uk.gov.hmrc.integrationcataloguefrontend.services
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.integrationcataloguefrontend.connectors.EmailConnector
@@ -42,46 +45,46 @@ class EmailServiceSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite with ApiTe
 
     "return true when email to platform and confirmation email to the sender is successfully sent" in new SetUp {
       when(mockEmailConnector
-        .sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(*))
+        .sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(any))
         .thenReturn(Future.successful(true))
 
       when(mockEmailConnector
-        .sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(*))
+        .sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(any))
         .thenReturn(Future.successful(true))
 
       val result: Boolean = await(emailService.send(apiTitle, apiEmails, senderName, senderEmail, contactReasons, specificQuestion))
 
       result shouldBe true
-      verify(mockEmailConnector).sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(*)
-      verify(mockEmailConnector).sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(*)
+      verify(mockEmailConnector).sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(any)
+      verify(mockEmailConnector).sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(any)
     }
 
     "return false when it fails to send email to platform" in new SetUp {
       when(mockEmailConnector
-        .sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(*))
+        .sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(any))
         .thenReturn(Future.successful(false))
 
       val result: Boolean = await(emailService.send(apiTitle, apiEmails, senderName, senderEmail, contactReasons, specificQuestion))
 
       result shouldBe false
-      verify(mockEmailConnector).sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(*)
-      verify(mockEmailConnector, times(0)).sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(*)
+      verify(mockEmailConnector).sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(any)
+      verify(mockEmailConnector, times(0)).sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(any)
     }
 
     "return false when it fails to send confirmation email to the sender" in new SetUp {
       when(mockEmailConnector
-        .sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(*))
+        .sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(any))
         .thenReturn(Future.successful(true))
 
       when(mockEmailConnector
-        .sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(*))
+        .sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(any))
         .thenReturn(Future.successful(false))
 
       val result: Boolean = await(emailService.send(apiTitle, apiEmails, senderName, senderEmail, contactReasons, specificQuestion))
 
       result shouldBe false
-      verify(mockEmailConnector).sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(*)
-      verify(mockEmailConnector).sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(*)
+      verify(mockEmailConnector).sendEmailToPlatform(eqTo(apiEmails), eqTo(emailParams))(any)
+      verify(mockEmailConnector).sendConfirmationEmailToSender(eqTo(senderEmail), eqTo(emailParams))(any)
     }
   }
 }

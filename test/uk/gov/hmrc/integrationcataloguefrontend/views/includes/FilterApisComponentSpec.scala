@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.views.includes
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.*
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.mockito.Mockito.when
 
 import play.twirl.api.Html
 

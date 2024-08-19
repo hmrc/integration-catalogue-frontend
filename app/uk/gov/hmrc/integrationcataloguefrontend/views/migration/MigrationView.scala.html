@@ -20,7 +20,7 @@
 @this(layout: DefaultLayout)
 
 
-@(link: String, title: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(link: String, title: String)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"$title - ${appConfig.serviceName}"), activePage=Some("case-studies")) {
     <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">

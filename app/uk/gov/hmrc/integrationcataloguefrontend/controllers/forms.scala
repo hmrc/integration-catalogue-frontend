@@ -24,27 +24,27 @@ final case class SelectedDataSourceForm(dataSource: Option[String])
 
 object SelectedDataSourceForm {
 
-  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
+  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { (s: Option[String]) =>
     if (s.isDefined) Valid else Invalid(message)
   }
 
   def form: Form[SelectedDataSourceForm] = Form(mapping(
     "dataSource" -> optional(text).verifying(nonEmpty("Select the HoD your data is currently stored in"))
-  )(SelectedDataSourceForm.apply)(SelectedDataSourceForm.unapply))
+  )(SelectedDataSourceForm.apply)(o => Some(o.dataSource)))
 }
 
 final case class SelectedDataTargetForm(dataSource: Option[String], dataTarget: Option[String])
 
 object SelectedDataTargetForm {
 
-  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { s: Option[String] =>
+  def nonEmpty(message: String): Constraint[Option[String]] = Constraint[Option[String]] { (s: Option[String]) =>
     if (s.isDefined) Valid else Invalid(message)
   }
 
   def form: Form[SelectedDataTargetForm] = Form(mapping(
     "dataSource" -> optional(text).verifying(nonEmpty("Select the HoD your data is currently stored in")),
     "dataTarget" -> optional(text).verifying(nonEmpty("Select the HoD you want to send data to"))
-  )(SelectedDataTargetForm.apply)(SelectedDataTargetForm.unapply))
+  )(SelectedDataTargetForm.apply)(o => Some(Tuple.fromProductTyped(o))))
 
 }
 
@@ -67,6 +67,6 @@ object ContactApiTeamForm {
       "reasonTwo"        -> optional(text),
       "reasonThree"      -> optional(text),
       "specificQuestion" -> optional(text)
-    )(ContactApiTeamForm.apply)(ContactApiTeamForm.unapply)
+    )(ContactApiTeamForm.apply)(o => Some(Tuple.fromProductTyped(o)))
   )
 }

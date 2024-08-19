@@ -16,57 +16,63 @@
 
 package uk.gov.hmrc.integrationcataloguefrontend.connectors
 
-import org.mockito.stubbing.ScalaOngoingStubbing
-import play.api.http.Status._
-import play.api.libs.json.Writes
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{reset, when}
+import play.api.http.Status.*
 import play.api.test.Helpers
-import uk.gov.hmrc.http._
-import uk.gov.hmrc.integrationcatalogue.models._
+import uk.gov.hmrc.http.*
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.integrationcatalogue.models.*
 import uk.gov.hmrc.integrationcataloguefrontend.config.AppConfig
 import uk.gov.hmrc.integrationcataloguefrontend.test.data.ApiTestData
 import uk.gov.hmrc.integrationcataloguefrontend.utils.AsyncHmrcSpec
 
+import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 class EmailConnectorSpec extends AsyncHmrcSpec with ApiTestData {
 
-  private val mockHttpClient                = mock[HttpClient]
+  private val mockHttpClient                = mock[HttpClientV2]
+  private val requestBuilder                = mock[RequestBuilder]
   private val mockAppConfig                 = mock[AppConfig]
+  private val baseUrl                       = "http://localhost"
   private implicit val ec: ExecutionContext = Helpers.stubControllerComponents().executionContext
   private implicit val hc: HeaderCarrier    = HeaderCarrier()
+
+  when(mockAppConfig.emailServiceUrl).thenReturn(baseUrl)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockHttpClient)
+    reset(requestBuilder)
   }
 
   override def afterEach(): Unit = {
     super.afterEach()
     reset(mockHttpClient)
+    reset(requestBuilder)
   }
 
   trait SetUp {
     val connector    = new EmailConnector(mockHttpClient, mockAppConfig)
-    val sendEmailUrl = s"/hmrc/email"
+    val sendEmailUrl = URL(s"$baseUrl/hmrc/email")
 
-    def httpCallToSendEmailWithStatus(emailRequest: EmailRequest, status: Int): ScalaOngoingStubbing[Future[HttpResponse]] = {
-      when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
-        wts = any[Writes[EmailRequest]],
-        rds = any[HttpReads[HttpResponse]],
-        hc = any[HeaderCarrier],
-        ec = any[ExecutionContext]
-      ))
-        .thenReturn(Future.successful(HttpResponse(status, "")))
+    def httpCallToSendEmailWithStatus(emailRequest: EmailRequest, status: Int) = {
+      when(mockHttpClient.post(eqTo(sendEmailUrl))(any[HeaderCarrier]))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.withBody(any())(using any(), any(), any())).thenReturn(requestBuilder)
+      when(requestBuilder.transform(any())).thenReturn(requestBuilder)
+      when(requestBuilder.execute(using any(), any())).thenReturn(Future.successful(HttpResponse(status, "")))
     }
 
-    def httpCallToSendEmailWillThrowException(emailRequest: EmailRequest, upstreamErrorResponse: UpstreamErrorResponse): ScalaOngoingStubbing[Future[HttpResponse]] = {
-      when(mockHttpClient.POST[EmailRequest, HttpResponse](url = eqTo(sendEmailUrl), body = eqTo(emailRequest), headers = *)(
-        wts = any[Writes[EmailRequest]],
-        rds = any[HttpReads[HttpResponse]],
-        hc = any[HeaderCarrier],
-        ec = any[ExecutionContext]
-      ))
-        .thenReturn(Future.failed(upstreamErrorResponse))
+    def httpCallToSendEmailWillThrowException(emailRequest: EmailRequest, upstreamErrorResponse: UpstreamErrorResponse) = {
+      when(mockHttpClient.post(eqTo(sendEmailUrl))(any[HeaderCarrier]))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.withBody(any())(using any(), any(), any())).thenReturn(requestBuilder)
+      when(requestBuilder.transform(any())).thenReturn(requestBuilder)
+      when(requestBuilder.execute(using any(), any())).thenReturn(Future.failed(upstreamErrorResponse))
     }
   }
 

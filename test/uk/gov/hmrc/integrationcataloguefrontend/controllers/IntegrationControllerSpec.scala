@@ -17,6 +17,8 @@
 package uk.gov.hmrc.integrationcataloguefrontend.controllers
 
 import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
@@ -57,7 +59,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   )
 
   private val fakeRequestWithCsrf = fakeRequest
-    .withCSRFToken.withFormUrlEncodedBody(validContactFormData.toSeq: _*)
+    .withCSRFToken.withFormUrlEncodedBody(validContactFormData.toSeq*)
 
   private val fakeRequestWithInvalidForm = fakeRequest
     .withCSRFToken.withFormUrlEncodedBody("fullName" -> "")
@@ -107,21 +109,21 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
 
   "GET /" should {
     "return 200 when Some(ApiId) is Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *)(*))
+      when(mockIntegrationService.findWithFilters(any, any, any)(any))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"))(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return migration page" in {
-      when(mockIntegrationService.findWithFilters(*, *, *)(*))
+      when(mockIntegrationService.findWithFilters(any, any, any)(any))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(None)(fakeRequest)
       contentAsString(result) shouldBe migrationView("http://localhost:15018/integration-hub/apis", "APIs")(fakeRequest, messages, appConfig).toString
     }
 
     "return 200 when Some(ApiId) and valid platform Filters are Sent" in {
-      when(mockIntegrationService.findWithFilters(*, *, *)(*))
+      when(mockIntegrationService.findWithFilters(any, any, any)(any))
         .thenReturn(Future.successful(Right(IntegrationResponse(count = 0, results = List.empty))))
       val result = controller.listIntegrations(Some("SomeId"), List(PlatformType.CORE_IF, PlatformType.API_PLATFORM))(fakeRequest)
       status(result) shouldBe Status.OK
@@ -131,7 +133,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   "getIntegrationDetail" should {
 
     "return 200 when api details are found" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(any)).thenReturn(Future.successful(Right(apiDetail0)))
 
       val integrationId = IntegrationId(UUID.randomUUID())
       val result = controller.getIntegrationDetail(integrationId, "self-assessment-mtd")(fakeRequest)
@@ -144,7 +146,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   "getIntegrationDetailTechnical" should {
 
     "return 200 when api details are found" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(any)).thenReturn(Future.successful(Right(apiDetail0)))
       
       val integrationId = IntegrationId(UUID.randomUUID())
       val result = controller.getIntegrationDetailTechnical(integrationId, "self-assessment-mtd")(fakeRequest)
@@ -156,7 +158,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   "getIntegrationDetailTechnicalRedoc" should {
 
     "return 200 when api details are found" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(any)).thenReturn(Future.successful(Right(apiDetail0)))
 
       val integrationId = IntegrationId(UUID.randomUUID())
       val result = controller.getIntegrationDetailTechnicalRedoc(integrationId, "self-assessment-mtd")(fakeRequest)
@@ -168,7 +170,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   "getIntegrationOas" should {
 
     "redirect to the APIs details screen on integration hub" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(any)).thenReturn(Future.successful(Right(apiDetail0)))
 
       val integrationId = IntegrationId(UUID.randomUUID())
       val result = controller.getIntegrationOas(integrationId)(fakeRequest)
@@ -180,7 +182,7 @@ class IntegrationControllerSpec extends AsyncHmrcSpec with GuiceOneAppPerSuite w
   "contactApiTeamPage" should {
 
     "redirect to the APIs details screen on integration hub" in {
-      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(*)).thenReturn(Future.successful(Right(apiDetail0)))
+      when(mockIntegrationService.findByIntegrationId(any[IntegrationId])(any)).thenReturn(Future.successful(Right(apiDetail0)))
 
       val integrationId = IntegrationId(UUID.randomUUID())
       val result = controller.contactApiTeamPage(integrationId)(fakeRequestWithCsrf)

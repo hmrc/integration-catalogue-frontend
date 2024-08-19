@@ -23,7 +23,7 @@
 @this(layout: FileTransferWizardLayout)
 
 
-@(form: Form[SelectedDataTargetForm], dataSource: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[SelectedDataTargetForm], dataSource: String)(implicit request: RequestHeader, messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(s"Where do you want to send your data? - ${appConfig.serviceName}"), activePage=Some("contact")) {
   <div class="govuk-form-group @if(form.hasErrors){govuk-form-group--error}">

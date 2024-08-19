@@ -42,7 +42,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     val target = "CESA"
 
     def assertCommonPageElements(document: Document) = {
-      document.title shouldBe "A file transfer connection exists -"
+      document.title should startWith("A file transfer connection exists -")
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
       document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"
 
@@ -75,7 +75,7 @@ class FileTransferWizardFoundConnectionsSpec extends CommonViewSpec {
     "render page correctly when no contacts and no file transfer results are provided" in new Setup {
       val page: Html         = foundConnectionsPage.render(source, target, List.empty, List.empty, FakeRequest(), messagesProvider.messages, appConfig)
       val document: Document = Jsoup.parse(page.body)
-      document.title shouldBe "A file transfer connection exists -"
+      document.title should startWith("A file transfer connection exists -")
       document.getElementById("page-heading").text() shouldBe "A file transfer connection exists"
       document.getElementById("paragraph1").text() shouldBe s"$source and $target are connected by:"
 
