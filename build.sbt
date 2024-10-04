@@ -2,7 +2,7 @@ import uk.gov.hmrc.DefaultBuildSettings
 
 val appName = "integration-catalogue-frontend"
 
-ThisBuild / scalaVersion := "3.4.2"
+ThisBuild / scalaVersion := "3.5.1"
 ThisBuild / majorVersion := 0
 
 lazy val root = (project in file("."))
@@ -18,11 +18,12 @@ lazy val root = (project in file("."))
       "uk.gov.hmrc.govukfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.components._"
     ),
-    scalacOptions += "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
+    scalacOptions += "-Wconf:cat=deprecation:w,cat=feature:w,src=target/.*:s"
   )
   .settings(scoverageSettings)
   .settings(scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")))
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
+  .settings(scalacOptions += "-Wconf:msg=Flag.*repeatedly:s")
 
   lazy val scoverageSettings = {
     import scoverage.ScoverageKeys
@@ -42,3 +43,4 @@ lazy val it = (project in file("it"))
   .dependsOn(root % "test->test")
   .settings(DefaultBuildSettings.itSettings())
   .settings(libraryDependencies ++= AppDependencies.it)
+  .settings(scalacOptions += "-Wconf:msg=Flag.*repeatedly:s")
